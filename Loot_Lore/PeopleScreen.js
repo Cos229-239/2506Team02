@@ -1,17 +1,16 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from './styles';
-import {People} from './PeopleDropbox';
 
-export function DisplayPeopleInfo({race, classType, 
-    ability, background, 
-    alignment}) {
+
+function DisplayPeopleInfo({ race, classType, level, background, alignment }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>People</Text>
-      <Text>Race:</Text>
+      <Text style={styles.header}>Selected Information</Text>
+      <Text>Race: {race}</Text>
       <Text>Class: {classType}</Text>
-      <Text>Ability: {ability}</Text>
+      <Text>Level: {level}</Text>
       <Text>Background: {background}</Text>
       <Text>Alignment: {alignment}</Text>
     </View>
@@ -20,22 +19,10 @@ export function DisplayPeopleInfo({race, classType,
 
 const styles = StyleSheet.create({
   container: {
-     ...GLOBAL_STYLES.screen,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
   },
-   input: {
-    width: '100%',
-    backgroundColor: '#fff',
-    borderRadius: 6,
-    padding: 12,
-    marginVertical: 8,
-    fontSize: 16,
-    color: '#000',
-  }, 
   header: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
