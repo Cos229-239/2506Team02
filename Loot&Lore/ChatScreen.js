@@ -13,17 +13,18 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { OPENAI_API_KEY } from '@env';
-import { MONSTER_CREATION_PROMPT } from './prompts';
+import { MONSTER_CREATION_PROMPT, SPELL_CREATION_PROMPT } from './prompts';
 import { Monster } from './Monster';
 import MonsterCard from './MonsterCard';
+import { Spell } from './Spell';
+import  SpellCard  from './SpellCard'
 import { GLOBAL_STYLES } from './styles';
 
 export default function ChatScreen() {
   const [input, setInput] = useState('');
   const [monster, setMonster] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [imageLoading, setImageLoading] = useState(false);
-
+  const [spell, setSpell] = useState(false);
   const handleSend = async () => {
     if (!input) return;
     setLoading(true);
@@ -34,7 +35,7 @@ export default function ChatScreen() {
         {
           model: 'gpt-4',
           messages: [
-            { role: 'system', content: MONSTER_CREATION_PROMPT },
+            { role: 'system', content: SPELL_CREATION_PROMPT },
             { role: 'user', content: input },
           ],
         },
@@ -48,11 +49,11 @@ export default function ChatScreen() {
 
       const message = res.data.choices[0].message.content;
       const parsed = JSON.parse(message);
-      const newMonster = new Monster(parsed);
-      setMonster(newMonster);
+      const newSpell = new Spell(parsed);
+      setSpell(newSpell);
 
     } catch (error) {
-      console.error('❌ Error generating monster:', error.message);
+      console.error(' Error generating monster:', error.message);
     }
 
     setLoading(false);
@@ -70,9 +71,9 @@ export default function ChatScreen() {
             <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
               {loading ? (
                 <Text style={GLOBAL_STYLES.buttonText}>Loading...</Text>
-              ) : monster ? (
+              ) : spell ? (
                 <>
-                  <MonsterCard monster={monster} />
+                  <SpellCard spell={spell} />
                 </>
               ) : (
                 <Text style={GLOBAL_STYLES.buttonText}>No monster yet.</Text>

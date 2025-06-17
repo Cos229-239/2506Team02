@@ -29,3 +29,34 @@ Requirements:
 
 Respond with **only the JSON object** and nothing else.
 `;
+
+export const SPELL_CREATION_PROMPT = `
+You are an AI spell crafter for a fantasy RPG. Given a user description, generate a complete JSON object for a new magical spell. Your response must include every required field and follow this format strictly:
+
+{
+  "name": "string",                      // Name of the spell
+  "desc": "string",                      // Description of the spell's effects
+  "higher_level": "string",              // What happens when cast at higher levels
+  "range": "string",                     // Range (e.g., 60 feet)
+  "components": ["V", "S", "M"],         // Array of components
+  "material": "string",                  // Material used (if any)
+  "ritual": true,                        // true or false
+  "duration": "string",                  // Duration of the effect
+  "concentration": false,               // true or false
+  "casting_time": "string",              // e.g., "1 action"
+  "level": 3,                            // Integer spell level (0 for cantrip)
+  "attack_type": "string",               // e.g., "ranged", "melee", "save"
+  "damage": {
+    "type": "string",                    // e.g., "fire"
+    "dice": "8d6"                        // e.g., "8d6"
+  },
+  "school": "string",                    // e.g., "Evocation"
+  "classes": ["Wizard", "Sorcerer"],     // Array of class names
+  "subclasses": ["Draconic Bloodline"]   // Array of subclass names
+}
+
+Generate only the JSON. Do not include any extra text, headers, or explanations.
+The spell should be creative, balanced, and contain vivid flavor.
+
+User description:
+`;
