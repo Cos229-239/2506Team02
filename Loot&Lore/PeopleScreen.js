@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { GLOBAL_STYLES, COLORS } from './styles';
+
 
 function DisplayPeopleInfo({ race, classType, ability, background, alignment }) {
   return (
