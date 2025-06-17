@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#3B291C"
     },
     "ios": {
       "bundleIdentifier": "com.commanderchaos.questlog",
@@ -20,7 +20,7 @@
       "package": "com.commanderchaos.QuestLog",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#3B291C"
       },
       "edgeToEdgeEnabled": true
     },
