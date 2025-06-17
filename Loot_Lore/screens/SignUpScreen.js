@@ -8,6 +8,9 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from '../styles';
 
@@ -34,7 +37,22 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <SafeAreaView style={GLOBAL_STYLES.screen}>
+  <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    keyboardVerticalOffset={80} // Adjust this if you have a header
+  >
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        paddingBottom: 40,
+      }}
+      keyboardShouldPersistTaps="handled"
+    >
       <Text style={styles.title}>Loot & Lore</Text>
       <Image source={require('../assets/logo.png')} style={styles.logo} />
 
@@ -113,6 +131,8 @@ export default function SignUpScreen({ navigation }) {
         <Text style={styles.backToSignInText}>Already have an account? Sign In</Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
