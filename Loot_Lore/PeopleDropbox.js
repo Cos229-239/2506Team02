@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Dropdown from './Dropdown'; // Make sure the path is correct
 import DisplayPeopleInfo from './PeopleScreen'; // Ensure path is correct
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { GLOBAL_STYLES, COLORS } from './styles';
+
 
 function People () {
     const [selectedRace, setSelectedRace] = useState('');
