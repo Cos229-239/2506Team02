@@ -1,8 +1,8 @@
 import React from 'react';
 //import ChatScreen from './ChatScreen';
-import People from './PeopleDropbox';
+import Test from './Test3';
 
 export default function App() {
-  return ( <People/> );
+  return ( <Test/> );
 }
 

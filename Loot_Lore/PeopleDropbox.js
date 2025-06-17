@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from './styles';
 
 
-function People () {
+export function People () {
     const [selectedRace, setSelectedRace] = useState('');
     const [selectedClass, setSelectedClass] = useState('');
     const [selectedAbility, setSelectedAbility] = useState('');
@@ -78,7 +78,7 @@ function People () {
         'Lawful Good', 'Lawful Neutral', 'Neutral Evil', 'Neutral Good', 'True Neutral',];
 
     return (
-        <View>
+        <View style={styles.dropdownStyle}>
             <Text><People/></Text>
             <Dropdown 
                 options={Race} 
@@ -128,6 +128,9 @@ function People () {
 
 const styles = StyleSheet.create({
   container: {
+    ...GLOBAL_STYLES.screen,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   header: {
@@ -135,6 +138,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  dropdownStyle : {
+        width: '250px', // Set the width of the dropdown
+        padding: '10px', // Add padding for better appearance
+        borderRadius: '5px', // Rounded corners
+        border: '1px solid #ccc', // Border color
+        fontSize: '16px', // Font size
+    },
 });
 
 export default People;

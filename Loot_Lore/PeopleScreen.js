@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from './styles';
+import {People} from './PeopleDropbox';
 
-
-function DisplayPeopleInfo({ race, classType, ability, background, alignment }) {
+export function DisplayPeopleInfo({race, classType, 
+    ability, background, 
+    alignment}) {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Selected Information</Text>
-      <Text>Race: {race}</Text>
+      <Text style={styles.header}>People</Text>
+      <Text>Race:</Text>
       <Text>Class: {classType}</Text>
       <Text>Ability: {ability}</Text>
       <Text>Background: {background}</Text>
@@ -18,10 +20,22 @@ function DisplayPeopleInfo({ race, classType, ability, background, alignment }) 
 
 const styles = StyleSheet.create({
   container: {
+     ...GLOBAL_STYLES.screen,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
+   input: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    padding: 12,
+    marginVertical: 8,
+    fontSize: 16,
+    color: '#000',
+  }, 
   header: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 10,
   },
