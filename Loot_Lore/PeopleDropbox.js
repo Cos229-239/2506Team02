@@ -104,11 +104,11 @@ function People () {
                 label="Alignment"
             />
             <View>
-                <p>Selected from Dropdown 1: {selectedRace}</p>
-                <p>Selected from Dropdown 2: {selectedClass}</p>
-                <p>Selected from Dropdown 2: {selectedAbility}</p>
-                <p>Selected from Dropdown 2: {selectedBackGround}</p>
-                <p>Selected from Dropdown 2: {selectedAlignment}</p>
+                <Text>Selected from Dropdown 1: {selectedRace}</Text>
+                <Text>Selected from Dropdown 2: {selectedClass}</Text>
+                <Text>Selected from Dropdown 2: {selectedAbility}</Text>
+                <Text>Selected from Dropdown 2: {selectedBackGround}</Text>
+                <Text>Selected from Dropdown 2: {selectedAlignment}</Text>
             </View>
 
              <button onClick={handleOutput}>Show Selected Options</button>
