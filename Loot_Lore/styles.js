@@ -46,4 +46,10 @@ export const GLOBAL_STYLES = StyleSheet.create({
     marginTop: 10,
     fontFamily: 'Aclonica',
   },
+  drawerStyle: {
+  shadowColor: '#000',
+  shadowOffset: { width: -2, height: 4 },
+  shadowOpacity: 0.2,
+  shadowRadius: 8,
+},
 });
