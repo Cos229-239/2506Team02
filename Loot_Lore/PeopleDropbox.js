@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Dropdown from './Dropdown'; // Make sure the path is correct
+import DisplayPeopleInfo from './PeopleScreen'; // Ensure path is correct
+import { View, Text, StyleSheet } from 'react-native';
 
 function People () {
     const [selectedRace, setSelectedRace] = useState('');
@@ -74,8 +76,8 @@ function People () {
         'Lawful Good', 'Lawful Neutral', 'Neutral Evil', 'Neutral Good', 'True Neutral',];
 
     return (
-        <div>
-            <h1>People</h1>
+        <View>
+            <Text><People/></Text>
             <Dropdown 
                 options={Race} 
                 onChange={handleDropdown1Change} 
@@ -101,18 +103,36 @@ function People () {
                 onChange={handleDropdown5Change} 
                 label="Alignment"
             />
-            <div>
+            <View>
                 <p>Selected from Dropdown 1: {selectedRace}</p>
                 <p>Selected from Dropdown 2: {selectedClass}</p>
                 <p>Selected from Dropdown 2: {selectedAbility}</p>
                 <p>Selected from Dropdown 2: {selectedBackGround}</p>
                 <p>Selected from Dropdown 2: {selectedAlignment}</p>
-            </div>
+            </View>
 
              <button onClick={handleOutput}>Show Selected Options</button>
+             <DisplayPeopleInfo
+        race={selectedRace}
+        classType={selectedClass}
+        ability={selectedAbility}
+        background={selectedBackGround}
+        alignment={selectedAlignment}
+      />
 
-        </div>
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+});
 
 export default People;
