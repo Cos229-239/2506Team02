@@ -29,7 +29,7 @@ export default function SignInScreen({ navigation }) {
       <Text style={styles.title}>Loot & Lore</Text>
 
       <Image
-        source={require('../assets/logo.png')} // Path matches your asset
+        source={require('../assets/logo.png')} 
         style={styles.logo}
       />
 
