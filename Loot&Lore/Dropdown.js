@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Dropdown({ options, onChange, label }) {
+export function Dropdown({ options, onChange, label }) {
   return (
-    <div>
+    <View>
       <label>{label}</label>
       <select onChange={onChange}>
         {options.map((option, index) => (
@@ -11,7 +11,7 @@ function Dropdown({ options, onChange, label }) {
           </option>
         ))}
       </select>
-    </div>
+    </View>
   );
 }
 
