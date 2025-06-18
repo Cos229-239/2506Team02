@@ -71,6 +71,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Main" component={DrawerNavigator} />
         <Stack.Screen name="People" component={PeopleScreen} />
         <Stack.Screen name="CharacterDetails" component={CharacterDetailsScreen} />
+        <Stack.Screen name="Spells" component={SpellsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
