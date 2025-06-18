@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { COLORS } from './styles';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const Dropdown = ({ label, options, selectedValue, onChange }) => {
   const data = options.map((item) => ({ key: item, value: item }));

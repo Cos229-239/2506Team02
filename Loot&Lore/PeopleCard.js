@@ -1,31 +1,31 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { GLOBAL_STYLES, COLORS } from './styles';
 
-const PeopleCard = ({ route }) => {
-  const { character } = route.params;
 
+function DisplayPeopleInfo({ race, classType, level, background, alignment }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Generated Character</Text>
-      <Text>Race: {character.race}</Text>
-      <Text>Class: {character.class}</Text>
-      <Text>Level: {character.level}</Text>
-      <Text>Background: {character.background}</Text>
-      <Text>Alignment: {character.alignment}</Text>
+      <Text style={styles.header}>Selected Information</Text>
+      <Text>Race: {race}</Text>
+      <Text>Class: {classType}</Text>
+      <Text>Level: {level}</Text>
+      <Text>Background: {background}</Text>
+      <Text>Alignment: {alignment}</Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
-  title: {
-    fontSize: 24,
+  header: {
+    fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
 
-export default PeopleCard;
+export default DisplayPeopleInfo;
