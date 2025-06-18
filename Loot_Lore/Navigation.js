@@ -15,6 +15,7 @@ import PlaceholderScreen from './screens/PlaceHolderScreen';
 import PeopleScreen from './screens/PeopleScreen'
 import CharacterDetailsScreen from './screens/CharacterDetailsScreen'
 import HeaderMenuButton from './HeaderMenuButton';
+import SpellsScreen from './screens/SpellsScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -53,7 +54,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="People" component={PeopleScreen} />
       <Drawer.Screen name="Monsters" component={ChatScreen} />
       <Drawer.Screen name="Items" component={PlaceholderScreen} />
-      <Drawer.Screen name="Spells" component={PlaceholderScreen} />
+      <Drawer.Screen name="Spells" component={SpellsScreen} />
       <Drawer.Screen name="Other" component={PlaceholderScreen} />
       <Drawer.Screen name="CharacterDetails" component={CharacterDetailsScreen} />
     </Drawer.Navigator>
