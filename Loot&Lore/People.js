@@ -3,24 +3,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from './styles';
 
-export class People {
-  constructor({
-    name,
-    levels,
-    classes,
-    stats,
-    background,
-    alignment,
-  }) {
-    this.name = name;
-    this.levels = levels;
-    this.classes = classes;
-    this.stats = stats;
-    this.background = background;
-    this.alignment = alignment;
-  }
-}
-
 const DisplayPeopleInfo = ({ character }) => {
   if (!character) return null;
 
