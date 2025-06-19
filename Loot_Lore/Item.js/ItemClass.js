@@ -14,15 +14,4 @@ export class Item {
         this.description = description;
         this.lore = lore;
     }
-
-    displayItemData() {
-         return `
-        Name: ${this.name}
-        Type: ${this.type}
-        Rarity: ${this.rarity}
-        Stats: ${JSON.stringify(this.stats, null, 2)}
-        Description: ${this.description}
-        Lore: ${this.lore}
-      `;
-    }
 }

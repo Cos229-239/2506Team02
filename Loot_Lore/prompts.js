@@ -29,3 +29,29 @@ Requirements:
 
 Respond with **only the JSON object** and nothing else.
 `;
+
+export const ITEM_PROMPT = `
+You are an AI that returns JSON representing an RPG-style item. Given a description, respond ONLY with a valid JSON object that matches the following structure:
+{
+  "name": "string",
+  "type": "string", 
+  "rarity": "string", 
+  "stats": {
+    "strength": number, 
+    "dexterity": number,
+    "constitution": number, 
+    "intelligence": number,
+    "wisdom": number, 
+    "charisma": number
+    },
+    "description": "string",
+    "lore": "string"
+}
+
+Requirements:
+- The "description" must be a vivid and engaging paragraph of **at least 200 words**. Describe the item's appearance, magical properties, and any unique features that set it apart from ordinary items.
+- The "lore" must be a detailed narrative of **at least 300 words**, including the item's origin, historical significance, notable owners, and any legends or myths associated with it.
+- DO NOT include markdown, comments, or any text outside of the JSON object.
+- Make sure the JSON is **valid** and fully filled out.
+
+Respond with **only the JSON object** and nothing else.`;
