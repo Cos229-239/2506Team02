@@ -23,9 +23,11 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   if (!character || typeof character !== 'object') {
     return (
-      <View style={styles.container}>
+      <View style={styles.centeredContainer}>
         <Text style={styles.title}>No character data found.</Text>
-        <Button title="Go Back" onPress={() => navigation.goBack()} color={COLORS.button} />
+       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+                 <Text style={styles.buttonText}>Go Back</Text>
+               </TouchableOpacity>
       </View>
     );
   }
@@ -134,6 +136,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: COLORS.background,
   },
+  centeredContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 20,
+  backgroundColor: COLORS.background,
+},
   title: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -161,11 +170,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   backButton: {
+    color: COLORS.text,
     marginTop: 30,
     alignItems: 'center',
   },
   button: {
-  backgroundColor: COLORS.button, // Or your preferred color
+  backgroundColor: COLORS.button, 
   paddingVertical: 16,
   paddingHorizontal: 40,
   borderRadius: 8,
@@ -174,7 +184,7 @@ const styles = StyleSheet.create({
   alignItems: 'center',
 },
 buttonText: {
-  color: COLORS.textOnAccent || '#fff',
+  color: COLORS.text,
   fontSize: 16,
   fontWeight: 'bold',
   fontFamily: 'Aclonica',

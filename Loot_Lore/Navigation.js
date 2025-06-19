@@ -10,11 +10,14 @@ import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import HomeScreen from './screens/HomeScreen';
-import ChatScreen from './ChatScreen';
 import PlaceholderScreen from './screens/PlaceHolderScreen';
 import PeopleScreen from './screens/PeopleScreen'
 import CharacterDetailsScreen from './screens/CharacterDetailsScreen'
 import HeaderMenuButton from './HeaderMenuButton';
+import SpellsScreen from './screens/SpellsScreen';
+import SpellDetailsScreen from './screens/SpellDetailScreen'
+import MonsterScreen from './screens/MonsterScreen';
+import MonsterDetailsScreen from './screens/MonsterDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -51,11 +54,13 @@ function DrawerNavigator() {
     >
        <Drawer.Screen name="Main Menu" component={HomeScreen} />
       <Drawer.Screen name="People" component={PeopleScreen} />
-      <Drawer.Screen name="Monsters" component={ChatScreen} />
+      <Drawer.Screen name="Monsters" component={MonsterScreen} />
       <Drawer.Screen name="Items" component={PlaceholderScreen} />
-      <Drawer.Screen name="Spells" component={PlaceholderScreen} />
+      <Drawer.Screen name="Spells" component={SpellsScreen} />
       <Drawer.Screen name="Other" component={PlaceholderScreen} />
-      <Drawer.Screen name="CharacterDetails" component={CharacterDetailsScreen} />
+      <Drawer.Screen name="Character Details" component={CharacterDetailsScreen} />
+      <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
+      <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
     </Drawer.Navigator>
   );
 }
@@ -70,6 +75,10 @@ export default function AppNavigator() {
         <Stack.Screen name="Main" component={DrawerNavigator} />
         <Stack.Screen name="People" component={PeopleScreen} />
         <Stack.Screen name="CharacterDetails" component={CharacterDetailsScreen} />
+        <Stack.Screen name="Spells" component={SpellsScreen} />
+        <Stack.Screen name="Spell Details" component={SpellDetailsScreen} />
+        <Stack.Screen name="Monster Screen" component={MonsterScreen} />
+        <Stack.Screen name="Monster Details" component={MonsterDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
