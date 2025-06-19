@@ -74,15 +74,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{spell.name}</Text>
 
-      <Text style={styles.sectionTitle}>Description</Text>
-      <Text style={styles.text}>{spell.description}</Text>
-
-      <Text style={styles.sectionTitle}>Effects</Text>
-      {(spell.effects || []).map((effect, idx) => (
-        <Text key={idx} style={styles.text}>- {effect}</Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Spell Details</Text>
+       <Text style={styles.sectionTitle}>Spell Details</Text>
       <Text style={styles.text}>School: {spell.school}</Text>
       <Text style={styles.text}>Level: {spell.level}</Text>
       <Text style={styles.text}>Casting Time: {spell.castingTime}</Text>
@@ -93,6 +85,14 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <Text style={styles.text}>Verbal: {spell.components?.verbal ? 'Yes' : 'No'}</Text>
       <Text style={styles.text}>Somatic: {spell.components?.somatic ? 'Yes' : 'No'}</Text>
       <Text style={styles.text}>Material: {spell.components?.material || 'None'}</Text>
+
+      <Text style={styles.sectionTitle}>Description</Text>
+      <Text style={styles.text}>{spell.description}</Text>
+
+      <Text style={styles.sectionTitle}>Effects</Text>
+      {(spell.effects || []).map((effect, idx) => (
+        <Text key={idx} style={styles.text}>- {effect}</Text>
+      ))}
 
       <View style={styles.buttonRow}>
               <TouchableOpacity style={styles.button} onPress={handleSave}>

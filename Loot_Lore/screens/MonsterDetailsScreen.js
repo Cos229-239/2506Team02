@@ -39,7 +39,10 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
     return (
       `Name: ${monster.name}\n\n` +
-      `Type: ${monster.type}\nChallenge Rating: ${monster.challengeRating}\n\n` +
+      `Prompt Used:\n` +
+      `- Type: ${monster.promptType || 'N/A'}\n` +
+      `- Race: ${monster.promptRace || 'N/A'}\n` +
+      `- Challenge Rating: ${monster.promptChallengeRating || 'N/A'}\n\n` +
       `Stats:\nSTR: ${monster.stats.STR}\nDEX: ${monster.stats.DEX}\nCON: ${monster.stats.CON}\n` +
       `INT: ${monster.stats.INT}\nWIS: ${monster.stats.WIS}\nCHA: ${monster.stats.CHA}\n\n` +
       `Abilities:\n- ${abilities}\n\n` +
@@ -79,20 +82,14 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{monster.name}</Text>
 
-      <Text style={styles.sectionTitle}>Description</Text>
-      <Text style={styles.text}>{monster.shortDescription}</Text>
-
-      <Text style={styles.sectionTitle}>Lore</Text>
-      <Text style={styles.text}>{monster.lore}</Text>
+      <Text style={styles.sectionTitle}>Monster Details</Text>
+      <Text style={styles.text}>Type: {monster.promptType || 'N/A'}</Text>
+      <Text style={styles.text}>Race: {monster.promptRace || 'N/A'}</Text>
+      <Text style={styles.text}>Challenge Rating: {monster.promptChallengeRating || 'N/A'}</Text>
 
       <Text style={styles.sectionTitle}>Stats</Text>
       {Object.entries(monster.stats).map(([key, value]) => (
         <Text key={key} style={styles.text}>{`${key}: ${value}`}</Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Abilities</Text>
-      {monster.abilities.map((ab, i) => (
-        <Text key={`ability-${i}`} style={styles.text}>- {ab}</Text>
       ))}
 
       <Text style={styles.sectionTitle}>Attacks</Text>
@@ -104,6 +101,17 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       {monster.spells.map((sp, i) => (
         <Text key={`spell-${i}`} style={styles.text}>- {sp}</Text>
       ))}
+
+      <Text style={styles.sectionTitle}>Abilities</Text>
+      {monster.abilities.map((ab, i) => (
+        <Text key={`ability-${i}`} style={styles.text}>- {ab}</Text>
+      ))}
+
+      <Text style={styles.sectionTitle}>Description</Text>
+      <Text style={styles.text}>{monster.shortDescription}</Text>
+
+      <Text style={styles.sectionTitle}>Lore</Text>
+      <Text style={styles.text}>{monster.lore}</Text>
 
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.button} onPress={handleSave}>

@@ -26,9 +26,9 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.row}>
         <TouchableOpacity
           style={styles.menuButton}
-          onPress={() => handleNavigate('People')}
+          onPress={() => handleNavigate('Characters')}
         >
-          <Text style={styles.buttonText}>People</Text>
+          <Text style={styles.buttonText}>Characters</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

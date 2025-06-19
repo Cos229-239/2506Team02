@@ -53,14 +53,14 @@ function DrawerNavigator() {
       }}
     >
        <Drawer.Screen name="Main Menu" component={HomeScreen} />
-      <Drawer.Screen name="People" component={PeopleScreen} />
+      <Drawer.Screen name="Characters" component={PeopleScreen} />
       <Drawer.Screen name="Monsters" component={MonsterScreen} />
       <Drawer.Screen name="Items" component={PlaceholderScreen} />
       <Drawer.Screen name="Spells" component={SpellsScreen} />
       <Drawer.Screen name="Other" component={PlaceholderScreen} />
       <Drawer.Screen name="Character Details" component={CharacterDetailsScreen} />
-      <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
+      <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
     </Drawer.Navigator>
   );
 }

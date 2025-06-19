@@ -89,23 +89,23 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       <Text style={styles.text}>Background: {character.background}</Text>
       <Text style={styles.text}>Alignment: {character.alignment}</Text>
 
-      <Text style={styles.sectionTitle}>Personality</Text>
-      <Text style={styles.text}>{character.personality}</Text>
-
+      <Text style={styles.sectionTitle}>Stats</Text>
+      {Object.entries(character.stats || {}).map(([stat, value]) => (
+        <Text key={stat} style={styles.text}>
+          {stat}: {value}
+        </Text>
+      ))}
+      
       <Text style={styles.sectionTitle}>Backstory</Text>
       <Text style={styles.text}>{character.backstory}</Text>
+
+      <Text style={styles.sectionTitle}>Personality</Text>
+      <Text style={styles.text}>{character.personality}</Text>
 
       <Text style={styles.sectionTitle}>Traits & Abilities</Text>
       {(character.traits || []).map((trait, idx) => (
         <Text key={idx} style={styles.text}>
           - {trait}
-        </Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Stats</Text>
-      {Object.entries(character.stats || {}).map(([stat, value]) => (
-        <Text key={stat} style={styles.text}>
-          {stat}: {value}
         </Text>
       ))}
 

@@ -66,7 +66,13 @@ export default function MonsterScreen() {
 
       try {
         const parsed = JSON.parse(message);
-        navigation.navigate('Monster Details', { monster: parsed }); 
+        const enrichedMonster = {
+        ...parsed,
+        promptType: selectedType,
+        promptRace: selectedRace,
+        promptChallengeRating: selectedCR,
+      };
+navigation.navigate('Monster Details', { monster: enrichedMonster }); 
       } catch (parseErr) {
         console.error('JSON Parse Error:', parseErr);
         console.error('Raw response:', message);
