@@ -38,7 +38,7 @@ const handleOutput = async () => {
     return;
   }
 
-  setIsLoading(true); // start loading
+  setIsLoading(true); 
 
   const levelNumber = selectedLevel.replace("Level ", "");
 
@@ -96,7 +96,7 @@ const handleOutput = async () => {
     console.error("API request failed:", fetchErr);
     Alert.alert("Error", "Failed to fetch from OpenAI. Try again.");
   } finally {
-    setIsLoading(false); // end loading
+    setIsLoading(false); 
   }
 };
 
@@ -114,7 +114,7 @@ const handleOutput = async () => {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={80} // Adjust this if you have a header
+        keyboardVerticalOffset={80} 
       >
         <ScrollView
           contentContainerStyle={{

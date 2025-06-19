@@ -18,7 +18,7 @@ const Dropdown = ({ label, options, selectedValue, onChange }) => {
   data={data}
   save="value"
   selected={selectedValue}
-  defaultOption={selectedValue ? { value: selectedValue } : undefined} // ✅ this line
+  defaultOption={selectedValue ? { value: selectedValue } : undefined} 
   boxStyles={styles.box}
   dropdownStyles={styles.dropdown}
   inputStyles={styles.input}
