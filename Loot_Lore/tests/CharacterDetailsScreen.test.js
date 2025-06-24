@@ -28,7 +28,6 @@ import CharacterDetailsScreen from '../screens/CharacterDetailsScreen';
 import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Explicitly import Alert and Share to spy on them
 import { Alert } from 'react-native';
 import Share from 'react-native/Libraries/Share/Share';
 
