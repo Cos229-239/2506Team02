@@ -19,6 +19,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { MONSTER_CREATION_PROMPT } from '../prompts';
 import { GLOBAL_STYLES, COLORS } from '../styles';
 import monsterOptions from '../data/monsterOptions';
+import LoadingOverlay from './LoadingOverlay';
 
 export default function MonsterScreen() {
   const [selectedType, setSelectedType] = useState('');
@@ -89,6 +90,7 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
   const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR;
 
   return (
+    isLoading ? <LoadingOverlay /> :
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={GLOBAL_STYLES.screen}>
         <KeyboardAvoidingView
@@ -124,7 +126,7 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
                 disabled={isGenerateDisabled || isLoading}
               >
                 <Text style={styles.buttonText}>
-                  {isLoading ? 'Generating...' : 'Generate'}
+                  {'Generate'}
                 </Text>
               </TouchableOpacity>
             </View>
