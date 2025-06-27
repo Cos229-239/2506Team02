@@ -1,19 +1,3 @@
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    Alert: { alert: jest.fn() },
-  };
-});
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    Alert: { alert: jest.fn() }, 
-    Share: { share: jest.fn().mockResolvedValue({}) },
-  };
-});
-
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
