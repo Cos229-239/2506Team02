@@ -1,14 +1,36 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet
+} from 'react-native';
 import { GLOBAL_STYLES, COLORS } from '../styles';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 export default function ResetPasswordScreen({ navigation }) {
   const [input, setInput] = useState('');
 
-  const handleSendLink = () => {
-    console.log('Reset link sent to:', input);
-    navigation.goBack(); 
+  const handleSendLink = async () => {
+    const trimmedInput = input.trim().toLowerCase();
+
+    if (!trimmedInput || !trimmedInput.includes('@')) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, trimmedInput);
+      alert("✅ Password reset email sent! Please check your inbox.");
+      navigation.goBack();
+    } catch (error) {
+      console.error('Password reset error:', error.message);
+      alert("❌ Error: " + error.message);
+    }
   };
 
   return (
@@ -20,14 +42,15 @@ export default function ResetPasswordScreen({ navigation }) {
         style={styles.logo}
       />
 
-      <Text style={styles.label}>Enter your email or phone number</Text>
+      <Text style={styles.label}>Enter your email</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email or phone"
+        placeholder="Enter your email address"
         placeholderTextColor="#ccc"
         value={input}
         onChangeText={setInput}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleSendLink}>
@@ -57,7 +80,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   label: {
-  color: COLORS.text,
+    color: COLORS.text,
     fontSize: 16,
     marginBottom: 4,
     fontFamily: 'Aclonica',

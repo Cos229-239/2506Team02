@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types */ 
 import React, { useState } from 'react';
 import {
   View,
@@ -13,6 +13,9 @@ import {
   Platform,
 } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from '../styles';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth, db } from '../firebaseConfig';
+import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function SignUpScreen({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -23,127 +26,158 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignUp = () => {
-    console.log({
-      firstName,
-      lastName,
-      phone,
-      username,
-      email,
-      password,
-      confirmPassword,
-    });
-    navigation.navigate('Main');
+  const isUsernameTaken = async (usernameToCheck) => {
+    const normalized = usernameToCheck.trim().toLowerCase();
+    const q = query(collection(db, 'users'), where('username', '==', normalized));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  };
+
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    if (!username || username.trim() === '') {
+      alert("Please enter a valid username");
+      return;
+    }
+
+    try {
+      const taken = await isUsernameTaken(username);
+      if (taken) {
+        alert("Username already taken. Please choose another.");
+        return;
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const normalizedUsername = username.trim().toLowerCase();
+
+      await updateProfile(user, { displayName: normalizedUsername });
+
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email,
+        username: normalizedUsername,
+        firstName,
+        lastName,
+        phone,
+        createdAt: new Date().toISOString(),
+      });
+
+      console.log('✅ User signed up & saved:', user.uid);
+    } catch (error) {
+      console.error('Signup error:', error.message);
+      alert(error.message);
+    }
   };
 
   return (
     <SafeAreaView style={GLOBAL_STYLES.screen}>
-  <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    keyboardVerticalOffset={80} 
-  >
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-        paddingBottom: 40,
-      }}
-      keyboardShouldPersistTaps="handled"
-    >
-      <Text style={styles.title}>Loot & Lore</Text>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={80}
+      >
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 20,
+            paddingBottom: 40,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={styles.title}>Loot & Lore</Text>
+          <Image source={require('../assets/logo.png')} style={styles.logo} />
 
-      <Text style={styles.label}>First Name</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your first name"
-        placeholderTextColor="#ccc"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
+          <Text style={styles.label}>First Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your first name"
+            placeholderTextColor="#ccc"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
 
-      <Text style={styles.label}>Last Name</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your last name"
-        placeholderTextColor="#ccc"
-        value={lastName}
-        onChangeText={setLastName}
-      />
+          <Text style={styles.label}>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your last name"
+            placeholderTextColor="#ccc"
+            value={lastName}
+            onChangeText={setLastName}
+          />
 
-      <Text style={styles.label}>Phone Number</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter phone number"
-        placeholderTextColor="#ccc"
-        value={phone}
-        onChangeText={setPhone}
-        keyboardType="phone-pad"
-      />
+          <Text style={styles.label}>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter phone number"
+            placeholderTextColor="#ccc"
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType="phone-pad"
+          />
 
-      <Text style={styles.label}>Username</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter username"
-        placeholderTextColor="#ccc"
-        value={username}
-        onChangeText={setUsername}
-      />
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter username"
+            placeholderTextColor="#ccc"
+            value={username}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+          />
 
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter email"
-        placeholderTextColor="#ccc"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter email"
+            placeholderTextColor="#ccc"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
 
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter password"
-        placeholderTextColor="#ccc"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter password"
+            placeholderTextColor="#ccc"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
 
-      <Text style={styles.label}>Confirm Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm password"
-        placeholderTextColor="#ccc"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
+          <Text style={styles.label}>Confirm Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm password"
+            placeholderTextColor="#ccc"
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
 
-      <TouchableOpacity style={styles.primaryButton} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Create Account</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.primaryButton} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Create Account</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backToSignIn}>
-        <Text style={styles.backToSignInText}>Already have an account? Sign In</Text>
-      </TouchableOpacity>
-    </ScrollView>
-    </KeyboardAvoidingView>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backToSignIn}>
+            <Text style={styles.backToSignInText}>Already have an account? Sign In</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    ...GLOBAL_STYLES.screen,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    paddingBottom: 40,
-  },
   title: {
     color: COLORS.text,
     fontSize: 32,

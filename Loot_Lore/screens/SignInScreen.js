@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types */ 
 import React, { useState } from 'react';
 import {
   View,
@@ -9,37 +9,61 @@ import {
   StyleSheet,
 } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from '../styles';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebaseConfig';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function SignInScreen({ navigation }) {
-  const [email, setEmail] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    navigation.replace('Main');
-    console.log('Main Menu tapped');
+  const handleLogin = async () => {
+    try {
+      let loginEmail = emailOrUsername;
+
+      if (!emailOrUsername.includes('@')) {
+        // Assume username, find email
+        const q = query(collection(db, 'users'), where('username', '==', emailOrUsername));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          throw new Error('Username not found.');
+        }
+
+        if (snapshot.docs.length > 1) {
+          throw new Error('Multiple users found with that username.');
+        }
+
+        const userData = snapshot.docs[0].data();
+        loginEmail = userData.email;
+      }
+
+      await signInWithEmailAndPassword(auth, loginEmail, password);
+      console.log('✅ Logged in as', loginEmail);
+    } catch (error) {
+      console.error('Login error:', error.message);
+      alert(error.message);
+    }
   };
 
   const handleSignUp = () => {
-     navigation.navigate('SignUpScreen');
-    console.log('Sign Up tapped');
+    navigation.navigate('SignUpScreen');
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Loot & Lore</Text>
 
-      <Image
-        source={require('../assets/logo.png')} 
-        style={styles.logo}
-      />
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
 
-      <Text style={styles.label}>Username or email</Text>
+      <Text style={styles.label}>Username or Email</Text>
       <TextInput
         style={styles.input}
         placeholder="Type your username or e-mail"
         placeholderTextColor="#ccc"
-        value={email}
-        onChangeText={setEmail}
+        value={emailOrUsername}
+        onChangeText={setEmailOrUsername}
+        autoCapitalize="none"
       />
 
       <Text style={styles.label}>Password</Text>
@@ -53,10 +77,10 @@ export default function SignInScreen({ navigation }) {
       />
 
       <View style={styles.forgotContainer}>
-  <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
-    <Text style={styles.forgot}>FORGOT PASSWORD</Text>
-  </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
+          <Text style={styles.forgot}>FORGOT PASSWORD</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.secondaryButton} onPress={handleSignUp}>
@@ -98,7 +122,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     fontSize: 16,
     color: '#000',
-  }, 
+  },
   label: {
     color: COLORS.text,
     fontSize: 16,
@@ -108,10 +132,10 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   forgotContainer: {
-  width: '100%',
-  alignItems: 'flex-end',
-  marginTop: 4,
-  marginBottom: 10,
+    width: '100%',
+    alignItems: 'flex-end',
+    marginTop: 4,
+    marginBottom: 10,
   },
   forgot: {
     color: COLORS.text,
@@ -132,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   secondaryButton: {
-    backgroundColor: COLORS.button, 
+    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     flex: 1,
