@@ -20,7 +20,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import DisplayItemsInfo from './Items';
 import { ITEM_CREATION_PROMPT } from './prompts';
 import { GLOBAL_STYLES, COLORS } from './styles';
-import itemOptions from './data/itemOptions';
+import itemOptions from './data/itemOptions'
 import LoadingOverlay from './LoadingOverlay';
 export default function ItemScreen() { 
   const navigation = useNavigation();   

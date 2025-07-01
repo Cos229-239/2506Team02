@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "expo": "^53.0.13",
+    "expo": "^53.0.15",
     "expo-auth-session": "~6.2.0",
     "expo-web-browser": "~14.2.0",
     "react-native": "^0.79.4",
