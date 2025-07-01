@@ -33,19 +33,14 @@ Respond with **only the JSON object** and nothing else.
 export const ITEM_PROMPT = `
 You are an AI that returns JSON representing an RPG-style item. Given a description, respond ONLY with a valid JSON object that matches the following structure:
 {
-  "name": "string",
-  "type": "string", 
-  "rarity": "string", 
-  "stats": {
-    "strength": number, 
-    "dexterity": number,
-    "constitution": number, 
-    "intelligence": number,
-    "wisdom": number, 
-    "charisma": number
-    },
-    "description": "string",
-    "lore": "string"
+  "name": "Item Name",
+  "description": "A vivid, immersive item description (1-2 paragraphs)...",
+  
+  "Item": "\${item.itemType}",
+  "MagicItem": \${MagicItem},
+  "damageType": "\${item.damageType}",
+  "damage": "\${item.damage}",
+  "properties": "\${item.properties}"
 }
 
 Requirements:

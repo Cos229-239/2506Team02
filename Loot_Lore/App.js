@@ -1,7 +1,7 @@
 import React from 'react';
-import ChatScreen from './ChatScreen';
+import ItemsScreen from './ItemsScreen';
 
 export default function App() {
-  return ( <ChatScreen/> );
+  return ( <ItemsScreen/> );
 }
 
