@@ -21,7 +21,7 @@ import DisplaySpellInfo from '../Spells';
 import { SPELL_CREATION_PROMPT } from '../prompts';
 import { GLOBAL_STYLES, COLORS } from '../styles';
 import spellOptions from '../data/spellOptions';
-
+import LoadingOverlay from './LoadingOverlay';
 export default function SpellsScreen() { 
   const navigation = useNavigation();   
   const [selectedSpellType, setSelectedSpellType] = useState('');
@@ -110,6 +110,7 @@ const [isLoading, setIsLoading] = useState(false);
   const isGenerateDisabled = !selectedSpellType || !selectedSpellLevel || !selectedCastingTime || !selectedDuration || !selectedRangeArea;
 
   return (
+        isLoading ? <LoadingOverlay /> :
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={GLOBAL_STYLES.screen}>
         <KeyboardAvoidingView
@@ -151,9 +152,7 @@ const [isLoading, setIsLoading] = useState(false);
   style={[styles.generateButton, (isGenerateDisabled || isLoading) && { opacity: 0.5 }]}
   disabled={isGenerateDisabled || isLoading}
 >
-  <Text style={styles.buttonText}>
-    {isLoading ? 'Generating...' : 'Generate'}
-  </Text>
+  <Text style={styles.buttonText}>Generate</Text>
 </TouchableOpacity>
             </View>
 

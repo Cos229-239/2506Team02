@@ -18,6 +18,7 @@ import { CHARACTER_CREATION_PROMPT } from '../prompts';
 import DisplayPeopleInfo from '../People';
 import { GLOBAL_STYLES, COLORS } from '../styles';
 import peopleOptions from '../data/peopleOptions';
+import LoadingOverlay from './LoadingOverlay';
 
 export default function PeopleScreen() { 
   const navigation = useNavigation();   
@@ -110,6 +111,7 @@ const handleOutput = async () => {
   };
 
   return (
+        isLoading ? <LoadingOverlay /> :
      <SafeAreaView style={GLOBAL_STYLES.screen}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -154,9 +156,7 @@ const handleOutput = async () => {
         style={[styles.generateButton, (isGenerateDisabled || isLoading) && { opacity: 0.5 }]}
         disabled={isGenerateDisabled || isLoading}
         >
-  <Text style={styles.buttonText}>
-    {isLoading ? 'Generating...' : 'Generate'}
-  </Text>
+  <Text style={styles.buttonText}>Generate</Text>
 </TouchableOpacity>
       </View>
 
