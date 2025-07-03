@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// MonsterDetailsScreen.js
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -14,6 +13,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
+import ImageGenerator from '../ImageGenerator'
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
@@ -98,6 +98,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <ImageGenerator prompt={editableMonster.shortDescription} />
       {isEditing ? (
         <TextInput
           style={styles.inputTitle}

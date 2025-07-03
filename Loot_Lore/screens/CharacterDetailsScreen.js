@@ -13,6 +13,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
+import ImageGenerator from '../ImageGenerator';
 
 export default function CharacterDetailsScreen({ route, navigation }) {
   const initialCharacter = route.params?.character || null;
@@ -86,6 +87,8 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+    <ImageGenerator prompt={character.race + character.backstory } />
+      
       <Text style={styles.title}>{character.name}</Text>
 
       <Text style={styles.sectionTitle}>Basic Info</Text>

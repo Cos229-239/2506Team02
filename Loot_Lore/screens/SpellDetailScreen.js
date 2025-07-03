@@ -13,6 +13,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
+import ImageGenerator from '../ImageGenerator';
 
 export default function SpellDetailsScreen({ route, navigation }) {
   const { spell } = route.params || {};
@@ -93,6 +94,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <ImageGenerator prompt= {editableSpell.name + editableSpell.description} />
       {isEditing ? (
         <TextInput
           style={styles.input}
