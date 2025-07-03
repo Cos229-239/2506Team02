@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types */ 
 // MonsterDetailsScreen.js
 import React, { useEffect, useState } from 'react';
 import {
@@ -45,7 +45,9 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       `Prompt Used:\n` +
       `- Type: ${editableMonster.promptType || 'N/A'}\n` +
       `- Race: ${editableMonster.promptRace || 'N/A'}\n` +
-      `- Challenge Rating: ${editableMonster.promptChallengeRating || 'N/A'}\n\n` +
+      `- Challenge Rating: ${editableMonster.promptChallengeRating || 'N/A'}\n` +
+      `- Size: ${editableMonster.promptSize || 'N/A'}\n` +
+      `- Alignment: ${editableMonster.promptAlignment || 'N/A'}\n\n` +
       `Stats:\nSTR: ${editableMonster.stats.STR}\nDEX: ${editableMonster.stats.DEX}\nCON: ${editableMonster.stats.CON}\n` +
       `INT: ${editableMonster.stats.INT}\nWIS: ${editableMonster.stats.WIS}\nCHA: ${editableMonster.stats.CHA}\n\n` +
       `Abilities:\n- ${abilities}\n\n` +
@@ -130,12 +132,26 @@ export default function MonsterDetailsScreen({ route, navigation }) {
             onChangeText={(text) => updateField('promptChallengeRating', text)}
             placeholder="Challenge Rating"
           />
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptSize}
+            onChangeText={(text) => updateField('promptSize', text)}
+            placeholder="Size"
+          />
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptAlignment}
+            onChangeText={(text) => updateField('promptAlignment', text)}
+            placeholder="Alignment"
+          />
         </>
       ) : (
         <>
           <Text style={styles.text}>Type: {editableMonster.promptType || 'N/A'}</Text>
           <Text style={styles.text}>Race: {editableMonster.promptRace || 'N/A'}</Text>
           <Text style={styles.text}>Challenge Rating: {editableMonster.promptChallengeRating || 'N/A'}</Text>
+          <Text style={styles.text}>Size: {editableMonster.promptSize || 'N/A'}</Text>
+          <Text style={styles.text}>Alignment: {editableMonster.promptAlignment || 'N/A'}</Text>
         </>
       )}
 

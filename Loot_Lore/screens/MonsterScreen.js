@@ -25,6 +25,8 @@ export default function MonsterScreen() {
   const [selectedType, setSelectedType] = useState('');
   const [selectedRace, setSelectedRace] = useState('');
   const [selectedCR, setSelectedCR] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedAlignment, setSelectedAlignment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
@@ -33,17 +35,19 @@ export default function MonsterScreen() {
     setSelectedType('');
     setSelectedRace('');
     setSelectedCR('');
+    setSelectedSize('');
+    setSelectedAlignment('');
   };
 
   const handleGenerate = async () => {
-    if (!selectedType || !selectedRace || !selectedCR) {
+    if (!selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment) {
       Alert.alert('Missing Info', 'Please select all options before generating.');
       return;
     }
 
     setIsLoading(true);
 
-    const monsterRequest = `Create a ${selectedRace} of type ${selectedType} with challenge rating ${selectedCR}.`;
+    const monsterRequest = `Create a ${selectedRace} of type ${selectedType} with challenge rating ${selectedCR}, size ${selectedSize}, and alignment ${selectedAlignment}.`;
 
     try {
       const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -68,12 +72,14 @@ export default function MonsterScreen() {
       try {
         const parsed = JSON.parse(message);
         const enrichedMonster = {
-        ...parsed,
-        promptType: selectedType,
-        promptRace: selectedRace,
-        promptChallengeRating: selectedCR,
-      };
-navigation.navigate('Monster Details', { monster: enrichedMonster }); 
+          ...parsed,
+          promptType: selectedType,
+          promptRace: selectedRace,
+          promptChallengeRating: selectedCR,
+          promptSize: selectedSize,
+          promptAlignment: selectedAlignment,
+        };
+        navigation.navigate('Monster Details', { monster: enrichedMonster }); 
       } catch (parseErr) {
         console.error('JSON Parse Error:', parseErr);
         console.error('Raw response:', message);
@@ -87,7 +93,7 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
     }
   };
 
-  const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR;
+  const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
   return (
     isLoading ? <LoadingOverlay /> :
@@ -108,13 +114,21 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
             </View>
 
             <Text style={styles.label}>Monster Type</Text>
-           <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
 
             <Text style={styles.label}>Race</Text>
-            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race"boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
 
             <Text style={styles.label}>Challenge Rating</Text>
             <SelectList setSelected={setSelectedCR} data={monsterOptions.crOptions} placeholder="CR" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            {/* New Size Dropdown */}
+            <Text style={styles.label}>Size</Text>
+            <SelectList setSelected={setSelectedSize} data={monsterOptions.sizeOptions} placeholder="Size" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            {/* New Alignment Dropdown */}
+            <Text style={styles.label}>Alignment</Text>
+            <SelectList setSelected={setSelectedAlignment} data={monsterOptions.alignments} placeholder="Alignment" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
@@ -125,9 +139,7 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
                 style={[styles.generateButton, isGenerateDisabled && { opacity: 0.5 }]}
                 disabled={isGenerateDisabled || isLoading}
               >
-                <Text style={styles.buttonText}>
-                  {'Generate'}
-                </Text>
+                <Text style={styles.buttonText}>Generate</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
