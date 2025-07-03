@@ -32,7 +32,7 @@ export default function MonsterScreen() {
   const handleClear = () => {
     setSelectedType('');
     setSelectedRace('');
-    setSelectedCR('');
+    setSelectedCR('');X
   };
 
   const handleGenerate = async () => {
