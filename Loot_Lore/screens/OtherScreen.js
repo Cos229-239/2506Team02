@@ -14,7 +14,6 @@ export default function HomeScreen({ navigation }) {
       console.error('Sign out error:', error.message);
     }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome!</Text>
