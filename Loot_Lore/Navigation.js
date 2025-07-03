@@ -18,6 +18,7 @@ import SpellsScreen from './screens/SpellsScreen';
 import SpellDetailsScreen from './screens/SpellDetailScreen'
 import MonsterScreen from './screens/MonsterScreen';
 import MonsterDetailsScreen from './screens/MonsterDetailsScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -57,7 +58,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Monsters" component={MonsterScreen} />
       <Drawer.Screen name="Items" component={PlaceholderScreen} />
       <Drawer.Screen name="Spells" component={SpellsScreen} />
-      <Drawer.Screen name="Other" component={PlaceholderScreen} />
+      <Drawer.Screen name="Other" component={SettingsScreen} />
       <Drawer.Screen name="Character Details" component={CharacterDetailsScreen} />
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
@@ -79,6 +80,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Spell Details" component={SpellDetailsScreen} />
         <Stack.Screen name="Monster Screen" component={MonsterScreen} />
         <Stack.Screen name="Monster Details" component={MonsterDetailsScreen} />
+        <Stack.Screen name="Other" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
