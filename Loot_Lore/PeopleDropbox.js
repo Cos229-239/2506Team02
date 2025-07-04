@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
-import DisplayPeopleInfo from './People'; // Character card display
-import { COLORS } from './styles';
+import DisplayPeopleInfo from './People';
+import { ThemeContext } from './ThemeContext';
+import { THEMES } from './styles';
 
 export default function PeopleDropbox() {
+  const { theme } = useContext(ThemeContext);
+  const colors = THEMES[theme] || THEMES.default;
+
   const [selectedRace, setSelectedRace] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
@@ -199,30 +203,65 @@ export default function PeopleDropbox() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>People</Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>People</Text>
 
-      <Text style={styles.label}>Races</Text>
-      <SelectList setSelected={setSelectedRace} data={dropdownData.races} placeholder="Races" boxStyles={styles.dropdown} />
+      <Text style={[styles.label, { color: colors.text }]}>Races</Text>
+      <SelectList
+        setSelected={setSelectedRace}
+        data={dropdownData.races}
+        placeholder="Races"
+        boxStyles={[styles.dropdown, { backgroundColor: colors.button }]}
+        inputStyles={{ color: colors.inputText }}
+        dropdownTextStyles={{ color: colors.inputText }}
+      />
 
-      <Text style={styles.label}>Classes</Text>
-      <SelectList setSelected={setSelectedClass} data={dropdownData.classes} placeholder="Classes" boxStyles={styles.dropdown} />
+      <Text style={[styles.label, { color: colors.text }]}>Classes</Text>
+      <SelectList
+        setSelected={setSelectedClass}
+        data={dropdownData.classes}
+        placeholder="Classes"
+        boxStyles={[styles.dropdown, { backgroundColor: colors.button }]}
+        inputStyles={{ color: colors.inputText }}
+        dropdownTextStyles={{ color: colors.inputText }}
+      />
 
-      <Text style={styles.label}>Level</Text>
-      <SelectList setSelected={setSelectedLevel} data={dropdownData.levels} placeholder="Level" boxStyles={styles.dropdown} />
+      <Text style={[styles.label, { color: colors.text }]}>Level</Text>
+      <SelectList
+        setSelected={setSelectedLevel}
+        data={dropdownData.levels}
+        placeholder="Level"
+        boxStyles={[styles.dropdown, { backgroundColor: colors.button }]}
+        inputStyles={{ color: colors.inputText }}
+        dropdownTextStyles={{ color: colors.inputText }}
+      />
 
-      <Text style={styles.label}>Backgrounds</Text>
-      <SelectList setSelected={setSelectedBackground} data={dropdownData.backgrounds} placeholder="Backgrounds" boxStyles={styles.dropdown} />
+      <Text style={[styles.label, { color: colors.text }]}>Backgrounds</Text>
+      <SelectList
+        setSelected={setSelectedBackground}
+        data={dropdownData.backgrounds}
+        placeholder="Backgrounds"
+        boxStyles={[styles.dropdown, { backgroundColor: colors.button }]}
+        inputStyles={{ color: colors.inputText }}
+        dropdownTextStyles={{ color: colors.inputText }}
+      />
 
-      <Text style={styles.label}>Alignment</Text>
-      <SelectList setSelected={setSelectedAlignment} data={dropdownData.alignments} placeholder="Alignment" boxStyles={styles.dropdown} />
+      <Text style={[styles.label, { color: colors.text }]}>Alignment</Text>
+      <SelectList
+        setSelected={setSelectedAlignment}
+        data={dropdownData.alignments}
+        placeholder="Alignment"
+        boxStyles={[styles.dropdown, { backgroundColor: colors.button }]}
+        inputStyles={{ color: colors.inputText }}
+        dropdownTextStyles={{ color: colors.inputText }}
+      />
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-          <Text style={styles.buttonText}>Clear</Text>
+        <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: colors.button }]}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Clear</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleOutput} style={styles.generateButton}>
-          <Text style={styles.buttonText}>Generate</Text>
+        <TouchableOpacity onPress={handleOutput} style={[styles.generateButton, { backgroundColor: colors.button }]}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Generate</Text>
         </TouchableOpacity>
       </View>
 
@@ -233,25 +272,22 @@ export default function PeopleDropbox() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#4b2e00',
     flex: 1,
     padding: 20,
   },
   title: {
     fontSize: 32,
-    color: '#f4a300',
     fontWeight: 'bold',
     marginBottom: 20,
     alignSelf: 'center',
   },
   label: {
-    color: '#f4a300',
     fontSize: 20,
     marginVertical: 5,
   },
   dropdown: {
-    backgroundColor: '#fff',
     marginBottom: 10,
+    borderRadius: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -259,21 +295,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   clearButton: {
-    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginRight: 10,
   },
   generateButton: {
-    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginLeft: 10,
   },
   buttonText: {
-    color: COLORS.text,
     textAlign: 'center',
     fontWeight: 'bold',
   },

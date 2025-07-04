@@ -1,15 +1,24 @@
+// ThemeContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('default');
+  const [theme, setTheme] = useState(undefined); // start undefined
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const storedTheme = await AsyncStorage.getItem('appTheme');
-      if (storedTheme) setTheme(storedTheme);
+      try {
+        const storedTheme = await AsyncStorage.getItem('appTheme');
+        setTheme(storedTheme || 'default'); // always set a fallback
+      } catch (err) {
+        console.warn('Failed to load theme from storage:', err);
+        setTheme('default');
+      } finally {
+        setIsReady(true);
+      }
     })();
   }, []);
 
@@ -17,6 +26,8 @@ export const ThemeProvider = ({ children }) => {
     setTheme(newTheme);
     await AsyncStorage.setItem('appTheme', newTheme);
   };
+
+  if (!isReady || !theme) return null; // or return a loading screen
 
   return (
     <ThemeContext.Provider value={{ theme, changeTheme }}>

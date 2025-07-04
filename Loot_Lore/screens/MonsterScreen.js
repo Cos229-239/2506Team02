@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,8 @@ import { useNavigation } from '@react-navigation/native';
 import { OPENAI_API_KEY } from '@env';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { MONSTER_CREATION_PROMPT } from '../prompts';
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { getGlobalStyles, THEMES } from '../styles';
+import { ThemeContext } from '../ThemeContext';
 import monsterOptions from '../data/monsterOptions';
 import LoadingOverlay from './LoadingOverlay';
 
@@ -28,6 +29,9 @@ export default function MonsterScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
+  const { theme } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const themeColors = THEMES[theme];
 
   const handleClear = () => {
     setSelectedType('');
@@ -68,12 +72,12 @@ export default function MonsterScreen() {
       try {
         const parsed = JSON.parse(message);
         const enrichedMonster = {
-        ...parsed,
-        promptType: selectedType,
-        promptRace: selectedRace,
-        promptChallengeRating: selectedCR,
-      };
-navigation.navigate('Monster Details', { monster: enrichedMonster }); 
+          ...parsed,
+          promptType: selectedType,
+          promptRace: selectedRace,
+          promptChallengeRating: selectedCR,
+        };
+        navigation.navigate('Monster Details', { monster: enrichedMonster });
       } catch (parseErr) {
         console.error('JSON Parse Error:', parseErr);
         console.error('Raw response:', message);
@@ -89,10 +93,11 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
 
   const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR;
 
-  return (
-    isLoading ? <LoadingOverlay /> :
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={GLOBAL_STYLES.screen}>
+      <SafeAreaView style={globalStyles.screen}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -103,31 +108,63 @@ navigation.navigate('Monster Details', { monster: enrichedMonster });
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.header}>
-              <Text style={styles.title}>Loot & Lore</Text>
+              <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
               <Image source={require('../assets/logo.png')} style={styles.logo} />
             </View>
 
-            <Text style={styles.label}>Monster Type</Text>
-           <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <Text style={[styles.label, { color: themeColors.text }]}>Monster Type</Text>
+            <SelectList
+              setSelected={setSelectedType}
+              data={monsterOptions.typeOptions}
+              placeholder="Monster Type"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
-            <Text style={styles.label}>Race</Text>
-            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race"boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <Text style={[styles.label, { color: themeColors.text }]}>Race</Text>
+            <SelectList
+              setSelected={setSelectedRace}
+              data={monsterOptions.raceOptions}
+              placeholder="Race"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
-            <Text style={styles.label}>Challenge Rating</Text>
-            <SelectList setSelected={setSelectedCR} data={monsterOptions.crOptions} placeholder="CR" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <Text style={[styles.label, { color: themeColors.text }]}>Challenge Rating</Text>
+            <SelectList
+              setSelected={setSelectedCR}
+              data={monsterOptions.crOptions}
+              placeholder="CR"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-                <Text style={styles.buttonText}>Clear</Text>
+              <TouchableOpacity
+                onPress={handleClear}
+                style={[styles.clearButton, { backgroundColor: themeColors.button }]}
+              >
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>Clear</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleGenerate}
-                style={[styles.generateButton, isGenerateDisabled && { opacity: 0.5 }]}
+                style={[
+                  styles.generateButton,
+                  { backgroundColor: themeColors.button },
+                  isGenerateDisabled && { opacity: 0.5 },
+                ]}
                 disabled={isGenerateDisabled || isLoading}
               >
-                <Text style={styles.buttonText}>
-                  {'Generate'}
-                </Text>
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>Generate</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -149,7 +186,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    color: COLORS.text,
     fontSize: 32,
     fontFamily: 'Aclonica',
     marginTop: 20,
@@ -162,29 +198,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    color: '#f4a300',
     fontSize: 20,
     marginVertical: 5,
   },
   dropdown: {
-    backgroundColor: COLORS.button,
-    borderColor: '#f4a300',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
   },
   dropdownInput: {
-    color: '#000000',
+    fontFamily: 'Aclonica',
   },
   dropdownList: {
-    backgroundColor: COLORS.button,
-    borderColor: '#f4a300',
+    borderWidth: 1,
   },
   dropdownItem: {
-    borderBottomColor: '#f4a300',
+    borderBottomWidth: 1,
   },
   dropdownText: {
-    color: '#000000',
+    fontFamily: 'Aclonica',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -195,22 +227,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   clearButton: {
-    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginRight: 10,
+    alignItems: 'center',
   },
   generateButton: {
-    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginLeft: 10,
+    alignItems: 'center',
   },
   buttonText: {
-    color: COLORS.text,
     textAlign: 'center',
     fontWeight: 'bold',
+    fontFamily: 'Aclonica',
   },
 });

@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -7,16 +6,21 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { ThemeContext } from '../ThemeContext';
+import { getGlobalStyles, THEMES } from '../styles';
 
 export default function HomeScreen({ navigation }) {
+  const { theme } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const themeColors = THEMES[theme];
+
   const handleNavigate = (screenName) => {
     navigation.navigate(screenName);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Loot & Lore</Text>
+    <View style={[globalStyles.screen, styles.container]}>
+      <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
 
       <Image
         source={require('../assets/logo.png')}
@@ -25,41 +29,41 @@ export default function HomeScreen({ navigation }) {
 
       <View style={styles.row}>
         <TouchableOpacity
-          style={styles.menuButton}
+          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
           onPress={() => handleNavigate('Characters')}
         >
-          <Text style={styles.buttonText}>Characters</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Characters</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.menuButton}
+          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
           onPress={() => handleNavigate('Monsters')}
         >
-          <Text style={styles.buttonText}>Monsters</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Monsters</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.row}>
         <TouchableOpacity
-          style={styles.menuButton}
+          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
           onPress={() => handleNavigate('Items')}
         >
-          <Text style={styles.buttonText}>Items</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Items</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.menuButton}
+          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
           onPress={() => handleNavigate('Spells')}
         >
-          <Text style={styles.buttonText}>Spells</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Spells</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
-        style={[styles.centeredButton]}
+        style={[styles.centeredButton, { backgroundColor: themeColors.button }]}
         onPress={() => handleNavigate('Other')}
       >
-        <Text style={styles.buttonText}>Other</Text>
+        <Text style={[styles.buttonText, { color: themeColors.text }]}>Other</Text>
       </TouchableOpacity>
     </View>
   );
@@ -67,13 +71,11 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    ...GLOBAL_STYLES.screen,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 20,
   },
   title: {
-    color: COLORS.text,
     fontSize: 32,
     fontFamily: 'Aclonica',
     marginTop: 20,
@@ -94,7 +96,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   menuButton: {
-    backgroundColor: COLORS.button,
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 8,
@@ -103,7 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   centeredButton: {
-    backgroundColor: COLORS.button,
     paddingVertical: 16,
     paddingHorizontal: 65,
     borderRadius: 8,
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonText: {
-    color: COLORS.text,
     fontSize: 18,
     fontFamily: 'Aclonica',
   },

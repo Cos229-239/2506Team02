@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,16 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { ThemeContext } from '../ThemeContext';
+import { getGlobalStyles, THEMES } from '../styles';
 
 export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { theme } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const colors = THEMES[theme];
 
   const handleLogin = () => {
     navigation.replace('Main');
@@ -20,51 +25,63 @@ export default function SignInScreen({ navigation }) {
   };
 
   const handleSignUp = () => {
-     navigation.navigate('SignUpScreen');
+    navigation.navigate('SignUpScreen');
     console.log('Sign Up tapped');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Loot & Lore</Text>
+    <View style={[globalStyles.screen, styles.container]}>
+      <Text style={[styles.title, { color: colors.text }]}>Loot & Lore</Text>
 
       <Image
-        source={require('../assets/logo.png')} 
+        source={require('../assets/logo.png')}
         style={styles.logo}
       />
 
-      <Text style={styles.label}>Username or email</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Username or email</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: colors.inputBackground, color: colors.inputText },
+        ]}
         placeholder="Type your username or e-mail"
-        placeholderTextColor="#ccc"
+        placeholderTextColor={colors.placeholder}
         value={email}
         onChangeText={setEmail}
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Password</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: colors.inputBackground, color: colors.inputText },
+        ]}
         placeholder="Type your password"
-        placeholderTextColor="#ccc"
+        placeholderTextColor={colors.placeholder}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
 
       <View style={styles.forgotContainer}>
-  <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
-    <Text style={styles.forgot}>FORGOT PASSWORD</Text>
-  </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
+          <Text style={[styles.forgot, { color: colors.text }]}>FORGOT PASSWORD</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.secondaryButton} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+        <TouchableOpacity
+          style={[styles.secondaryButton, { backgroundColor: colors.button }]}
+          onPress={handleSignUp}
+        >
+          <Text style={[styles.buttonText, { color: colors.text }]}>Sign Up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
+        <TouchableOpacity
+          style={[styles.primaryButton, { backgroundColor: colors.button }]}
+          onPress={handleLogin}
+        >
+          <Text style={[styles.buttonText, { color: colors.text }]}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -73,13 +90,11 @@ export default function SignInScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    ...GLOBAL_STYLES.screen,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   title: {
-    color: COLORS.text,
     fontSize: 32,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -92,15 +107,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    backgroundColor: '#fff',
     borderRadius: 6,
     padding: 12,
     marginVertical: 8,
     fontSize: 16,
-    color: '#000',
-  }, 
+  },
   label: {
-    color: COLORS.text,
     fontSize: 16,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -108,13 +120,12 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   forgotContainer: {
-  width: '100%',
-  alignItems: 'flex-end',
-  marginTop: 4,
-  marginBottom: 10,
+    width: '100%',
+    alignItems: 'flex-end',
+    marginTop: 4,
+    marginBottom: 10,
   },
   forgot: {
-    color: COLORS.text,
     textDecorationLine: 'underline',
     fontSize: 14,
     fontWeight: 'bold',
@@ -125,21 +136,18 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   primaryButton: {
-    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     flex: 1,
     alignItems: 'center',
   },
   secondaryButton: {
-    backgroundColor: COLORS.button, 
     padding: 12,
     borderRadius: 6,
     flex: 1,
     alignItems: 'center',
   },
   buttonText: {
-    color: COLORS.text,
     fontFamily: 'Aclonica',
     fontSize: 16,
   },

@@ -3,27 +3,38 @@ import { StyleSheet } from 'react-native';
 
 export const THEMES = {
   default: {
-    button: '#944C17',
-    text: '#E59F34',
     background: '#3B291C',
+    text: '#E59F34',
+    button: '#944C17',
+    inputBackground: '#fff',
+    inputText: '#000',
+    placeholder: '#ccc',
   },
   light: {
-    button: '#DD8B41',
-    text: '#333',
     background: '#FAFAFA',
+    text: '#333',
+    button: '#DD8B41',
+    inputBackground: '#fff',
+    inputText: '#000',
+    placeholder: '#aaa',
   },
   dark: {
-    button: '#222',
-    text: '#DDD',
     background: '#000',
+    text: '#DDD',
+    button: '#222',
+    inputBackground: '#1a1a1a',
+    inputText: '#fff',
+    placeholder: '#666',
   },
 };
 
-export const getGlobalStyles = (theme = 'default') =>
-  StyleSheet.create({
+export const getGlobalStyles = (theme = 'default') => {
+  const colors = THEMES[theme] || THEMES.default;
+
+  return StyleSheet.create({
     screen: {
       flex: 1,
-      backgroundColor: THEMES[theme].background,
+      backgroundColor: colors.background,
       padding: 10,
     },
     input: {
@@ -33,30 +44,30 @@ export const getGlobalStyles = (theme = 'default') =>
       marginBottom: 10,
       minHeight: 60,
       textAlignVertical: 'top',
-      color: THEMES[theme].text,
+      color: colors.text,
       fontFamily: 'Aclonica',
     },
     button: {
-      backgroundColor: THEMES[theme].button,
+      backgroundColor: colors.button,
       padding: 12,
       borderRadius: 6,
       alignItems: 'center',
     },
     buttonText: {
-      color: THEMES[theme].text,
+      color: colors.text,
       fontFamily: 'Aclonica',
       fontSize: 16,
     },
     header: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: THEMES[theme].text,
+      color: colors.text,
       fontFamily: 'Aclonica',
     },
     sectionTitle: {
       fontSize: 18,
       fontWeight: '600',
-      color: THEMES[theme].text,
+      color: colors.text,
       marginTop: 10,
       fontFamily: 'Aclonica',
     },
@@ -67,3 +78,4 @@ export const getGlobalStyles = (theme = 'default') =>
       shadowRadius: 8,
     },
   });
+};

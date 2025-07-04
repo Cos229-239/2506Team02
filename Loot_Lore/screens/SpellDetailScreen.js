@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,14 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import { COLORS } from '../styles';
+import { ThemeContext } from '../ThemeContext';
+import { THEMES, getGlobalStyles } from '../styles';
 
 export default function SpellDetailsScreen({ route, navigation }) {
   const { spell } = route.params || {};
+  const { theme } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const colors = THEMES[theme];
 
   useEffect(() => {
     console.log('SpellDetailsScreen → spell:', spell);
@@ -22,10 +26,13 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
   if (!spell || typeof spell !== 'object') {
     return (
-      <View style={styles.centeredContainer}>
-        <Text style={styles.title}>No spell data found.</Text>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Go Back</Text>
+      <View style={[styles.centeredContainer, { backgroundColor: colors.background }]}>
+        <Text style={[styles.title, { color: colors.text }]}>No spell data found.</Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: colors.button }]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.buttonText, { color: colors.text }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -59,80 +66,77 @@ export default function SpellDetailsScreen({ route, navigation }) {
   };
 
   const handleSave = async () => {
-      try {
-        const existing = await AsyncStorage.getItem('@saved_characters');
-        const characters = existing ? JSON.parse(existing) : [];
-        characters.push(character);
-        await AsyncStorage.setItem('@saved_characters', JSON.stringify(characters));
-        Alert.alert('Success', 'Character saved successfully!');
-      } catch (error) {
-        Alert.alert('Error saving', error.message);
-      }
-    };
+    try {
+      const existing = await AsyncStorage.getItem('@saved_characters');
+      const characters = existing ? JSON.parse(existing) : [];
+      characters.push(spell); // Fixed from "character" to "spell"
+      await AsyncStorage.setItem('@saved_characters', JSON.stringify(characters));
+      Alert.alert('Success', 'Spell saved successfully!');
+    } catch (error) {
+      Alert.alert('Error saving', error.message);
+    }
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{spell.name}</Text>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>{spell.name}</Text>
 
-       <Text style={styles.sectionTitle}>Spell Details</Text>
-      <Text style={styles.text}>School: {spell.school}</Text>
-      <Text style={styles.text}>Level: {spell.level}</Text>
-      <Text style={styles.text}>Casting Time: {spell.castingTime}</Text>
-      <Text style={styles.text}>Duration: {spell.duration}</Text>
-      <Text style={styles.text}>Range: {spell.range}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>Spell Details</Text>
+      <Text style={[styles.text, { color: colors.text }]}>School: {spell.school}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Level: {spell.level}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Casting Time: {spell.castingTime}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Duration: {spell.duration}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Range: {spell.range}</Text>
 
-      <Text style={styles.sectionTitle}>Components</Text>
-      <Text style={styles.text}>Verbal: {spell.components?.verbal ? 'Yes' : 'No'}</Text>
-      <Text style={styles.text}>Somatic: {spell.components?.somatic ? 'Yes' : 'No'}</Text>
-      <Text style={styles.text}>Material: {spell.components?.material || 'None'}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>Components</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Verbal: {spell.components?.verbal ? 'Yes' : 'No'}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Somatic: {spell.components?.somatic ? 'Yes' : 'No'}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>Material: {spell.components?.material || 'None'}</Text>
 
-      <Text style={styles.sectionTitle}>Description</Text>
-      <Text style={styles.text}>{spell.description}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
+      <Text style={[styles.text, { color: colors.text }]}>{spell.description}</Text>
 
-      <Text style={styles.sectionTitle}>Effects</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>Effects</Text>
       {(spell.effects || []).map((effect, idx) => (
-        <Text key={idx} style={styles.text}>- {effect}</Text>
+        <Text key={idx} style={[styles.text, { color: colors.text }]}>- {effect}</Text>
       ))}
 
       <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.button} onPress={handleSave}>
-        <Text style={styles.text}>Save</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleShare}>
-        <Text style={styles.text}>Share</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleCopy}>
-        <Text style={styles.text}>Copy</Text>
-      </TouchableOpacity>
-            </View>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.button }]} onPress={handleSave}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.button }]} onPress={handleShare}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Share</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.button }]} onPress={handleCopy}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Copy</Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.backButton}>
-              <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-        <Text style={styles.text}>Create New Character</Text>
-      </TouchableOpacity>
-            </View>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.button }]} onPress={() => navigation.goBack()}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Create New Character</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   centeredContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: 20,
-  backgroundColor: COLORS.background,
-},
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   container: {
     padding: 20,
     flexGrow: 1,
-    backgroundColor: COLORS.background,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   sectionTitle: {
@@ -140,13 +144,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 15,
     marginBottom: 6,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   text: {
     fontSize: 16,
     marginBottom: 5,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   buttonRow: {
@@ -159,18 +161,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-  backgroundColor: COLORS.button, 
-  paddingVertical: 16,
-  paddingHorizontal: 40,
-  borderRadius: 8,
-  marginHorizontal: 5,
-  marginBottom: 10,
-  alignItems: 'center',
-},
- buttonText: {
-  color: COLORS.text,
-  fontSize: 16,
-  fontWeight: 'bold',
-  fontFamily: 'Aclonica',
-},
+    paddingVertical: 16,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Aclonica',
+  },
 });

@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
-// MonsterDetailsScreen.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,10 +11,14 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import { COLORS } from '../styles';
+
+import { ThemeContext } from '../ThemeContext';
+import { getGlobalStyles, THEMES } from '../styles';
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
+  const { theme } = useContext(ThemeContext);
+  const themeColors = THEMES[theme];
 
   useEffect(() => {
     console.log('MonsterDetailsScreen → monster:', monster);
@@ -23,10 +26,13 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
   if (!monster || typeof monster !== 'object') {
     return (
-      <View style={styles.centeredContainer}>
-        <Text style={styles.title}>No monster data found.</Text>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Go Back</Text>
+      <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
+        <Text style={[styles.title, { color: themeColors.text }]}>No monster data found.</Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: themeColors.button }]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -79,55 +85,55 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{monster.name}</Text>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Text style={[styles.title, { color: themeColors.text }]}>{monster.name}</Text>
 
-      <Text style={styles.sectionTitle}>Monster Details</Text>
-      <Text style={styles.text}>Type: {monster.promptType || 'N/A'}</Text>
-      <Text style={styles.text}>Race: {monster.promptRace || 'N/A'}</Text>
-      <Text style={styles.text}>Challenge Rating: {monster.promptChallengeRating || 'N/A'}</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Monster Details</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Type: {monster.promptType || 'N/A'}</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Race: {monster.promptRace || 'N/A'}</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Challenge Rating: {monster.promptChallengeRating || 'N/A'}</Text>
 
-      <Text style={styles.sectionTitle}>Stats</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Stats</Text>
       {Object.entries(monster.stats).map(([key, value]) => (
-        <Text key={key} style={styles.text}>{`${key}: ${value}`}</Text>
+        <Text key={key} style={[styles.text, { color: themeColors.text }]}>{`${key}: ${value}`}</Text>
       ))}
 
-      <Text style={styles.sectionTitle}>Attacks</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Attacks</Text>
       {monster.attacks.map((atk, i) => (
-        <Text key={`attack-${i}`} style={styles.text}>- {atk}</Text>
+        <Text key={`attack-${i}`} style={[styles.text, { color: themeColors.text }]}>- {atk}</Text>
       ))}
 
-      <Text style={styles.sectionTitle}>Spells</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Spells</Text>
       {monster.spells.map((sp, i) => (
-        <Text key={`spell-${i}`} style={styles.text}>- {sp}</Text>
+        <Text key={`spell-${i}`} style={[styles.text, { color: themeColors.text }]}>- {sp}</Text>
       ))}
 
-      <Text style={styles.sectionTitle}>Abilities</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Abilities</Text>
       {monster.abilities.map((ab, i) => (
-        <Text key={`ability-${i}`} style={styles.text}>- {ab}</Text>
+        <Text key={`ability-${i}`} style={[styles.text, { color: themeColors.text }]}>- {ab}</Text>
       ))}
 
-      <Text style={styles.sectionTitle}>Description</Text>
-      <Text style={styles.text}>{monster.shortDescription}</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Description</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>{monster.shortDescription}</Text>
 
-      <Text style={styles.sectionTitle}>Lore</Text>
-      <Text style={styles.text}>{monster.lore}</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Lore</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>{monster.lore}</Text>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSave}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleShare}>
-          <Text style={styles.buttonText}>Share</Text>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleShare}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Share</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleCopy}>
-          <Text style={styles.buttonText}>Copy</Text>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCopy}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Copy</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Create New Monster</Text>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={() => navigation.goBack()}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Create New Monster</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -140,18 +146,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: COLORS.background,
   },
   container: {
     padding: 20,
     flexGrow: 1,
-    backgroundColor: COLORS.background,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   sectionTitle: {
@@ -159,13 +162,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 15,
     marginBottom: 6,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   text: {
     fontSize: 16,
     marginBottom: 5,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   buttonRow: {
@@ -178,7 +179,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: COLORS.button,
     paddingVertical: 16,
     paddingHorizontal: 40,
     borderRadius: 8,
@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: COLORS.text,
     fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'Aclonica',

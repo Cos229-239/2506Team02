@@ -1,26 +1,29 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { GLOBAL_STYLES, COLORS } from './styles';
+import { ThemeContext } from './ThemeContext';
+import { THEMES } from './styles';
 
 const DisplaySpellInfo = ({ spell }) => {
+  const { theme } = useContext(ThemeContext);
+  const colors = THEMES[theme];
+
   if (!spell) return null;
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Generated Character</Text>
-      <Text>Race: {spell.spellType}</Text>
-      <Text>Class: {spell.spellLevel}</Text>
-      <Text>Level: {spell.castingTime}</Text>
-      <Text>Background: {spell.duration}</Text>
-      <Text>Alignment: {spell.rangeArea}</Text>
+    <View style={[styles.card, { backgroundColor: colors.button }]}>
+      <Text style={[styles.title, { color: colors.text }]}>Generated Spell</Text>
+      <Text style={{ color: colors.text }}>Type: {spell.spellType}</Text>
+      <Text style={{ color: colors.text }}>Level: {spell.spellLevel}</Text>
+      <Text style={{ color: colors.text }}>Casting Time: {spell.castingTime}</Text>
+      <Text style={{ color: colors.text }}>Duration: {spell.duration}</Text>
+      <Text style={{ color: colors.text }}>Range: {spell.rangeArea}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.button,
     padding: 16,
     borderRadius: 10,
     shadowColor: '#000',

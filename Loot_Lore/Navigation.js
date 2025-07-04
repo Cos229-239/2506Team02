@@ -1,21 +1,21 @@
-import React from 'react';
-import { NavigationContainer, DrawerActions } from '@react-navigation/native';
+import React, { useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from './styles';
+import { ThemeContext } from './ThemeContext';
+import { THEMES } from './styles';
+import HeaderMenuButton from './HeaderMenuButton';
 
+// Screens
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import HomeScreen from './screens/HomeScreen';
 import PlaceholderScreen from './screens/PlaceHolderScreen';
-import PeopleScreen from './screens/PeopleScreen'
-import CharacterDetailsScreen from './screens/CharacterDetailsScreen'
-import HeaderMenuButton from './HeaderMenuButton';
+import PeopleScreen from './screens/PeopleScreen';
+import CharacterDetailsScreen from './screens/CharacterDetailsScreen';
 import SpellsScreen from './screens/SpellsScreen';
-import SpellDetailsScreen from './screens/SpellDetailScreen'
+import SpellDetailsScreen from './screens/SpellDetailScreen';
 import MonsterScreen from './screens/MonsterScreen';
 import MonsterDetailsScreen from './screens/MonsterDetailsScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -24,21 +24,24 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
+  const { theme } = useContext(ThemeContext);
+  const colors = THEMES[theme] || THEMES.default;
+
   return (
     <Drawer.Navigator
       initialRouteName="Main Menu"
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: COLORS.background,
+          backgroundColor: colors.background,
         },
-        headerTintColor: COLORS.text,
+        headerTintColor: colors.text,
         headerTitleStyle: {
           fontWeight: 'bold',
         },
         headerRight: () => <HeaderMenuButton />,
         drawerStyle: {
-          backgroundColor: COLORS.background,
+          backgroundColor: colors.background,
           width: 220,
           borderTopLeftRadius: 20,
           borderBottomLeftRadius: 20,
@@ -46,14 +49,14 @@ function DrawerNavigator() {
           marginBottom: 80,
           elevation: 12,
         },
-        drawerActiveTintColor: COLORS.text,
-        drawerInactiveTintColor: COLORS.text,
+        drawerActiveTintColor: colors.text,
+        drawerInactiveTintColor: colors.text,
         drawerType: 'front',
         overlayColor: 'rgba(160, 152, 127, 0.78)',
         drawerPosition: 'right',
       }}
     >
-       <Drawer.Screen name="Main Menu" component={HomeScreen} />
+      <Drawer.Screen name="Main Menu" component={HomeScreen} />
       <Drawer.Screen name="Characters" component={PeopleScreen} />
       <Drawer.Screen name="Monsters" component={MonsterScreen} />
       <Drawer.Screen name="Items" component={PlaceholderScreen} />
