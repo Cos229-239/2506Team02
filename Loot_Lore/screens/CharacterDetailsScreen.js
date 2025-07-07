@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useContext, useState } from 'react';
-/* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -19,7 +17,12 @@ import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
 
 export default function CharacterDetailsScreen({ route, navigation }) {
-  const { character } = route.params || {};
+  const { character: initialCharacter } = route.params || {};
+  const { theme } = useContext(ThemeContext);
+  const themeColors = THEMES[theme] || THEMES.default;
+
+  const [character, setCharacter] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     setCharacter(initialCharacter);
@@ -27,11 +30,14 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   if (!character || typeof character !== 'object') {
     return (
-      <View style={styles.centeredContainer}>
-        <Text style={styles.title}>No character data found.</Text>
-       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-                 <Text style={styles.buttonText}>Go Back</Text>
-               </TouchableOpacity>
+      <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
+        <Text style={[styles.title, { color: themeColors.text }]}>No character data found.</Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: themeColors.button }]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -90,63 +96,59 @@ export default function CharacterDetailsScreen({ route, navigation }) {
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
       <Text style={[styles.title, { color: themeColors.text }]}>{character.name}</Text>
 
-      <Text style={styles.sectionTitle}>Basic Info</Text>
-      <Text style={styles.text}>Race: {character.race}</Text>
-      <Text style={styles.text}>Class: {character.class}</Text>
-      <Text style={styles.text}>Level: {character.level}</Text>
-      <Text style={styles.text}>Background: {character.background}</Text>
-      <Text style={styles.text}>Alignment: {character.alignment}</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Basic Info</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Race: {character.race}</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Class: {character.class}</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Level: {character.level}</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Background: {character.background}</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>Alignment: {character.alignment}</Text>
 
-      <Text style={styles.sectionTitle}>Stats</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Stats</Text>
       {Object.entries(character.stats || {}).map(([stat, value]) => (
-        <Text key={stat} style={styles.text}>
+        <Text key={stat} style={[styles.text, { color: themeColors.text }]}>
           {stat}: {value}
         </Text>
       ))}
-      
-      <Text style={styles.sectionTitle}>Backstory</Text>
-      <Text style={styles.text}>{character.backstory}</Text>
 
-      <Text style={styles.sectionTitle}>Personality</Text>
-      <Text style={styles.text}>{character.personality}</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Backstory</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>{character.backstory}</Text>
 
-      <Text style={styles.sectionTitle}>Traits & Abilities</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Personality</Text>
+      <Text style={[styles.text, { color: themeColors.text }]}>{character.personality}</Text>
+
+      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Traits & Abilities</Text>
       {(character.traits || []).map((trait, idx) => (
-        <Text key={idx} style={styles.text}>
-          - {trait}
-        </Text>
+        <Text key={idx} style={[styles.text, { color: themeColors.text }]}>- {trait}</Text>
       ))}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={handleSave}>
-  <Text style={styles.text}>Save</Text>
-</TouchableOpacity>
-<TouchableOpacity style={styles.button} onPress={handleShare}>
-  <Text style={styles.text}>Share</Text>
-</TouchableOpacity>
-<TouchableOpacity style={styles.button} onPress={handleCopy}>
-  <Text style={styles.text}>Copy</Text>
-</TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSave}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleShare}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Share</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCopy}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Copy</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-  <Text style={styles.text}>Create New Character</Text>
-</TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={() => navigation.goBack()}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Create New Character</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Optional editing input (if used) */}
       {isEditing && (
         <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: themeColors.text,
-            borderRadius: 6,
-            padding: 8,
-            marginBottom: 8,
-            color: themeColors.text,
-            fontFamily: 'Aclonica',
-          }}
+          style={[
+            styles.input,
+            {
+              borderColor: themeColors.text,
+              color: themeColors.text,
+              backgroundColor: themeColors.inputBackground,
+            },
+          ]}
           placeholder="Edit something..."
           placeholderTextColor={themeColors.placeholder}
           onChangeText={(text) => updateField('backstory', text)}
@@ -164,12 +166,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   centeredContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: 20,
-  backgroundColor: COLORS.background,
-},
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -190,11 +191,9 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: COLORS.text,
     borderRadius: 6,
     padding: 8,
     marginBottom: 8,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   buttonRow: {
@@ -202,33 +201,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  buttonHalf: {
-    backgroundColor: COLORS.button,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    marginBottom: 10,
-    alignItems: 'center',
-    flex: 1,
-  },
   backButton: {
     marginTop: 30,
     alignItems: 'center',
   },
   button: {
-  backgroundColor: COLORS.button, 
-  paddingVertical: 16,
-  paddingHorizontal: 40,
-  borderRadius: 8,
-  marginHorizontal: 5,
-  marginBottom: 10,
-  alignItems: 'center',
-},
-buttonText: {
-  color: COLORS.text,
-  fontSize: 16,
-  fontWeight: 'bold',
-  fontFamily: 'Aclonica',
-},
+    paddingVertical: 16,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Aclonica',
+  },
 });

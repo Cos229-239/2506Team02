@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-/* eslint-disable react/prop-types */
-import React, { useEffect, useContext } from 'react';
-=======
 /* eslint-disable react/prop-types */ 
 // MonsterDetailsScreen.js
-import React, { useEffect, useState } from 'react';
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -24,13 +19,10 @@ import { getGlobalStyles, THEMES } from '../styles';
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
-<<<<<<< HEAD
   const { theme } = useContext(ThemeContext);
-  const themeColors = THEMES[theme];
-=======
+  const themeColors = THEMES[theme] || THEMES.default;
   const [editableMonster, setEditableMonster] = useState(monster);
   const [isEditing, setIsEditing] = useState(false);
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
 
   useEffect(() => {
     setEditableMonster(monster);
@@ -113,310 +105,96 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     setEditableMonster((prev) => ({ ...prev, [field]: value.split('\n') }));
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+      flexGrow: 1,
+      backgroundColor: themeColors.background,
+    },
+    centeredContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+      backgroundColor: themeColors.background,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: 'bold',
+      marginBottom: 15,
+      fontFamily: 'Aclonica',
+      color: themeColors.text,
+    },
+    inputTitle: {
+      fontSize: 26,
+      fontWeight: 'bold',
+      marginBottom: 15,
+      borderBottomWidth: 1,
+      borderColor: themeColors.text,
+      color: themeColors.text,
+      fontFamily: 'Aclonica',
+    },
+    sectionTitle: {
+      fontSize: 20,
+      fontWeight: '600',
+      marginTop: 15,
+      marginBottom: 6,
+      fontFamily: 'Aclonica',
+      color: themeColors.text,
+    },
+    text: {
+      fontSize: 16,
+      marginBottom: 5,
+      fontFamily: 'Aclonica',
+      color: themeColors.text,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: themeColors.text,
+      borderRadius: 6,
+      padding: 8,
+      marginBottom: 8,
+      color: themeColors.text,
+      fontFamily: 'Aclonica',
+    },
+    buttonRow: {
+      marginTop: 20,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    buttonHalf: {
+      backgroundColor: themeColors.button,
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      marginHorizontal: 5,
+      marginBottom: 10,
+      alignItems: 'center',
+      flex: 1,
+    },
+    backButton: {
+      marginTop: 30,
+      alignItems: 'center',
+    },
+    button: {
+      backgroundColor: themeColors.button,
+      paddingVertical: 16,
+      paddingHorizontal: 40,
+      borderRadius: 8,
+      marginBottom: 10,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      fontFamily: 'Aclonica',
+      color: themeColors.text,
+    },
+  });
+
   return (
-<<<<<<< HEAD
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
-      <Text style={[styles.title, { color: themeColors.text }]}>{monster.name}</Text>
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Monster Details</Text>
-      <Text style={[styles.text, { color: themeColors.text }]}>Type: {monster.promptType || 'N/A'}</Text>
-      <Text style={[styles.text, { color: themeColors.text }]}>Race: {monster.promptRace || 'N/A'}</Text>
-      <Text style={[styles.text, { color: themeColors.text }]}>Challenge Rating: {monster.promptChallengeRating || 'N/A'}</Text>
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Stats</Text>
-      {Object.entries(monster.stats).map(([key, value]) => (
-        <Text key={key} style={[styles.text, { color: themeColors.text }]}>{`${key}: ${value}`}</Text>
-      ))}
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Attacks</Text>
-      {monster.attacks.map((atk, i) => (
-        <Text key={`attack-${i}`} style={[styles.text, { color: themeColors.text }]}>- {atk}</Text>
-      ))}
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Spells</Text>
-      {monster.spells.map((sp, i) => (
-        <Text key={`spell-${i}`} style={[styles.text, { color: themeColors.text }]}>- {sp}</Text>
-      ))}
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Abilities</Text>
-      {monster.abilities.map((ab, i) => (
-        <Text key={`ability-${i}`} style={[styles.text, { color: themeColors.text }]}>- {ab}</Text>
-      ))}
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Description</Text>
-      <Text style={[styles.text, { color: themeColors.text }]}>{monster.shortDescription}</Text>
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Lore</Text>
-      <Text style={[styles.text, { color: themeColors.text }]}>{monster.lore}</Text>
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSave}>
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleShare}>
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Share</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCopy}>
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Copy</Text>
-=======
     <ScrollView contentContainerStyle={styles.container}>
-      {isEditing ? (
-        <TextInput
-          style={styles.inputTitle}
-          value={editableMonster.name}
-          onChangeText={(text) => updateField('name', text)}
-          placeholder="Name"
-        />
-      ) : (
-        <Text style={styles.title}>{editableMonster.name}</Text>
-      )}
-
-      <Text style={styles.sectionTitle}>Monster Details</Text>
-      {isEditing ? (
-        <>
-          <TextInput
-            style={styles.input}
-            value={editableMonster.promptType}
-            onChangeText={(text) => updateField('promptType', text)}
-            placeholder="Type"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableMonster.promptRace}
-            onChangeText={(text) => updateField('promptRace', text)}
-            placeholder="Race"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableMonster.promptChallengeRating}
-            onChangeText={(text) => updateField('promptChallengeRating', text)}
-            placeholder="Challenge Rating"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableMonster.promptSize}
-            onChangeText={(text) => updateField('promptSize', text)}
-            placeholder="Size"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableMonster.promptAlignment}
-            onChangeText={(text) => updateField('promptAlignment', text)}
-            placeholder="Alignment"
-          />
-        </>
-      ) : (
-        <>
-          <Text style={styles.text}>Type: {editableMonster.promptType || 'N/A'}</Text>
-          <Text style={styles.text}>Race: {editableMonster.promptRace || 'N/A'}</Text>
-          <Text style={styles.text}>Challenge Rating: {editableMonster.promptChallengeRating || 'N/A'}</Text>
-          <Text style={styles.text}>Size: {editableMonster.promptSize || 'N/A'}</Text>
-          <Text style={styles.text}>Alignment: {editableMonster.promptAlignment || 'N/A'}</Text>
-        </>
-      )}
-
-      <Text style={styles.sectionTitle}>Stats</Text>
-      {Object.entries(editableMonster.stats || {}).map(([key, value]) =>
-        isEditing ? (
-          <TextInput
-            key={key}
-            style={styles.input}
-            value={String(value)}
-            onChangeText={(text) => updateStat(key, text)}
-            placeholder={key}
-            keyboardType="numeric"
-          />
-        ) : (
-          <Text key={key} style={styles.text}>{`${key}: ${value}`}</Text>
-        )
-      )}
-
-      <Text style={styles.sectionTitle}>Attacks</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 80 }]}
-          multiline
-          value={(editableMonster.attacks || []).join('\n')}
-          onChangeText={(text) => updateListField('attacks', text)}
-          placeholder="One attack per line"
-        />
-      ) : (
-        editableMonster.attacks.map((atk, i) => (
-          <Text key={`attack-${i}`} style={styles.text}>- {atk}</Text>
-        ))
-      )}
-
-      <Text style={styles.sectionTitle}>Spells</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 80 }]}
-          multiline
-          value={(editableMonster.spells || []).join('\n')}
-          onChangeText={(text) => updateListField('spells', text)}
-          placeholder="One spell per line"
-        />
-      ) : (
-        editableMonster.spells.map((sp, i) => (
-          <Text key={`spell-${i}`} style={styles.text}>- {sp}</Text>
-        ))
-      )}
-
-      <Text style={styles.sectionTitle}>Abilities</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 80 }]}
-          multiline
-          value={(editableMonster.abilities || []).join('\n')}
-          onChangeText={(text) => updateListField('abilities', text)}
-          placeholder="One ability per line"
-        />
-      ) : (
-        editableMonster.abilities.map((ab, i) => (
-          <Text key={`ability-${i}`} style={styles.text}>- {ab}</Text>
-        ))
-      )}
-
-      <Text style={styles.sectionTitle}>Description</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          multiline
-          value={editableMonster.shortDescription}
-          onChangeText={(text) => updateField('shortDescription', text)}
-        />
-      ) : (
-        <Text style={styles.text}>{editableMonster.shortDescription}</Text>
-      )}
-
-      <Text style={styles.sectionTitle}>Lore</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          multiline
-          value={editableMonster.lore}
-          onChangeText={(text) => updateField('lore', text)}
-        />
-      ) : (
-        <Text style={styles.text}>{editableMonster.lore}</Text>
-      )}
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
-          <Text style={styles.buttonText}>Share</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleCopy}>
-          <Text style={styles.buttonText}>Copy</Text>
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonHalf} onPress={() => setIsEditing((e) => !e)}>
-          <Text style={styles.buttonText}>{isEditing ? 'Done' : 'Edit'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.backButton}>
-<<<<<<< HEAD
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={() => navigation.goBack()}>
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Create New Monster</Text>
-=======
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Create New Monster</Text>
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
-        </TouchableOpacity>
-      </View>
+      {/* render content here using styles */}
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flexGrow: 1,
-    backgroundColor: COLORS.background,
-  },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-<<<<<<< HEAD
-  container: {
-    padding: 20,
-    flexGrow: 1,
-  },
-=======
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    fontFamily: 'Aclonica',
-  },
-  inputTitle: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    borderBottomWidth: 1,
-    borderColor: COLORS.text,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginTop: 15,
-    marginBottom: 6,
-    fontFamily: 'Aclonica',
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 5,
-    fontFamily: 'Aclonica',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: COLORS.text,
-    borderRadius: 6,
-    padding: 8,
-    marginBottom: 8,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  buttonRow: {
-    marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonHalf: {
-    backgroundColor: COLORS.button,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    marginBottom: 10,
-    alignItems: 'center',
-    flex: 1,
-  },
-  backButton: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  button: {
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'Aclonica',
-  },
-});

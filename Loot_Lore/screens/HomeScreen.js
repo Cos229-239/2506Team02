@@ -19,7 +19,14 @@ export default function HomeScreen({ navigation }) {
   };
 
   return (
-    <View style={[globalStyles.screen, styles.container]}>
+    <View
+      style={[
+        globalStyles.screen,
+        styles.container,
+        { backgroundColor: themeColors.background },
+      ]}
+    >
+      {/* All text wrapped properly */}
       <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
 
       <Image

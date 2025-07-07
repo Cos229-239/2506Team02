@@ -80,15 +80,10 @@ export default function MonsterScreen() {
           promptType: selectedType,
           promptRace: selectedRace,
           promptChallengeRating: selectedCR,
-<<<<<<< HEAD
-        };
-        navigation.navigate('Monster Details', { monster: enrichedMonster });
-=======
           promptSize: selectedSize,
           promptAlignment: selectedAlignment,
         };
         navigation.navigate('Monster Details', { monster: enrichedMonster }); 
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
       } catch (parseErr) {
         console.error('JSON Parse Error:', parseErr);
         console.error('Raw response:', message);
@@ -123,79 +118,31 @@ export default function MonsterScreen() {
               <Image source={require('../assets/logo.png')} style={styles.logo} />
             </View>
 
-<<<<<<< HEAD
             <Text style={[styles.label, { color: themeColors.text }]}>Monster Type</Text>
-            <SelectList
-              setSelected={setSelectedType}
-              data={monsterOptions.typeOptions}
-              placeholder="Monster Type"
-              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
-              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
-            />
+            <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={[styles.dropdown, { borderColor: themeColors.text }]} inputStyles={[styles.dropdownInput, { color: themeColors.text }]} dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]} />
 
             <Text style={[styles.label, { color: themeColors.text }]}>Race</Text>
-            <SelectList
-              setSelected={setSelectedRace}
-              data={monsterOptions.raceOptions}
-              placeholder="Race"
-              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
-              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
-            />
-=======
-            <Text style={styles.label}>Monster Type</Text>
-            <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
-
-            <Text style={styles.label}>Race</Text>
-            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
+            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race" boxStyles={[styles.dropdown, { borderColor: themeColors.text }]} inputStyles={[styles.dropdownInput, { color: themeColors.text }]} dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]} />
 
             <Text style={[styles.label, { color: themeColors.text }]}>Challenge Rating</Text>
-            <SelectList
-              setSelected={setSelectedCR}
-              data={monsterOptions.crOptions}
-              placeholder="CR"
-              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
-              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
-            />
+            <SelectList setSelected={setSelectedCR} data={monsterOptions.crOptions} placeholder="CR" boxStyles={[styles.dropdown, { borderColor: themeColors.text }]} inputStyles={[styles.dropdownInput, { color: themeColors.text }]} dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]} />
 
-            {/* New Size Dropdown */}
-            <Text style={styles.label}>Size</Text>
-            <SelectList setSelected={setSelectedSize} data={monsterOptions.sizeOptions} placeholder="Size" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <Text style={[styles.label, { color: themeColors.text }]}>Size</Text>
+            <SelectList setSelected={setSelectedSize} data={monsterOptions.sizeOptions} placeholder="Size" boxStyles={[styles.dropdown, { borderColor: themeColors.text }]} inputStyles={[styles.dropdownInput, { color: themeColors.text }]} dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]} />
 
-            {/* New Alignment Dropdown */}
-            <Text style={styles.label}>Alignment</Text>
-            <SelectList setSelected={setSelectedAlignment} data={monsterOptions.alignments} placeholder="Alignment" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            <Text style={[styles.label, { color: themeColors.text }]}>Alignment</Text>
+            <SelectList setSelected={setSelectedAlignment} data={monsterOptions.alignments} placeholder="Alignment" boxStyles={[styles.dropdown, { borderColor: themeColors.text }]} inputStyles={[styles.dropdownInput, { color: themeColors.text }]} dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]} />
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={handleClear}
-                style={[styles.clearButton, { backgroundColor: themeColors.button }]}
-              >
+              <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: themeColors.button }]}>
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>Clear</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleGenerate}
-                style={[
-                  styles.generateButton,
-                  { backgroundColor: themeColors.button },
-                  isGenerateDisabled && { opacity: 0.5 },
-                ]}
+                style={[styles.generateButton, { backgroundColor: themeColors.button }, isGenerateDisabled && { opacity: 0.5 }]}
                 disabled={isGenerateDisabled || isLoading}
               >
-<<<<<<< HEAD
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>Generate</Text>
-=======
-                <Text style={styles.buttonText}>Generate</Text>
->>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
               </TouchableOpacity>
             </View>
           </ScrollView>
