@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */ 
+/* eslint-disable react/prop-types */
 import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
@@ -20,6 +20,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
   const { theme } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
+
   const initialCharacter = route.params?.character || null;
   const [character, setCharacter] = useState(initialCharacter);
   const [isEditing, setIsEditing] = useState(false);
@@ -106,7 +107,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
           {stat}: {value}
         </Text>
       ))}
-      
+
       <Text style={[styles.sectionTitle, { color: themeColors.text }]}>Backstory</Text>
       <Text style={[styles.text, { color: themeColors.text }]}>{character.backstory}</Text>
 
@@ -137,6 +138,26 @@ export default function CharacterDetailsScreen({ route, navigation }) {
           <Text style={[styles.buttonText, { color: themeColors.text }]}>Create New Character</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Optional editing input (if used) */}
+      {isEditing && (
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: themeColors.text,
+            borderRadius: 6,
+            padding: 8,
+            marginBottom: 8,
+            color: themeColors.text,
+            fontFamily: 'Aclonica',
+          }}
+          placeholder="Edit something..."
+          placeholderTextColor={themeColors.placeholder}
+          onChangeText={(text) => updateField('backstory', text)}
+          value={character.backstory}
+          multiline
+        />
+      )}
     </ScrollView>
   );
 }
@@ -170,29 +191,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: 'Aclonica',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: COLORS.text,
-    borderRadius: 6,
-    padding: 8,
-    marginBottom: 8,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
   buttonRow: {
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  buttonHalf: {
-    backgroundColor: COLORS.button,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    marginBottom: 10,
-    alignItems: 'center',
-    flex: 1,
   },
   backButton: {
     marginTop: 30,
