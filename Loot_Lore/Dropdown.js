@@ -16,18 +16,18 @@ const Dropdown = ({ label, options, selectedValue, onChange }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.label, { color: colors.button }]}>{label}</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{label}</Text> {/* Ensure text color matches the theme */}
       <SelectList
         setSelected={onChange}
         data={data}
         save="value"
         selected={selectedValue}
         defaultOption={selectedValue ? { value: selectedValue } : undefined}
-        boxStyles={[styles.box, { backgroundColor: colors.button, borderColor: colors.placeholder }]}
+        boxStyles={[styles.box, { backgroundColor: colors.button, borderColor: colors.text }]}
         dropdownStyles={[styles.dropdown, { backgroundColor: colors.button }]}
         inputStyles={[styles.input, { color: colors.text }]}
         dropdownItemStyles={styles.dropdownItem}
-        dropdownTextStyles={[styles.dropdownText, { color: colors.inputText }]}
+        dropdownTextStyles={[styles.dropdownText, { color: colors.text }]}
       />
     </View>
   );
@@ -46,7 +46,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
   },
-  dropdown: {},
+  dropdown: {
+    maxHeight: 300,  // Ensure that the dropdown doesn't overflow too much
+  },
   input: {
     fontSize: 16,
   },

@@ -4,7 +4,6 @@ import { OPENAI_API_KEY } from '@env';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -32,7 +31,7 @@ export default function PeopleScreen() {
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { theme } = useContext(ThemeContext);
+  const { theme, boldText } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
 
@@ -74,30 +73,25 @@ export default function PeopleScreen() {
 
       const data = await response.json();
       if (data.choices && data.choices.length > 0) {
-        try {
-          const raw = data.choices[0].message?.content;
-          const generated = JSON.parse(raw);
+        const raw = data.choices[0].message?.content;
+        const generated = JSON.parse(raw);
 
-          navigation.navigate('Character Details', {
-            character: {
-              race: selectedRace,
-              class: selectedClass,
-              level: selectedLevel,
-              background: selectedBackground,
-              alignment: selectedAlignment,
-              ...generated,
-            },
-          });
-        } catch (err) {
-          console.error('JSON parse error:', err, data.choices[0].message?.content);
-          Alert.alert('Error', 'Character generation failed. Try again.');
-        }
+        navigation.navigate('Character Details', {
+          character: {
+            race: selectedRace,
+            class: selectedClass,
+            level: selectedLevel,
+            background: selectedBackground,
+            alignment: selectedAlignment,
+            ...generated,
+          },
+        });
       } else {
         Alert.alert('Error', 'OpenAI did not return a valid response.');
       }
     } catch (err) {
-      Alert.alert('Error', 'Failed to connect to OpenAI.');
       console.error('API error:', err);
+      Alert.alert('Error', 'Failed to connect to OpenAI.');
     } finally {
       setIsLoading(false);
     }
@@ -138,16 +132,18 @@ export default function PeopleScreen() {
             { label: 'Alignment', data: peopleOptions.alignments, setter: setSelectedAlignment },
           ].map(({ label, data, setter }) => (
             <React.Fragment key={label}>
-              <Text style={[styles.label, { color: themeColors.text }]}>{label}</Text>
+              <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+                {label}
+              </Text>
               <SelectList
                 setSelected={setter}
                 data={data}
                 placeholder={label}
                 boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
-                inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+                inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
                 dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
                 dropdownItemStyles={styles.dropdownItem}
-                dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+                dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
               />
             </React.Fragment>
           ))}
@@ -183,7 +179,6 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'left',
     padding: 20,
     paddingBottom: 40,
   },
@@ -249,7 +244,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    fontWeight: 'bold',
     fontFamily: 'Aclonica',
+    fontWeight: 'bold',
   },
 });

@@ -4,7 +4,6 @@ import { OPENAI_API_KEY } from '@env';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -13,22 +12,19 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
-import DisplaySpellInfo from '../Spells';
 import { SPELL_CREATION_PROMPT } from '../prompts';
 import spellOptions from '../data/spellOptions';
 import LoadingOverlay from './LoadingOverlay';
 
 export default function SpellsScreen() {
   const navigation = useNavigation();
-  const { theme } = useContext(ThemeContext);
+  const { theme, boldText } = useContext(ThemeContext); 
   const globalStyles = getGlobalStyles(theme);
-  const colors = THEMES[theme];
+  const themeColors = THEMES[theme];
 
   const [selectedSpellType, setSelectedSpellType] = useState('');
   const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
@@ -121,108 +117,111 @@ export default function SpellsScreen() {
   return isLoading ? (
     <LoadingOverlay />
   ) : (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={globalStyles.screen}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={80}
+    <SafeAreaView style={globalStyles.screen}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={80}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-            contentContainerStyle={styles.formContainer}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={styles.header}>
-              <Text style={[styles.title, { color: colors.text }]}>Loot & Lore</Text>
-              <Image source={require('../assets/logo.png')} style={styles.logo} />
-            </View>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Loot & Lore</Text>
+            <Image source={require('../assets/logo.png')} style={styles.logo} />
+          </View>
 
-            <Text style={[styles.label, { color: colors.accent }]}>Spell Type</Text>
-            <SelectList
-              setSelected={setSelectedSpellType}
-              data={spellOptions.spellType}
-              placeholder="Spell Type"
-              boxStyles={[styles.dropdown, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              inputStyles={[styles.dropdownInput, { color: colors.inputText }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: colors.inputText }]}
-            />
+          {/* Spell Type Dropdown */}
+          <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Spell Type</Text>
+          <SelectList
+            setSelected={setSelectedSpellType}
+            data={spellOptions.spellType}
+            placeholder="Spell Type"
+            boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+            inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+            dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+            dropdownItemStyles={styles.dropdownItem}
+            dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+          />
 
-            <Text style={[styles.label, { color: colors.accent }]}>Spell Level</Text>
-            <SelectList
-              setSelected={setSelectedSpellLevel}
-              data={spellOptions.spellLevel}
-              placeholder="Spell Level"
-              boxStyles={[styles.dropdown, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              inputStyles={[styles.dropdownInput, { color: colors.inputText }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: colors.inputText }]}
-            />
+          {/* Spell Level Dropdown */}
+          <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Spell Level</Text>
+          <SelectList
+            setSelected={setSelectedSpellLevel}
+            data={spellOptions.spellLevel}
+            placeholder="Spell Level"
+            boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+            inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+            dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+            dropdownItemStyles={styles.dropdownItem}
+            dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+          />
 
-            <Text style={[styles.label, { color: colors.accent }]}>Casting Time</Text>
-            <SelectList
-              setSelected={setSelectedCastingTime}
-              data={spellOptions.castingTime}
-              placeholder="Casting Time"
-              boxStyles={[styles.dropdown, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              inputStyles={[styles.dropdownInput, { color: colors.inputText }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: colors.inputText }]}
-            />
+          {/* Casting Time Dropdown */}
+          <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Casting Time</Text>
+          <SelectList
+            setSelected={setSelectedCastingTime}
+            data={spellOptions.castingTime}
+            placeholder="Casting Time"
+            boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+            inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+            dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+            dropdownItemStyles={styles.dropdownItem}
+            dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+          />
 
-            <Text style={[styles.label, { color: colors.accent }]}>Duration</Text>
-            <SelectList
-              setSelected={setSelectedDuration}
-              data={spellOptions.duration}
-              placeholder="Duration"
-              boxStyles={[styles.dropdown, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              inputStyles={[styles.dropdownInput, { color: colors.inputText }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: colors.inputText }]}
-            />
+          {/* Duration Dropdown */}
+          <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Duration</Text>
+          <SelectList
+            setSelected={setSelectedDuration}
+            data={spellOptions.duration}
+            placeholder="Duration"
+            boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+            inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+            dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+            dropdownItemStyles={styles.dropdownItem}
+            dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+          />
 
-            <Text style={[styles.label, { color: colors.accent }]}>Range/Area</Text>
-            <SelectList
-              setSelected={setSelectedRangeArea}
-              data={spellOptions.rangeArea}
-              placeholder="Range/Area"
-              boxStyles={[styles.dropdown, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              inputStyles={[styles.dropdownInput, { color: colors.inputText }]}
-              dropdownStyles={[styles.dropdownList, { backgroundColor: colors.button, borderColor: colors.accent }]}
-              dropdownItemStyles={styles.dropdownItem}
-              dropdownTextStyles={[styles.dropdownText, { color: colors.inputText }]}
-            />
+          {/* Range/Area Dropdown */}
+          <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Range/Area</Text>
+          <SelectList
+            setSelected={setSelectedRangeArea}
+            data={spellOptions.rangeArea}
+            placeholder="Range/Area"
+            boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+            inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+            dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+            dropdownItemStyles={styles.dropdownItem}
+            dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
+          />
 
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: colors.button }]}>
-                <Text style={[styles.buttonText, { color: colors.text }]}>Clear</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleOutput}
-                style={[styles.generateButton, { backgroundColor: colors.button }, (isGenerateDisabled || isLoading) && { opacity: 0.5 }]}
-                disabled={isGenerateDisabled || isLoading}
-              >
-                <Text style={[styles.buttonText, { color: colors.text }]}>Generate</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: themeColors.button }]}>
+              <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Clear</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleOutput}
+              style={[styles.generateButton, { backgroundColor: themeColors.button }, isGenerateDisabled && { opacity: 0.5 }]}
+              disabled={isGenerateDisabled}
+            >
+              <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Generate</Text>
+            </TouchableOpacity>
+          </View>
 
-            {spell && <DisplaySpellInfo spell={spell} />}
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+          {spell && <DisplaySpellInfo spell={spell} />}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  formContainer: {
-    flexGrow: 1,
-    padding: 20,
-    paddingBottom: 40,
+  scrollContainer: {
+    flexGrow: 1,  // Ensures ScrollView content can grow and scroll
+    paddingBottom: 40,  // Adds space at the bottom for the last item
   },
   header: {
     alignItems: 'center',
@@ -261,7 +260,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginTop: 20,
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   clearButton: {
@@ -278,6 +276,5 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    fontWeight: 'bold',
   },
 });

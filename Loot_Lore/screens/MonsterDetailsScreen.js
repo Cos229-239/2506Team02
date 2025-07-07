@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */ 
-// MonsterDetailsScreen.js
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
@@ -19,8 +18,9 @@ import { getGlobalStyles, THEMES } from '../styles';
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
-  const { theme } = useContext(ThemeContext);
+  const { theme, boldText } = useContext(ThemeContext);
   const themeColors = THEMES[theme] || THEMES.default;
+  const textWeight = boldText ? 'bold' : 'normal';
   const [editableMonster, setEditableMonster] = useState(monster);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -31,12 +31,12 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   if (!editableMonster || typeof editableMonster !== 'object') {
     return (
       <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
-        <Text style={[styles.title, { color: themeColors.text }]}>No monster data found.</Text>
+        <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>No monster data found.</Text>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: themeColors.button }]}
           onPress={() => navigation.goBack()}
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Go Back</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: textWeight }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -120,14 +120,14 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     },
     title: {
       fontSize: 26,
-      fontWeight: 'bold',
+      fontWeight: textWeight,
       marginBottom: 15,
       fontFamily: 'Aclonica',
       color: themeColors.text,
     },
     inputTitle: {
       fontSize: 26,
-      fontWeight: 'bold',
+      fontWeight: textWeight,
       marginBottom: 15,
       borderBottomWidth: 1,
       borderColor: themeColors.text,
@@ -136,7 +136,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     },
     sectionTitle: {
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: textWeight,
       marginTop: 15,
       marginBottom: 6,
       fontFamily: 'Aclonica',
@@ -147,6 +147,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       marginBottom: 5,
       fontFamily: 'Aclonica',
       color: themeColors.text,
+      fontWeight: textWeight,
     },
     input: {
       borderWidth: 1,
@@ -156,6 +157,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       marginBottom: 8,
       color: themeColors.text,
       fontFamily: 'Aclonica',
+      fontWeight: textWeight,
     },
     buttonRow: {
       marginTop: 20,
@@ -186,9 +188,9 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: 'bold',
       fontFamily: 'Aclonica',
       color: themeColors.text,
+      fontWeight: textWeight,
     },
   });
 

@@ -20,9 +20,10 @@ export default function SpellDetailsScreen({ route, navigation }) {
   const [editableSpell, setEditableSpell] = useState(spell);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { theme } = useContext(ThemeContext);
+  const { theme, boldText } = useContext(ThemeContext);
   const themeColors = THEMES[theme] || THEMES.default;
   const globalStyles = getGlobalStyles(theme);
+  const textWeight = boldText ? 'bold' : 'normal';
 
   useEffect(() => {
     setEditableSpell(spell);
@@ -31,12 +32,12 @@ export default function SpellDetailsScreen({ route, navigation }) {
   if (!editableSpell || typeof editableSpell !== 'object') {
     return (
       <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
-        <Text style={[styles.title, { color: themeColors.text }]}>No spell data found.</Text>
+        <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>No spell data found.</Text>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: themeColors.button }]}
           onPress={() => navigation.goBack()}
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Go Back</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: textWeight }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -114,24 +115,25 @@ export default function SpellDetailsScreen({ route, navigation }) {
     },
     title: {
       fontSize: 26,
-      fontWeight: 'bold',
       marginBottom: 15,
       fontFamily: 'Aclonica',
       color: themeColors.text,
+      fontWeight: textWeight,
     },
     sectionTitle: {
       fontSize: 20,
-      fontWeight: '600',
       marginTop: 15,
       marginBottom: 6,
       fontFamily: 'Aclonica',
       color: themeColors.text,
+      fontWeight: textWeight,
     },
     text: {
       fontSize: 16,
       marginBottom: 5,
       fontFamily: 'Aclonica',
       color: themeColors.text,
+      fontWeight: textWeight,
     },
     input: {
       borderWidth: 1,
@@ -141,6 +143,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
       marginBottom: 10,
       color: themeColors.text,
       fontFamily: 'Aclonica',
+      fontWeight: textWeight,
     },
     buttonRow: {
       marginTop: 20,
@@ -172,8 +175,8 @@ export default function SpellDetailsScreen({ route, navigation }) {
     buttonText: {
       color: themeColors.text,
       fontSize: 16,
-      fontWeight: 'bold',
       fontFamily: 'Aclonica',
+      fontWeight: textWeight,
     },
   });
 
@@ -194,36 +197,11 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
       {isEditing ? (
         <>
-          <TextInput
-            style={styles.input}
-            value={editableSpell.school}
-            onChangeText={(text) => updateField('school', text)}
-            placeholder="School"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.level}
-            onChangeText={(text) => updateField('level', text)}
-            placeholder="Level"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.castingTime}
-            onChangeText={(text) => updateField('castingTime', text)}
-            placeholder="Casting Time"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.duration}
-            onChangeText={(text) => updateField('duration', text)}
-            placeholder="Duration"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.range}
-            onChangeText={(text) => updateField('range', text)}
-            placeholder="Range"
-          />
+          <TextInput style={styles.input} value={editableSpell.school} onChangeText={(text) => updateField('school', text)} placeholder="School" />
+          <TextInput style={styles.input} value={editableSpell.level} onChangeText={(text) => updateField('level', text)} placeholder="Level" />
+          <TextInput style={styles.input} value={editableSpell.castingTime} onChangeText={(text) => updateField('castingTime', text)} placeholder="Casting Time" />
+          <TextInput style={styles.input} value={editableSpell.duration} onChangeText={(text) => updateField('duration', text)} placeholder="Duration" />
+          <TextInput style={styles.input} value={editableSpell.range} onChangeText={(text) => updateField('range', text)} placeholder="Range" />
         </>
       ) : (
         <>
@@ -238,24 +216,9 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <Text style={styles.sectionTitle}>Components</Text>
       {isEditing ? (
         <>
-          <TextInput
-            style={styles.input}
-            value={editableSpell.components?.verbal ? 'Yes' : 'No'}
-            onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')}
-            placeholder="Verbal (Yes/No)"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.components?.somatic ? 'Yes' : 'No'}
-            onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')}
-            placeholder="Somatic (Yes/No)"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.components?.material || ''}
-            onChangeText={(text) => updateComponent('material', text)}
-            placeholder="Material"
-          />
+          <TextInput style={styles.input} value={editableSpell.components?.verbal ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')} placeholder="Verbal (Yes/No)" />
+          <TextInput style={styles.input} value={editableSpell.components?.somatic ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')} placeholder="Somatic (Yes/No)" />
+          <TextInput style={styles.input} value={editableSpell.components?.material || ''} onChangeText={(text) => updateComponent('material', text)} placeholder="Material" />
         </>
       ) : (
         <>
