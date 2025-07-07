@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */ 
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  TextInput,
   Share,
   Alert,
 } from 'react-native';
@@ -16,14 +17,16 @@ import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
 
 export default function CharacterDetailsScreen({ route, navigation }) {
-  const { character } = route.params || {};
   const { theme } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
+  const initialCharacter = route.params?.character || null;
+  const [character, setCharacter] = useState(initialCharacter);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    console.log('CharacterDetailsScreen → character:', character);
-  }, [character]);
+    setCharacter(initialCharacter);
+  }, [initialCharacter]);
 
   if (!character || typeof character !== 'object') {
     return (
@@ -80,6 +83,10 @@ export default function CharacterDetailsScreen({ route, navigation }) {
     } catch (error) {
       Alert.alert('Error saving', error.message);
     }
+  };
+
+  const updateField = (field, value) => {
+    setCharacter((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -163,10 +170,29 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: 'Aclonica',
   },
+  input: {
+    borderWidth: 1,
+    borderColor: COLORS.text,
+    borderRadius: 6,
+    padding: 8,
+    marginBottom: 8,
+    color: COLORS.text,
+    fontFamily: 'Aclonica',
+  },
   buttonRow: {
-    marginTop: 40,
+    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  buttonHalf: {
+    backgroundColor: COLORS.button,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    alignItems: 'center',
+    flex: 1,
   },
   backButton: {
     marginTop: 30,
