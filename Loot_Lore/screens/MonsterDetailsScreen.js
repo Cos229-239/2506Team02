@@ -1,13 +1,20 @@
+<<<<<<< HEAD
 /* eslint-disable react/prop-types */
 import React, { useEffect, useContext } from 'react';
+=======
+/* eslint-disable react/prop-types */ 
+// MonsterDetailsScreen.js
+import React, { useEffect, useState } from 'react';
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Alert,
+  TextInput,
   Share,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
@@ -17,14 +24,19 @@ import { getGlobalStyles, THEMES } from '../styles';
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
+<<<<<<< HEAD
   const { theme } = useContext(ThemeContext);
   const themeColors = THEMES[theme];
+=======
+  const [editableMonster, setEditableMonster] = useState(monster);
+  const [isEditing, setIsEditing] = useState(false);
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
 
   useEffect(() => {
-    console.log('MonsterDetailsScreen → monster:', monster);
+    setEditableMonster(monster);
   }, [monster]);
 
-  if (!monster || typeof monster !== 'object') {
+  if (!editableMonster || typeof editableMonster !== 'object') {
     return (
       <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
         <Text style={[styles.title, { color: themeColors.text }]}>No monster data found.</Text>
@@ -39,23 +51,25 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   }
 
   const generateMonsterText = () => {
-    const abilities = (monster.abilities || []).join('\n- ');
-    const attacks = (monster.attacks || []).join('\n- ');
-    const spells = (monster.spells || []).join('\n- ');
+    const abilities = (editableMonster.abilities || []).join('\n- ');
+    const attacks = (editableMonster.attacks || []).join('\n- ');
+    const spells = (editableMonster.spells || []).join('\n- ');
 
     return (
-      `Name: ${monster.name}\n\n` +
+      `Name: ${editableMonster.name}\n\n` +
       `Prompt Used:\n` +
-      `- Type: ${monster.promptType || 'N/A'}\n` +
-      `- Race: ${monster.promptRace || 'N/A'}\n` +
-      `- Challenge Rating: ${monster.promptChallengeRating || 'N/A'}\n\n` +
-      `Stats:\nSTR: ${monster.stats.STR}\nDEX: ${monster.stats.DEX}\nCON: ${monster.stats.CON}\n` +
-      `INT: ${monster.stats.INT}\nWIS: ${monster.stats.WIS}\nCHA: ${monster.stats.CHA}\n\n` +
+      `- Type: ${editableMonster.promptType || 'N/A'}\n` +
+      `- Race: ${editableMonster.promptRace || 'N/A'}\n` +
+      `- Challenge Rating: ${editableMonster.promptChallengeRating || 'N/A'}\n` +
+      `- Size: ${editableMonster.promptSize || 'N/A'}\n` +
+      `- Alignment: ${editableMonster.promptAlignment || 'N/A'}\n\n` +
+      `Stats:\nSTR: ${editableMonster.stats.STR}\nDEX: ${editableMonster.stats.DEX}\nCON: ${editableMonster.stats.CON}\n` +
+      `INT: ${editableMonster.stats.INT}\nWIS: ${editableMonster.stats.WIS}\nCHA: ${editableMonster.stats.CHA}\n\n` +
       `Abilities:\n- ${abilities}\n\n` +
       `Attacks:\n- ${attacks}\n\n` +
       `Spells:\n- ${spells}\n\n` +
-      `Lore:\n${monster.lore}\n\n` +
-      `Short Description:\n${monster.shortDescription}`
+      `Lore:\n${editableMonster.lore}\n\n` +
+      `Short Description:\n${editableMonster.shortDescription}`
     );
   };
 
@@ -76,7 +90,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     try {
       const existing = await AsyncStorage.getItem('@saved_monsters');
       const monsters = existing ? JSON.parse(existing) : [];
-      monsters.push(monster);
+      monsters.push(editableMonster);
       await AsyncStorage.setItem('@saved_monsters', JSON.stringify(monsters));
       Alert.alert('Success', 'Monster saved successfully!');
     } catch (error) {
@@ -84,7 +98,23 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     }
   };
 
+  const updateField = (field, value) => {
+    setEditableMonster((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const updateStat = (statKey, value) => {
+    setEditableMonster((prev) => ({
+      ...prev,
+      stats: { ...prev.stats, [statKey]: value },
+    }));
+  };
+
+  const updateListField = (field, value) => {
+    setEditableMonster((prev) => ({ ...prev, [field]: value.split('\n') }));
+  };
+
   return (
+<<<<<<< HEAD
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
       <Text style={[styles.title, { color: themeColors.text }]}>{monster.name}</Text>
 
@@ -128,12 +158,175 @@ export default function MonsterDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCopy}>
           <Text style={[styles.buttonText, { color: themeColors.text }]}>Copy</Text>
+=======
+    <ScrollView contentContainerStyle={styles.container}>
+      {isEditing ? (
+        <TextInput
+          style={styles.inputTitle}
+          value={editableMonster.name}
+          onChangeText={(text) => updateField('name', text)}
+          placeholder="Name"
+        />
+      ) : (
+        <Text style={styles.title}>{editableMonster.name}</Text>
+      )}
+
+      <Text style={styles.sectionTitle}>Monster Details</Text>
+      {isEditing ? (
+        <>
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptType}
+            onChangeText={(text) => updateField('promptType', text)}
+            placeholder="Type"
+          />
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptRace}
+            onChangeText={(text) => updateField('promptRace', text)}
+            placeholder="Race"
+          />
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptChallengeRating}
+            onChangeText={(text) => updateField('promptChallengeRating', text)}
+            placeholder="Challenge Rating"
+          />
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptSize}
+            onChangeText={(text) => updateField('promptSize', text)}
+            placeholder="Size"
+          />
+          <TextInput
+            style={styles.input}
+            value={editableMonster.promptAlignment}
+            onChangeText={(text) => updateField('promptAlignment', text)}
+            placeholder="Alignment"
+          />
+        </>
+      ) : (
+        <>
+          <Text style={styles.text}>Type: {editableMonster.promptType || 'N/A'}</Text>
+          <Text style={styles.text}>Race: {editableMonster.promptRace || 'N/A'}</Text>
+          <Text style={styles.text}>Challenge Rating: {editableMonster.promptChallengeRating || 'N/A'}</Text>
+          <Text style={styles.text}>Size: {editableMonster.promptSize || 'N/A'}</Text>
+          <Text style={styles.text}>Alignment: {editableMonster.promptAlignment || 'N/A'}</Text>
+        </>
+      )}
+
+      <Text style={styles.sectionTitle}>Stats</Text>
+      {Object.entries(editableMonster.stats || {}).map(([key, value]) =>
+        isEditing ? (
+          <TextInput
+            key={key}
+            style={styles.input}
+            value={String(value)}
+            onChangeText={(text) => updateStat(key, text)}
+            placeholder={key}
+            keyboardType="numeric"
+          />
+        ) : (
+          <Text key={key} style={styles.text}>{`${key}: ${value}`}</Text>
+        )
+      )}
+
+      <Text style={styles.sectionTitle}>Attacks</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={(editableMonster.attacks || []).join('\n')}
+          onChangeText={(text) => updateListField('attacks', text)}
+          placeholder="One attack per line"
+        />
+      ) : (
+        editableMonster.attacks.map((atk, i) => (
+          <Text key={`attack-${i}`} style={styles.text}>- {atk}</Text>
+        ))
+      )}
+
+      <Text style={styles.sectionTitle}>Spells</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={(editableMonster.spells || []).join('\n')}
+          onChangeText={(text) => updateListField('spells', text)}
+          placeholder="One spell per line"
+        />
+      ) : (
+        editableMonster.spells.map((sp, i) => (
+          <Text key={`spell-${i}`} style={styles.text}>- {sp}</Text>
+        ))
+      )}
+
+      <Text style={styles.sectionTitle}>Abilities</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={(editableMonster.abilities || []).join('\n')}
+          onChangeText={(text) => updateListField('abilities', text)}
+          placeholder="One ability per line"
+        />
+      ) : (
+        editableMonster.abilities.map((ab, i) => (
+          <Text key={`ability-${i}`} style={styles.text}>- {ab}</Text>
+        ))
+      )}
+
+      <Text style={styles.sectionTitle}>Description</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 100 }]}
+          multiline
+          value={editableMonster.shortDescription}
+          onChangeText={(text) => updateField('shortDescription', text)}
+        />
+      ) : (
+        <Text style={styles.text}>{editableMonster.shortDescription}</Text>
+      )}
+
+      <Text style={styles.sectionTitle}>Lore</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 100 }]}
+          multiline
+          value={editableMonster.lore}
+          onChangeText={(text) => updateField('lore', text)}
+        />
+      ) : (
+        <Text style={styles.text}>{editableMonster.lore}</Text>
+      )}
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
+          <Text style={styles.buttonText}>Share</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={handleCopy}>
+          <Text style={styles.buttonText}>Copy</Text>
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => setIsEditing((e) => !e)}>
+          <Text style={styles.buttonText}>{isEditing ? 'Done' : 'Edit'}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.backButton}>
+<<<<<<< HEAD
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={() => navigation.goBack()}>
           <Text style={[styles.buttonText, { color: themeColors.text }]}>Create New Monster</Text>
+=======
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Create New Monster</Text>
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -141,20 +334,37 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    flexGrow: 1,
+    backgroundColor: COLORS.background,
+  },
   centeredContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
+<<<<<<< HEAD
   container: {
     padding: 20,
     flexGrow: 1,
   },
+=======
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
+    fontFamily: 'Aclonica',
+  },
+  inputTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderColor: COLORS.text,
+    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   sectionTitle: {
@@ -169,10 +379,29 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: 'Aclonica',
   },
+  input: {
+    borderWidth: 1,
+    borderColor: COLORS.text,
+    borderRadius: 6,
+    padding: 8,
+    marginBottom: 8,
+    color: COLORS.text,
+    fontFamily: 'Aclonica',
+  },
   buttonRow: {
-    marginTop: 30,
+    marginTop: 20,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+  },
+  buttonHalf: {
+    backgroundColor: COLORS.button,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    alignItems: 'center',
+    flex: 1,
   },
   backButton: {
     marginTop: 30,
@@ -182,7 +411,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 40,
     borderRadius: 8,
-    marginHorizontal: 5,
     marginBottom: 10,
     alignItems: 'center',
   },

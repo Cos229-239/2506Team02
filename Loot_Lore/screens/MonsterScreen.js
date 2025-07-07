@@ -26,6 +26,8 @@ export default function MonsterScreen() {
   const [selectedType, setSelectedType] = useState('');
   const [selectedRace, setSelectedRace] = useState('');
   const [selectedCR, setSelectedCR] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedAlignment, setSelectedAlignment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
@@ -37,17 +39,19 @@ export default function MonsterScreen() {
     setSelectedType('');
     setSelectedRace('');
     setSelectedCR('');
+    setSelectedSize('');
+    setSelectedAlignment('');
   };
 
   const handleGenerate = async () => {
-    if (!selectedType || !selectedRace || !selectedCR) {
+    if (!selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment) {
       Alert.alert('Missing Info', 'Please select all options before generating.');
       return;
     }
 
     setIsLoading(true);
 
-    const monsterRequest = `Create a ${selectedRace} of type ${selectedType} with challenge rating ${selectedCR}.`;
+    const monsterRequest = `Create a ${selectedRace} of type ${selectedType} with challenge rating ${selectedCR}, size ${selectedSize}, and alignment ${selectedAlignment}.`;
 
     try {
       const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -76,8 +80,15 @@ export default function MonsterScreen() {
           promptType: selectedType,
           promptRace: selectedRace,
           promptChallengeRating: selectedCR,
+<<<<<<< HEAD
         };
         navigation.navigate('Monster Details', { monster: enrichedMonster });
+=======
+          promptSize: selectedSize,
+          promptAlignment: selectedAlignment,
+        };
+        navigation.navigate('Monster Details', { monster: enrichedMonster }); 
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
       } catch (parseErr) {
         console.error('JSON Parse Error:', parseErr);
         console.error('Raw response:', message);
@@ -91,7 +102,7 @@ export default function MonsterScreen() {
     }
   };
 
-  const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR;
+  const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
   return isLoading ? (
     <LoadingOverlay />
@@ -112,6 +123,7 @@ export default function MonsterScreen() {
               <Image source={require('../assets/logo.png')} style={styles.logo} />
             </View>
 
+<<<<<<< HEAD
             <Text style={[styles.label, { color: themeColors.text }]}>Monster Type</Text>
             <SelectList
               setSelected={setSelectedType}
@@ -135,6 +147,13 @@ export default function MonsterScreen() {
               dropdownItemStyles={styles.dropdownItem}
               dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
             />
+=======
+            <Text style={styles.label}>Monster Type</Text>
+            <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            <Text style={styles.label}>Race</Text>
+            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
 
             <Text style={[styles.label, { color: themeColors.text }]}>Challenge Rating</Text>
             <SelectList
@@ -147,6 +166,14 @@ export default function MonsterScreen() {
               dropdownItemStyles={styles.dropdownItem}
               dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
             />
+
+            {/* New Size Dropdown */}
+            <Text style={styles.label}>Size</Text>
+            <SelectList setSelected={setSelectedSize} data={monsterOptions.sizeOptions} placeholder="Size" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            {/* New Alignment Dropdown */}
+            <Text style={styles.label}>Alignment</Text>
+            <SelectList setSelected={setSelectedAlignment} data={monsterOptions.alignments} placeholder="Alignment" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -164,7 +191,11 @@ export default function MonsterScreen() {
                 ]}
                 disabled={isGenerateDisabled || isLoading}
               >
+<<<<<<< HEAD
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>Generate</Text>
+=======
+                <Text style={styles.buttonText}>Generate</Text>
+>>>>>>> 83b9e2a5d160dd641ded8fd0f89997b8f2924cc0
               </TouchableOpacity>
             </View>
           </ScrollView>
