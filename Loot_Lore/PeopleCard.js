@@ -4,13 +4,13 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from './styles';
 
 
-function DisplayPeopleInfo({ race, classType, levels, background, alignment }) {
+function DisplayPeopleInfo({ race, classType, level, background, alignment }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Selected Information</Text>
       <Text>Race: {race}</Text>
       <Text>Class: {classType}</Text>
-      <Text>Level: {levels}</Text>
+      <Text>Level: {level}</Text>
       <Text>Background: {background}</Text>
       <Text>Alignment: {alignment}</Text>
     </View>

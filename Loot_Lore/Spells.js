@@ -9,11 +9,11 @@ const DisplaySpellInfo = ({ spell }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>Generated Character</Text>
-      <Text>Race: {spell.spellType}</Text>
-      <Text>Class: {spell.spellLevel}</Text>
-      <Text>Level: {spell.castingTime}</Text>
-      <Text>Background: {spell.duration}</Text>
-      <Text>Alignment: {spell.rangeArea}</Text>
+      <Text>Spell Type: {spell.spellType}</Text>
+      <Text>Spell Level: {spell.spellLevel}</Text>
+      <Text>CastingTime: {spell.castingTime}</Text>
+      <Text>Duration: {spell.duration}</Text>
+      <Text>Range/Area: {spell.rangeArea}</Text>
     </View>
   );
 };

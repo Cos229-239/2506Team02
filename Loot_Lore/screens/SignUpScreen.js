@@ -41,7 +41,7 @@ export default function SignUpScreen({ navigation }) {
   <KeyboardAvoidingView
     style={{ flex: 1 }}
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    keyboardVerticalOffset={80} 
+    keyboardVerticalOffset={80} // Adjust this if you have a header
   >
     <ScrollView
       contentContainerStyle={{

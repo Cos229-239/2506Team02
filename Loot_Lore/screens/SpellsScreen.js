@@ -12,16 +12,11 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import DisplaySpellInfo from '../Spells';
-import { SPELL_CREATION_PROMPT } from '../prompts';
 import { GLOBAL_STYLES, COLORS } from '../styles';
-import spellOptions from '../data/spellOptions';
-import LoadingOverlay from './LoadingOverlay';
+
 export default function SpellsScreen() { 
   const navigation = useNavigation();   
   const [selectedSpellType, setSelectedSpellType] = useState('');
@@ -29,25 +24,135 @@ export default function SpellsScreen() {
   const [selectedCastingTime, setSelectedCastingTime] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
   const [selectedRangeArea, setSelectedRangeArea] = useState('');
- const [spell, setSpell] = useState(null);
-const [isLoading, setIsLoading] = useState(false);
+  const [spell, setSpell] = useState(null);
 
+  const dropdownData = {
+  spellType: [
+    { value: 'abjuration' },
+  { value: 'conjuration' },
+  { value: 'divination' },
+  { value: 'enchantment' },
+  { value: 'evocation' },
+  { value: 'illusion' },
+  { value: 'necromancy' },
+  { value: 'transmutation' }
+  ],
+  spellLevel:[
+    { value: 'Level 1' },
+  { value: 'Level 2' },
+  { value: 'Level 3' },
+  { value: 'Level 4' },
+  { value: 'Level 5' },
+  { value: 'Level 6' },
+  { value: 'Level 7' },
+  { value: 'Level 8' },
+  { value: 'Level 9' }
+  ],
+  castingTime:[
+     { value: '1 action' },
+  { value: '1 bonus action' },
+  { value: '1 reaction' },
+  { value: '1 minute' },
+  { value: '10 minutes' },
+  { value: '1 hour' },
+  { value: '8 hours' },
+  { value: '12 hours' },
+  { value: '24 hours' }
+  ],
+  duration:[
+  { value: 'Instantaneous' },
+  { value: 'Until dispelled' },
+  { value: 'Concentration, up to 1 round' },
+  { value: 'Concentration, up to 1 minute' },
+  { value: 'Concentration, up to 10 minutes' },
+  { value: 'Concentration, up to 1 hour' },
+  { value: 'Concentration, up to 8 hours' },
+  { value: '1 round' },
+  { value: '1 minute' },
+  { value: '10 minutes' },
+  { value: '1 hour' },
+  { value: '8 hours' },
+  { value: '24 hours' },
+  { value: '7 days' },
+  { value: 'Special' }
+],
+rangeArea:[
+  { value: 'Self' },
+  { value: 'Touch' },
+  { value: '5 feet' },
+  { value: '10 feet' },
+  { value: '15 feet' },
+  { value: '30 feet' },
+  { value: '60 feet' },
+  { value: '90 feet' },
+  { value: '120 feet' },
+  { value: '150 feet' },
+  { value: '300 feet' },
+  { value: '500 feet' },
+  { value: '1 mile' },
+  { value: 'Sight' },
+  { value: 'Unlimited' },
+  { value: 'Special' },
+  { value: 'Area: 5-foot radius' },
+  { value: 'Area: 10-foot radius' },
+  { value: 'Area: 15-foot cone' },
+  { value: 'Area: 20-foot cube' },
+  { value: 'Area: 60-foot line' },
+  { value: 'Area: Sphere (varies)' },
+  { value: 'Area: Cylinder (varies)' }
+]
+};
 
-  const handleOutput = async () => {
-  if (isGenerateDisabled) {
-    Alert.alert("Missing Info", "Please select all options before generating.");
-    return;
-  }
+const handleOutput = async () => {
+    if (!selectedSpellType || !selectedSpellLevel || !selectedCastingTime || !selectedDuration || !selectedRangeArea) {
+      Alert.alert("Missing Info", "Please select all options before generating.");
+      return;
+    }
 
-  setIsLoading(true);
+    const newSpell = {
+      spellType: selectedSpellType,
+      spellLevel: selectedSpellLevel,
+      castingTime: selectedCastingTime,
+      duration: selectedDuration,
+      rangeArea: selectedRangeArea,
+    };
 
-  const levelNumber = selectedSpellLevel.replace("Level ", "");
-  const interpolatedPrompt = SPELL_CREATION_PROMPT
-    .replace(/\$\{newSpell.spellType\}/g, selectedSpellType)
-    .replace(/\$\{levelNumber\}/g, levelNumber)
-    .replace(/\$\{newSpell.castingTime\}/g, selectedCastingTime)
-    .replace(/\$\{newSpell.duration\}/g, selectedDuration)
-    .replace(/\$\{newSpell.rangeArea\}/g, selectedRangeArea);
+    const levelNumber = selectedSpellLevel.replace("Level ", "");
+    const prompt = `
+Create a unique and immersive fantasy RPG spell with the following properties:
+
+- Spell Type: ${newSpell.spellType}
+- Spell Level: ${levelNumber}
+- Casting Time: ${newSpell.castingTime}
+- Duration: ${newSpell.duration}
+- Range/Area: ${newSpell.rangeArea}
+
+The spell should include a vivid name, description, magical effects, and relevant mechanical details. Focus on how the spell looks, feels, and functions in the game world. Include any visual effects, elemental themes, and any special quirks or drawbacks the spell might have.
+
+Randomly generate the spell's power metrics such as damage, save DCs, or healing (if applicable), and note any conditions or status effects it causes.
+
+Return ONLY valid JSON in this format:
+
+{
+  "name": "Spell Name",
+  "description": "A flavorful and vivid spell description...",
+  "effects": [
+    "Primary effect (e.g., 'Deals 6d8 fire damage in a 20 ft cone')",
+    "Secondary effect (e.g., 'Targets must make a Dexterity saving throw or be blinded for 1 turn')",
+    "Quirk or drawback (e.g., 'The caster glows with radiant light, giving enemies advantage to hit them for 1 round')"
+  ],
+  "components": {
+    "verbal": true,
+    "somatic": true,
+    "material": "a ruby worth 50gp"
+  },
+  "school": "${newSpell.spellType}",
+  "level": ${levelNumber},
+  "castingTime": "${newSpell.castingTime}",
+  "duration": "${newSpell.duration}",
+  "range": "${newSpell.rangeArea}"
+}
+`;
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -58,28 +163,22 @@ const [isLoading, setIsLoading] = useState(false);
       },
       body: JSON.stringify({
         model: "gpt-4",
-        messages: [
-          { role: "system", content: SPELL_CREATION_PROMPT },
-          { role: "user", content: interpolatedPrompt }
-        ],
+        messages: [{ role: "user", content: prompt }],
         temperature: 0.8,
       }),
     });
 
     const data = await response.json();
+    console.log("OpenAI Response:", data);
 
     if (data.choices && data.choices.length > 0) {
       try {
         const raw = data.choices[0].message?.content;
         const generated = JSON.parse(raw);
 
-        navigation.navigate('Spell Details', {
+        navigation.navigate('SpellDetails', {
           spell: {
-            spellType: selectedSpellType,
-            spellLevel: selectedSpellLevel,
-            castingTime: selectedCastingTime,
-            duration: selectedDuration,
-            rangeArea: selectedRangeArea,
+            ...newSpell,
             ...generated,
           },
         });
@@ -88,13 +187,12 @@ const [isLoading, setIsLoading] = useState(false);
         Alert.alert("Error", "Spell generation failed. Try again.");
       }
     } else {
+      console.error("Invalid OpenAI response", data);
       Alert.alert("Error", "OpenAI did not return a valid response.");
     }
   } catch (fetchErr) {
     console.error("API request failed:", fetchErr);
     Alert.alert("Error", "Failed to fetch from OpenAI. Try again.");
-  } finally {
-    setIsLoading(false);
   }
 };
 
@@ -107,74 +205,70 @@ const [isLoading, setIsLoading] = useState(false);
     setSpell(null);
   };
 
-  const isGenerateDisabled = !selectedSpellType || !selectedSpellLevel || !selectedCastingTime || !selectedDuration || !selectedRangeArea;
-
   return (
-        isLoading ? <LoadingOverlay /> :
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={GLOBAL_STYLES.screen}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={80}
+     <SafeAreaView style={GLOBAL_STYLES.screen}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={80} // Adjust this if you have a header
+      >
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            alignItems: 'left',
+            padding: 20,
+            paddingBottom: 40,
+          }}
+          keyboardShouldPersistTaps="handled"
         >
-          <ScrollView
-            contentContainerStyle={styles.formContainer}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={styles.header}>
-              <Text style={styles.title}>Loot & Lore</Text>
-              <Image source={require('../assets/logo.png')} style={styles.logo} />
-            </View>
+      <View style={styles.header}>
+        <Text style={styles.title}>Loot & Lore</Text>
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
+        </View>
+      <Text style={styles.label}>Spell Type</Text>
+      <SelectList setSelected={setSelectedSpellType} data={dropdownData.spellType} placeholder="Spell Type" boxStyles={styles.dropdown} />
 
-            <Text style={styles.label}>Spell Type</Text>
+      <Text style={styles.label}>Spell Level</Text>
+      <SelectList setSelected={setSelectedSpellLevel} data={dropdownData.spellLevel} placeholder="Spell Level" boxStyles={styles.dropdown} />
 
-            <SelectList setSelected={setSelectedSpellType} data={spellOptions.spellType} placeholder="Spell Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText}/>
+      <Text style={styles.label}>Casting Time</Text>
+      <SelectList setSelected={setSelectedCastingTime} data={dropdownData.castingTime} placeholder="Casting Time" boxStyles={styles.dropdown} />
 
-            <Text style={styles.label}>Spell Level</Text>
-            <SelectList setSelected={setSelectedSpellLevel} data={spellOptions.spellLevel} placeholder="Spell Level" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText}/>
+      <Text style={styles.label}>Duration</Text>
+      <SelectList setSelected={setSelectedDuration} data={dropdownData.duration} placeholder="Duration" boxStyles={styles.dropdown} />
 
-            <Text style={styles.label}>Casting Time</Text>
-            <SelectList setSelected={setSelectedCastingTime} data={spellOptions.castingTime} placeholder="Casting Time" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText}/>
+      <Text style={styles.label}>Range/Area</Text>
+      <SelectList setSelected={setSelectedRangeArea} data={dropdownData.rangeArea} placeholder="Range/Area" boxStyles={styles.dropdown} />
 
-            <Text style={styles.label}>Duration</Text>
-            <SelectList setSelected={setSelectedDuration} data={spellOptions.duration} placeholder="Duration" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText}/>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
+          <Text style={styles.buttonText}>Clear</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleOutput} style={styles.generateButton}>
+          <Text style={styles.buttonText}>Generate</Text>
+        </TouchableOpacity>
+      </View>
 
-            <Text style={styles.label}>Range/Area</Text>
-            <SelectList setSelected={setSelectedRangeArea} data={spellOptions.rangeArea} placeholder="Range/Area" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText}/>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-                <Text style={styles.buttonText}>Clear</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-  onPress={handleOutput}
-  style={[styles.generateButton, (isGenerateDisabled || isLoading) && { opacity: 0.5 }]}
-  disabled={isGenerateDisabled || isLoading}
->
-  <Text style={styles.buttonText}>Generate</Text>
-</TouchableOpacity>
-            </View>
-
-            {spell && <DisplaySpellInfo spell={spell} />}
-          </ScrollView>
+      {spell && <DisplaySpellInfo spell={spell} />}
+    </ScrollView>
         </KeyboardAvoidingView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+        </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  formContainer: {
-    flexGrow: 1,
-    padding: 20,
-    paddingBottom: 40,
+  container: {
+    ...GLOBAL_STYLES.screen,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: 20,
   },
   header: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: 20,
+},
   title: {
     color: COLORS.text,
     fontSize: 32,
@@ -194,24 +288,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   dropdown: {
-    backgroundColor: COLORS.button,
-    borderColor: '#f4a300',
-    borderWidth: 1,
-    borderRadius: 8,
+    backgroundColor: '#fff',
     marginBottom: 10,
-  },
-  dropdownInput: {
-    color: '#000000',
-  },
-  dropdownList: {
-    backgroundColor: COLORS.button,
-    borderColor: '#f4a300',
-  },
-  dropdownItem: {
-    borderBottomColor: '#f4a300',
-  },
-  dropdownText: {
-    color: '#000000',
   },
   buttonContainer: {
     flexDirection: 'row',

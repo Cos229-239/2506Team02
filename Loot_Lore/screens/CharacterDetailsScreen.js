@@ -23,11 +23,9 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   if (!character || typeof character !== 'object') {
     return (
-      <View style={styles.centeredContainer}>
+      <View style={styles.container}>
         <Text style={styles.title}>No character data found.</Text>
-       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-                 <Text style={styles.buttonText}>Go Back</Text>
-               </TouchableOpacity>
+        <Button title="Go Back" onPress={() => navigation.goBack()} color={COLORS.button} />
       </View>
     );
   }
@@ -89,23 +87,23 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       <Text style={styles.text}>Background: {character.background}</Text>
       <Text style={styles.text}>Alignment: {character.alignment}</Text>
 
-      <Text style={styles.sectionTitle}>Stats</Text>
-      {Object.entries(character.stats || {}).map(([stat, value]) => (
-        <Text key={stat} style={styles.text}>
-          {stat}: {value}
-        </Text>
-      ))}
-      
-      <Text style={styles.sectionTitle}>Backstory</Text>
-      <Text style={styles.text}>{character.backstory}</Text>
-
       <Text style={styles.sectionTitle}>Personality</Text>
       <Text style={styles.text}>{character.personality}</Text>
+
+      <Text style={styles.sectionTitle}>Backstory</Text>
+      <Text style={styles.text}>{character.backstory}</Text>
 
       <Text style={styles.sectionTitle}>Traits & Abilities</Text>
       {(character.traits || []).map((trait, idx) => (
         <Text key={idx} style={styles.text}>
           - {trait}
+        </Text>
+      ))}
+
+      <Text style={styles.sectionTitle}>Stats</Text>
+      {Object.entries(character.stats || {}).map(([stat, value]) => (
+        <Text key={stat} style={styles.text}>
+          {stat}: {value}
         </Text>
       ))}
 
@@ -136,13 +134,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: COLORS.background,
   },
-  centeredContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: 20,
-  backgroundColor: COLORS.background,
-},
   title: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -170,12 +161,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   backButton: {
-    color: COLORS.text,
     marginTop: 30,
     alignItems: 'center',
   },
   button: {
-  backgroundColor: COLORS.button, 
+  backgroundColor: COLORS.button, // Or your preferred color
   paddingVertical: 16,
   paddingHorizontal: 40,
   borderRadius: 8,
@@ -184,7 +174,7 @@ const styles = StyleSheet.create({
   alignItems: 'center',
 },
 buttonText: {
-  color: COLORS.text,
+  color: COLORS.textOnAccent || '#fff',
   fontSize: 16,
   fontWeight: 'bold',
   fontFamily: 'Aclonica',

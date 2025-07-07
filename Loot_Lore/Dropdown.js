@@ -5,24 +5,20 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { COLORS } from './styles';
 
 const Dropdown = ({ label, options, selectedValue, onChange }) => {
-  const data = options.map((item) => ({
-    key: item.key ?? item.value,
-    value: item.value,
-  }));
+  const data = options.map((item) => ({ key: item, value: item }));
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <SelectList
-  setSelected={onChange}
-  data={data}
-  save="value"
-  selected={selectedValue}
-  defaultOption={selectedValue ? { value: selectedValue } : undefined} 
-  boxStyles={styles.box}
-  dropdownStyles={styles.dropdown}
-  inputStyles={styles.input}
-/>
+        setSelected={onChange}
+        data={data}
+        save="value"
+        defaultOption={{ key: selectedValue, value: selectedValue }}
+        boxStyles={styles.box}
+        dropdownStyles={styles.dropdown}
+        inputStyles={styles.input}
+      />
     </View>
   );
 };

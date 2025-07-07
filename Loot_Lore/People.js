@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { GLOBAL_STYLES, COLORS } from './styles';
 
-
 const DisplayPeopleInfo = ({ character }) => {
   if (!character) return null;
 
