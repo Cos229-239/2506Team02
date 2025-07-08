@@ -28,7 +28,7 @@ export default function TermsAndAgreementScreen() {
         style={styles.screen}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
-        <Text style={styles.header}>Terms and Agreement</Text>
+        {/* Removed header title text */}
         {terms.map((term, index) => (
           <Text
             key={index}
@@ -46,10 +46,15 @@ export default function TermsAndAgreementScreen() {
       </ScrollView>
 
       {/* 🔽 Back button pinned to bottom with theme colors */}
-      <View style={[localStyles.footer, {
-        backgroundColor: colors.background,
-        borderTopColor: colors.text,
-      }]}>
+      <View
+        style={[
+          localStyles.footer,
+          {
+            backgroundColor: colors.background,
+            borderTopColor: colors.text,
+          },
+        ]}
+      >
         <BackButton />
       </View>
     </View>
@@ -60,7 +65,7 @@ const localStyles = StyleSheet.create({
   container: {
     flex: 1,
   },
-    footer: {
+  footer: {
     borderTopWidth: 1,
     padding: 10,
   },

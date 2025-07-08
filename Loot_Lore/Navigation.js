@@ -76,7 +76,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="Terms and Agreement" component={TermsAndAgreementScreen} />
+      <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
     </Drawer.Navigator>
   );
 }
@@ -122,7 +122,7 @@ export default function AppNavigator({ user }) {
             <Stack.Screen name="Monster Details" component={MonsterDetailsScreen} />
             <Stack.Screen name="Other" component={OtherScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="Terms And Agreement" component={TermsAndAgreementScreen} />
+            <Stack.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
           </>
         )}
       </Stack.Navigator>
