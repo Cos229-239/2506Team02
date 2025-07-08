@@ -43,7 +43,7 @@ export default function OtherScreen({ navigation }) {
 
         <TouchableOpacity
           style={[styles.menuButton, { backgroundColor: themeColors.button }]}
-          onPress={() => navigation.navigate('TermsAndAgreement')}
+          onPress={() => navigation.navigate('Terms And Agreement')}
         >
           <Text style={[styles.buttonText, { color: themeColors.text }]}>Terms & Agreement</Text>
         </TouchableOpacity>
