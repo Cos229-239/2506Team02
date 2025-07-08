@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles } from '../styles';
 
@@ -23,9 +23,22 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       ))}
 
-      <View style={{ marginTop: 30, flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={[styles.header, { marginRight: 10 }]}>Bold Text</Text>
-        <Switch value={boldText} onValueChange={toggleBoldText} />
+      {/* Full-width Bold Toggle Button */}
+      <View style={{ marginTop: 30, width: '100%', paddingHorizontal: 20 }}>
+        <TouchableOpacity
+          onPress={toggleBoldText}
+          style={{
+            backgroundColor: boldText ? '#E59F34' : '#944C17',
+            paddingVertical: 14,
+            borderRadius: 8,
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>
+            {boldText ? 'Bold: ON' : 'Bold: OFF'}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
