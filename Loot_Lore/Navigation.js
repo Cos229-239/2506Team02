@@ -21,6 +21,8 @@ import SpellDetailsScreen from './screens/SpellDetailScreen';
 import MonsterScreen from './screens/MonsterScreen';
 import OtherScreen from './screens/OtherScreen'
 import MonsterDetailsScreen from './screens/MonsterDetailsScreen';
+import ItemScreen from './screens/ItemScreen';
+import ItemDetailsScreen from './screens/ItemDetailsScreen';
 import HeaderMenuButton from './HeaderMenuButton';
 
 const Stack = createNativeStackNavigator();
@@ -59,7 +61,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Main Menu" component={HomeScreen} />
       <Drawer.Screen name="Characters" component={PeopleScreen} />
       <Drawer.Screen name="Monsters" component={MonsterScreen} />
-      <Drawer.Screen name="Items" component={PlaceholderScreen} />
+      <Drawer.Screen name="Items" component={ItemScreen} />
       <Drawer.Screen name="Spells" component={SpellsScreen} />
       <Drawer.Screen name="Other" component={OtherScreen} />
       <Drawer.Screen
@@ -73,6 +75,7 @@ function DrawerNavigator() {
       />
       <Drawer.Screen name="Character Details" component={CharacterDetailsScreen} />
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
+      <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
     </Drawer.Navigator>
   );
