@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { ThemeContext } from '../ThemeContext';
-import { getGlobalStyles, THEMES } from '../styles';
+import { getGlobalStyles } from '../styles';
 import BackButton from '../BackButton';
 
 export default function TermsAndAgreementScreen() {
   const { theme, boldText } = useContext(ThemeContext);
   const styles = getGlobalStyles(theme);
-  const colors = THEMES[theme] || THEMES.default;
+  const colors = theme;
 
   const terms = [
     '1. You agree to use this app in accordance with all applicable laws and regulations.',
@@ -33,7 +33,7 @@ export default function TermsAndAgreementScreen() {
           <Text
             key={index}
             style={{
-              color: styles.buttonText.color,
+              color: colors.text,
               fontSize: 16,
               fontWeight: boldText ? 'bold' : 'normal',
               marginVertical: 8,

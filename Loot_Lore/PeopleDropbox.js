@@ -3,11 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-na
 import { SelectList } from 'react-native-dropdown-select-list';
 import DisplayPeopleInfo from './People';
 import { ThemeContext } from './ThemeContext';
-import { THEMES } from './styles';
 
 export default function PeopleDropbox() {
   const { theme } = useContext(ThemeContext);
-  const colors = THEMES[theme] || THEMES.default;
+  const colors = theme;
 
   const [selectedRace, setSelectedRace] = useState('');
   const [selectedClass, setSelectedClass] = useState('');

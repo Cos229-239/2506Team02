@@ -1,11 +1,27 @@
+/* eslint-disable react/prop-types */
 import React, { createContext, useState, useEffect } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ThemeContext = createContext();
 
+// Define your themes here
+const themes = {
+  default: {
+    text: '#000', // black text
+    background: '#fff', // white background
+    // add more theme properties as needed
+  },
+  dark: {
+    text: '#fff',
+    background: '#000',
+    // add more theme properties as needed
+  },
+};
+
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(undefined);
+  const [themeName, setThemeName] = useState(undefined);
+  const [theme, setTheme] = useState(themes.default);
   const [boldText, setBoldText] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
@@ -14,11 +30,14 @@ export const ThemeProvider = ({ children }) => {
       try {
         const storedTheme = await AsyncStorage.getItem('appTheme');
         const storedBold = await AsyncStorage.getItem('appBoldText');
-        setTheme(storedTheme || 'default');
-        setBoldText(storedBold === 'true'); // note: storedBold is a string
+        const name = storedTheme || 'default';
+        setThemeName(name);
+        setTheme(themes[name] || themes.default);
+        setBoldText(storedBold === 'true');
       } catch (err) {
         console.warn('Failed to load theme settings:', err);
-        setTheme('default');
+        setThemeName('default');
+        setTheme(themes.default);
         setBoldText(false);
       } finally {
         setIsReady(true);
@@ -26,9 +45,10 @@ export const ThemeProvider = ({ children }) => {
     })();
   }, []);
 
-  const changeTheme = async (newTheme) => {
-    setTheme(newTheme);
-    await AsyncStorage.setItem('appTheme', newTheme);
+  const changeTheme = async (newThemeName) => {
+    setThemeName(newThemeName);
+    setTheme(themes[newThemeName] || themes.default);
+    await AsyncStorage.setItem('appTheme', newThemeName);
   };
 
   const toggleBoldText = async () => {
@@ -47,7 +67,7 @@ export const ThemeProvider = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, changeTheme, boldText, toggleBoldText }}>
+    <ThemeContext.Provider value={{ theme, changeTheme, boldText, toggleBoldText, themeName }}>
       {children}
     </ThemeContext.Provider>
   );

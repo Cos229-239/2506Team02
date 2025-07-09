@@ -1,4 +1,14 @@
 {
+  "name": "questlog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "test": "jest"
+  },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
     "@react-native-async-storage/async-storage": "2.1.2",
@@ -17,17 +27,9 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
-    "@react-native-async-storage/async-storage": "^2.1.2",
-    "@react-native-masked-view/masked-view": "0.3.2",
-    "@react-navigation/drawer": "^7.5.2",
-    "@react-navigation/native": "^7.1.14",
-    "@react-navigation/native-stack": "^7.3.21",
-    "expo": "^53.0.18",
-    "expo-web-browser": "^14.2.0",
-    "firebase": "^11.10.0",
-    "react-native-dotenv": "^3.4.11",
     "react-native-dropdown-select-list": "^2.0.5",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-pager-view": "6.7.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
@@ -53,6 +55,4 @@
     "react-test-renderer": "^19.0.0"
   },
   "private": true
-    "expo-clipboard": "~7.1.5"
-  }
 }

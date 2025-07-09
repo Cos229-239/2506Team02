@@ -1,29 +1,27 @@
 /* eslint-disable react/prop-types */
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ThemeContext } from './ThemeContext';
-import { THEMES } from './styles';
+import { GLOBAL_STYLES, COLORS } from './styles';
+
 
 const DisplayPeopleInfo = ({ character }) => {
-  const { theme } = useContext(ThemeContext);
-  const colors = THEMES[theme];
-
   if (!character) return null;
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.button }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Generated Character</Text>
-      <Text style={{ color: colors.text }}>Race: {character.race}</Text>
-      <Text style={{ color: colors.text }}>Class: {character.class || character.classes}</Text>
-      <Text style={{ color: colors.text }}>Level: {character.level || character.levels}</Text>
-      <Text style={{ color: colors.text }}>Background: {character.background}</Text>
-      <Text style={{ color: colors.text }}>Alignment: {character.alignment}</Text>
+    <View style={styles.card}>
+      <Text style={styles.title}>Generated Character</Text>
+      <Text>Race: {character.race}</Text>
+      <Text>Class: {character.classes}</Text>
+      <Text>Level: {character.levels}</Text>
+      <Text>Background: {character.background}</Text>
+      <Text>Alignment: {character.alignment}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
+    backgroundColor: COLORS.button,
     padding: 16,
     borderRadius: 10,
     shadowColor: '#000',

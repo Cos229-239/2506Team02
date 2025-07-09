@@ -1,17 +1,11 @@
 /* eslint-disable react/prop-types */ 
-import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { auth } from '../firebaseConfig'; 
-import { signOut } from 'firebase/auth'; 
+import { getAuth, signOut } from 'firebase/auth'; 
+import React from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { GLOBAL_STYLES, COLORS } from '../styles';
 
-import { ThemeContext } from '../ThemeContext';
-import { getGlobalStyles, THEMES } from '../styles';
-
-export default function OtherScreen({ navigation }) {
-  const { theme } = useContext(ThemeContext);
-  const themeColors = THEMES[theme] || THEMES.default;
-  const globalStyles = getGlobalStyles(theme);
-
+export default function HomeScreen({ navigation }) {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -22,37 +16,41 @@ export default function OtherScreen({ navigation }) {
   };
 
   return (
-    <View style={[globalStyles.screen, styles.container, { backgroundColor: themeColors.background }]}>
-      <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
+    <View style={styles.container}>
+     <Text style={styles.title}>Loot & Lore</Text>
+     
+           <Image
+             source={require('../assets/logo.png')}
+             style={styles.logo}
+           />
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
+          style={styles.menuButton}
           onPress={() => navigation.navigate('SavedDatabase')}
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Saved Database</Text>
+          <Text style={styles.buttonText}>Saved Database</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
+          style={styles.menuButton}
           onPress={() => navigation.navigate('Settings')}
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Settings</Text>
+          <Text style={styles.buttonText}>Settings</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.menuButton, { backgroundColor: themeColors.button }]}
-          onPress={() => navigation.navigate('Terms & Agreement')}
+          style={styles.menuButton}
+          onPress={() => navigation.navigate('TermsAndAgreement')}
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Terms & Agreement</Text>
+          <Text style={styles.buttonText}>Terms & Agreement</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.centeredButton, { backgroundColor: themeColors.button }]}
+          style={[styles.centeredButton]}
           onPress={handleSignOut}
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Sign Out</Text>
+          <Text style={styles.buttonText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -61,11 +59,13 @@ export default function OtherScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    ...GLOBAL_STYLES.screen,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 20,
   },
   title: {
+    color: COLORS.text,
     fontSize: 32,
     fontFamily: 'Aclonica',
     marginTop: 20,
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   menuButton: {
+    backgroundColor: COLORS.button,
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 8,
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   centeredButton: {
+    backgroundColor: COLORS.button,
     paddingVertical: 16,
     paddingHorizontal: 65,
     borderRadius: 8,
@@ -99,6 +101,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
+    color: COLORS.text,
     fontSize: 18,
     fontFamily: 'Aclonica',
   },

@@ -1,16 +1,13 @@
-/* eslint-disable react/prop-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { TouchableOpacity, ActivityIndicator, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity, ActivityIndicator, View } from 'react-native';
 
-import { auth } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-
-import { ThemeContext } from './ThemeContext';
-import { THEMES } from './styles';
+import { auth } from './firebaseConfig';
+import { COLORS } from './styles';
 
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -28,30 +25,25 @@ import ItemScreen from './screens/ItemScreen';
 import ItemDetailsScreen from './screens/ItemDetailsScreen';
 import HeaderMenuButton from './HeaderMenuButton';
 
-
-
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
-  const { theme } = useContext(ThemeContext);
-  const colors = THEMES[theme] || THEMES.default;
-
   return (
     <Drawer.Navigator
       initialRouteName="Main Menu"
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: COLORS.background,
         },
-        headerTintColor: colors.text,
+        headerTintColor: COLORS.text,
         headerTitleStyle: {
           fontWeight: 'bold',
         },
         headerRight: () => <HeaderMenuButton />,
         drawerStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: COLORS.background,
           width: 220,
           borderTopLeftRadius: 20,
           borderBottomLeftRadius: 20,
@@ -59,8 +51,8 @@ function DrawerNavigator() {
           marginBottom: 80,
           elevation: 12,
         },
-        drawerActiveTintColor: colors.text,
-        drawerInactiveTintColor: colors.text,
+        drawerActiveTintColor: COLORS.text,
+        drawerInactiveTintColor: COLORS.text,
         drawerType: 'front',
         overlayColor: 'rgba(160, 152, 127, 0.78)',
         drawerPosition: 'right',
@@ -72,33 +64,40 @@ function DrawerNavigator() {
       <Drawer.Screen name="Items" component={ItemScreen} />
       <Drawer.Screen name="Spells" component={SpellsScreen} />
       <Drawer.Screen name="Other" component={OtherScreen} />
+      <Drawer.Screen
+        name="Separator"
+        component={() => null}
+        options={{
+          drawerLabel: () => (
+            <View style={{ height: 1, backgroundColor: COLORS.text, marginVertical: 8 }} />
+          ),
+        }}
+      />
       <Drawer.Screen name="Character Details" component={CharacterDetailsScreen} />
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
       <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
     </Drawer.Navigator>
   );
 }
 
-export default function AppNavigator({ user }) {
-  const { theme } = useContext(ThemeContext);
-  const themeColors = THEMES[theme] || THEMES.default;
-
-  const [loading, setLoading] = useState(user === undefined);
+export default function AppNavigator() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
       setLoading(false);
     });
-    return unsubscribe;
+
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: themeColors.background }}>
-        <ActivityIndicator size="large" color={themeColors.text} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={COLORS.text} />
       </View>
     );
   }
@@ -106,24 +105,15 @@ export default function AppNavigator({ user }) {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!user ? (
+        {user ? (
+          <>
+            <Stack.Screen name="Main" component={DrawerNavigator} />
+          </>
+        ) : (
           <>
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Main" component={DrawerNavigator} />
-            <Stack.Screen name="People" component={PeopleScreen} />
-            <Stack.Screen name="Character Details" component={CharacterDetailsScreen} />
-            <Stack.Screen name="Spells" component={SpellsScreen} />
-            <Stack.Screen name="Spell Details" component={SpellDetailsScreen} />
-            <Stack.Screen name="Monster Screen" component={MonsterScreen} />
-            <Stack.Screen name="Monster Details" component={MonsterDetailsScreen} />
-            <Stack.Screen name="Other" component={OtherScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
           </>
         )}
       </Stack.Navigator>

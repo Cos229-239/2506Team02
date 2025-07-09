@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
-import React, { useState, useContext } from 'react';
+/* eslint-disable react/prop-types */ 
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,17 +12,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { getGlobalStyles, THEMES } from '../styles';
-import { ThemeContext } from '../ThemeContext';
+import { GLOBAL_STYLES, COLORS } from '../styles';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function SignUpScreen({ navigation }) {
-  const { theme } = useContext(ThemeContext);
-  const globalStyles = getGlobalStyles(theme);
-  const themeColors = THEMES[theme];
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -81,7 +76,7 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={globalStyles.screen}>
+    <SafeAreaView style={GLOBAL_STYLES.screen}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -97,89 +92,84 @@ export default function SignUpScreen({ navigation }) {
           }}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
+          <Text style={styles.title}>Loot & Lore</Text>
           <Image source={require('../assets/logo.png')} style={styles.logo} />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>First Name</Text>
+          <Text style={styles.label}>First Name</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Enter your first name"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             value={firstName}
             onChangeText={setFirstName}
           />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>Last Name</Text>
+          <Text style={styles.label}>Last Name</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Enter your last name"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             value={lastName}
             onChangeText={setLastName}
           />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>Phone Number</Text>
+          <Text style={styles.label}>Phone Number</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Enter phone number"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             value={phone}
             onChangeText={setPhone}
             keyboardType="phone-pad"
           />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>Username</Text>
+          <Text style={styles.label}>Username</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Enter username"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
           />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>Email</Text>
+          <Text style={styles.label}>Email</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Enter email"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>Password</Text>
+          <Text style={styles.label}>Password</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Enter password"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
 
-          <Text style={[styles.label, { color: themeColors.text }]}>Confirm Password</Text>
+          <Text style={styles.label}>Confirm Password</Text>
           <TextInput
-            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
+            style={styles.input}
             placeholder="Confirm password"
-            placeholderTextColor={themeColors.placeholder}
+            placeholderTextColor="#ccc"
             secureTextEntry
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
 
-          <TouchableOpacity
-            style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
-            onPress={handleSignUp}
-          >
-            <Text style={[styles.buttonText, { color: themeColors.text }]}>Create Account</Text>
+          <TouchableOpacity style={styles.primaryButton} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Create Account</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backToSignIn}>
-            <Text style={[styles.backToSignInText, { color: themeColors.text }]}>
-              Already have an account? Sign In
-            </Text>
+            <Text style={styles.backToSignInText}>Already have an account? Sign In</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -189,6 +179,7 @@ export default function SignUpScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   title: {
+    color: COLORS.text,
     fontSize: 32,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -201,12 +192,15 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    backgroundColor: '#fff',
     borderRadius: 6,
     padding: 12,
     marginBottom: 10,
     fontSize: 16,
+    color: '#000',
   },
   label: {
+    color: COLORS.text,
     fontSize: 16,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -214,6 +208,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   primaryButton: {
+    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     alignItems: 'center',
@@ -221,6 +216,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
+    color: COLORS.text,
     fontFamily: 'Aclonica',
     fontSize: 16,
   },
@@ -228,6 +224,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   backToSignInText: {
+    color: COLORS.text,
     fontFamily: 'Aclonica',
     fontSize: 14,
     textDecorationLine: 'underline',

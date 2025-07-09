@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
 import { auth, db } from './firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
 import AppNavigator from './Navigation';
-import { ThemeProvider } from './ThemeContext'; // ✅ Import your ThemeProvider
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -36,6 +34,7 @@ export default function App() {
       } else {
         console.log("👋 User signed out");
 
+        // Clean up Firestore listener if signed out
         if (unsubscribeFirestore) {
           unsubscribeFirestore();
           unsubscribeFirestore = null;
@@ -43,16 +42,12 @@ export default function App() {
       }
     });
 
+    // Cleanup function on unmount
     return () => {
       unsubscribeAuth();
       if (unsubscribeFirestore) unsubscribeFirestore();
     };
   }, []);
 
-  return (
-   <ThemeProvider>
-  <AppNavigator user={user} />
-</ThemeProvider>
-
-  );
+  return <AppNavigator user={user} />;
 }

@@ -7,33 +7,23 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Alert,
   Share,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
 
 export default function ItemDetailsScreen({ route, navigation }) {
-  const { item } = route.params || {};
-  const [editableItem, setEditableItem] = useState({
-    ...item,
-    properties: Array.isArray(item?.properties) ? item.properties : [],
-    effect: Array.isArray(item?.effect) ? item.effect : [],
-    damage: item?.damage || { amount: '0', type: 'N/A' },
-  });
+  const initialItem = route.params?.item || null;
+  const [item, setItem] = useState(initialItem);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    setEditableItem({
-      ...item,
-      properties: Array.isArray(item?.properties) ? item.properties : [],
-      effect: Array.isArray(item?.effect) ? item.effect : [],
-      damage: item?.damage || { amount: '0', type: 'N/A' },
-    });
-  }, [item]);
+    setItem(initialItem);
+  }, [initialItem]);
 
-  if (!editableItem || typeof editableItem !== 'object') {
+  if (!item || typeof item !== 'object') {
     return (
       <View style={styles.centeredContainer}>
         <Text style={styles.title}>No item data found.</Text>
@@ -45,21 +35,28 @@ export default function ItemDetailsScreen({ route, navigation }) {
   }
 
   const updateField = (field, value) => {
-    setEditableItem((prev) => ({ ...prev, [field]: value }));
+    setItem((prev) => ({ ...prev, [field]: value }));
   };
 
-  const updateEffect = (text) => {
-    setEditableItem((prev) => ({
-      ...prev,
-      effect: text.split('\n'),
-    }));
+  const handleShare = async () => {
+    try {
+      const message = generateItemText();
+      await Share.share({ message });
+    } catch (error) {
+      Alert.alert('Error sharing', error.message);
+    }
+  };
+
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(generateItemText());
+    Alert.alert('Copied', 'Item copied to clipboard!');
   };
 
   const handleSave = async () => {
     try {
       const existing = await AsyncStorage.getItem('@saved_items');
       const items = existing ? JSON.parse(existing) : [];
-      items.push(editableItem);
+      items.push(item);
       await AsyncStorage.setItem('@saved_items', JSON.stringify(items));
       Alert.alert('Success', 'Item saved successfully!');
     } catch (error) {
@@ -68,103 +65,99 @@ export default function ItemDetailsScreen({ route, navigation }) {
   };
 
   const generateItemText = () => {
-    const damageAmount = editableItem?.damage?.amount || 'N/A';
-    const damageType = editableItem?.damage?.type || 'N/A';
-    return `
-      Name: ${editableItem?.name || 'N/A'}
-      Description: ${editableItem?.description || 'N/A'}
-      Damage: ${damageAmount} ${damageType}
-      Properties: ${editableItem?.properties?.length ? editableItem.properties.map((prop) => `- ${prop}`).join('\n') : 'No properties available'}
-      Effects: ${editableItem?.effect?.length ? editableItem.effect.map((eff) => `- ${eff}`).join('\n') : 'No effects available'}
-      Origin: ${editableItem?.origin || 'No origin available'}
-    `;
-  };
-
-  const handleCopy = async () => {
-    await Clipboard.setStringAsync(generateItemText());
-    Alert.alert('Copied', 'Item copied to clipboard!');
-  };
-
-  const handleShare = async () => {
-    try {
-      await Share.share({ message: generateItemText() });
-    } catch (error) {
-      Alert.alert('Error sharing', error.message);
-    }
+    return (
+      `Name: ${item.name}\n\n` +
+      `Type: ${item.type}\n` +
+      `Magic: ${item.magicItem}\n\n` +
+      `Damage: ${item.damage?.amount || ''} ${item.damage?.type || ''}\n\n` +
+      `Properties:\n${(item.properties || []).join('\n')}\n\n` +
+      `Effect:\n${(item.effect || []).join('\n')}\n\n` +
+      `Origin:\n${item.origin}\n\n` +
+      `Description:\n${item.description}`
+    );
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>{item.name || 'Unnamed Item'}</Text>
+
+      <Text style={styles.sectionTitle}>Basic Info</Text>
       {isEditing ? (
-        <TextInput
-          style={styles.inputTitle}
-          value={editableItem?.name}
-          onChangeText={(text) => updateField('name', text)}
-          placeholder="Item Name"
-        />
+        <>
+          <TextInput style={styles.input} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" />
+          <TextInput style={styles.input} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" />
+        </>
       ) : (
-        <Text style={styles.title}>{editableItem?.name}</Text>
+        <>
+          <Text style={styles.text}>Type: {item.type}</Text>
+          <Text style={styles.text}>Magic: {item.magicItem}</Text>
+        </>
       )}
 
-      <Text style={styles.sectionTitle}>Item Details</Text>
-
+      <Text style={styles.sectionTitle}>Damage</Text>
       {isEditing ? (
         <>
-          <TextInput
-            style={styles.input}
-            value={editableItem?.description}
-            onChangeText={(text) => updateField('description', text)}
-            placeholder="Description"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableItem?.damage?.amount}
-            onChangeText={(text) => updateField('damage', { ...editableItem.damage, amount: text })}
-            placeholder="Damage Amount"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableItem?.damage?.type}
-            onChangeText={(text) => updateField('damage', { ...editableItem.damage, type: text })}
-            placeholder="Damage Type"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableItem?.properties.join(', ')}
-            onChangeText={(text) => updateField('properties', text.split(', '))}
-            placeholder="Properties (comma separated)"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableItem?.effect.join(', ')}
-            onChangeText={updateEffect}
-            placeholder="Effects (one per line)"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableItem?.origin}
-            onChangeText={(text) => updateField('origin', text)}
-            placeholder="Origin"
-          />
+          <TextInput style={styles.input} value={item.damage?.amount} onChangeText={(text) => setItem((prev) => ({ ...prev, damage: { ...prev.damage, amount: text } }))} placeholder="Damage Amount" />
+          <TextInput style={styles.input} value={item.damage?.type} onChangeText={(text) => setItem((prev) => ({ ...prev, damage: { ...prev.damage, type: text } }))} placeholder="Damage Type" />
         </>
       ) : (
-        <>
-          <Text style={styles.text}>Description: {editableItem?.description}</Text>
-          <Text style={styles.text}>Damage: {editableItem?.damage?.amount} {editableItem?.damage?.type}</Text>
-          <Text style={styles.text}>Properties:</Text>
-          {editableItem?.properties?.length ? (
-            editableItem.properties.map((prop, index) => <Text key={index} style={styles.text}>- {prop}</Text>)
-          ) : (
-            <Text style={styles.text}>- No properties available</Text>
-          )}
-          <Text style={styles.text}>Effects:</Text>
-          {editableItem?.effect?.length ? (
-            editableItem.effect.map((eff, index) => <Text key={index} style={styles.text}>- {eff}</Text>)
-          ) : (
-            <Text style={styles.text}>- No effects available</Text>
-          )}
-          <Text style={styles.text}>Origin: {editableItem?.origin}</Text>
-        </>
+        <Text style={styles.text}>{item.damage?.amount} {item.damage?.type}</Text>
+      )}
+
+      <Text style={styles.sectionTitle}>Properties</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={(item.properties || []).join('\n')}
+          onChangeText={(text) => updateField('properties', text.split('\n'))}
+          placeholder="Properties (one per line)"
+        />
+      ) : (
+        (item.properties || []).map((prop, idx) => (
+          <Text key={idx} style={styles.text}>- {prop}</Text>
+        ))
+      )}
+
+      <Text style={styles.sectionTitle}>Effects</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={(item.effect || []).join('\n')}
+          onChangeText={(text) => updateField('effect', text.split('\n'))}
+          placeholder="Effects (one per line)"
+        />
+      ) : (
+        (item.effect || []).map((eff, idx) => (
+          <Text key={idx} style={styles.text}>- {eff}</Text>
+        ))
+      )}
+
+      <Text style={styles.sectionTitle}>Origin</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={item.origin}
+          onChangeText={(text) => updateField('origin', text)}
+          placeholder="Origin"
+        />
+      ) : (
+        <Text style={styles.text}>{item.origin}</Text>
+      )}
+
+      <Text style={styles.sectionTitle}>Description</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          multiline
+          value={item.description}
+          onChangeText={(text) => updateField('description', text)}
+          placeholder="Description"
+        />
+      ) : (
+        <Text style={styles.text}>{item.description}</Text>
       )}
 
       <View style={styles.buttonRow}>
@@ -180,7 +173,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
         <TouchableOpacity style={styles.buttonHalf} onPress={handleCopy}>
           <Text style={styles.buttonText}>Copy</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonHalf} onPress={() => setIsEditing((prev) => !prev)}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => setIsEditing((e) => !e)}>
           <Text style={styles.buttonText}>{isEditing ? 'Done' : 'Edit'}</Text>
         </TouchableOpacity>
       </View>
@@ -211,15 +204,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  inputTitle: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    borderBottomWidth: 1,
-    borderColor: COLORS.text,
     color: COLORS.text,
     fontFamily: 'Aclonica',
   },
@@ -262,6 +246,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
+    color: COLORS.text,
     marginTop: 30,
     alignItems: 'center',
   },
@@ -270,6 +255,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 40,
     borderRadius: 8,
+    marginHorizontal: 5,
     marginBottom: 10,
     alignItems: 'center',
   },
@@ -277,7 +263,6 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
     fontFamily: 'Aclonica',
   },
 });

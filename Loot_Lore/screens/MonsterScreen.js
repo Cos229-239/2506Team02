@@ -1,44 +1,46 @@
-import React, { useState, useContext } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { OPENAI_API_KEY } from '@env';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  Image,
-  StyleSheet,
   ScrollView,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Image,
+  StyleSheet,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { OPENAI_API_KEY } from '@env';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { MONSTER_CREATION_PROMPT } from '../prompts';
-import { getGlobalStyles, THEMES } from '../styles';
-import { ThemeContext } from '../ThemeContext';
+import { GLOBAL_STYLES, COLORS } from '../styles';
 import monsterOptions from '../data/monsterOptions';
 import LoadingOverlay from './LoadingOverlay';
 
 export default function MonsterScreen() {
-  const navigation = useNavigation();
   const [selectedType, setSelectedType] = useState('');
   const [selectedRace, setSelectedRace] = useState('');
   const [selectedCR, setSelectedCR] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedAlignment, setSelectedAlignment] = useState('');
-  const [monster, setMonster] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { theme, boldText } = useContext(ThemeContext);
-  const globalStyles = getGlobalStyles(theme);
-  const themeColors = THEMES[theme];
+  const navigation = useNavigation();
 
-  const isGenerateDisabled =
-    !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
+  const handleClear = () => {
+    setSelectedType('');
+    setSelectedRace('');
+    setSelectedCR('');
+    setSelectedSize('');
+    setSelectedAlignment('');
+  };
 
-  const handleOutput = async () => {
-    if (isGenerateDisabled) {
+  const handleGenerate = async () => {
+    if (!selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment) {
       Alert.alert('Missing Info', 'Please select all options before generating.');
       return;
     }
@@ -48,11 +50,11 @@ export default function MonsterScreen() {
     const monsterRequest = `Create a ${selectedRace} of type ${selectedType} with challenge rating ${selectedCR}, size ${selectedSize}, and alignment ${selectedAlignment}.`;
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           model: 'gpt-4',
@@ -60,122 +62,96 @@ export default function MonsterScreen() {
             { role: 'system', content: MONSTER_CREATION_PROMPT },
             { role: 'user', content: monsterRequest },
           ],
-          temperature: 0.8,
+          temperature: 0.9,
         }),
       });
 
-      const data = await response.json();
-      if (data.choices && data.choices.length > 0) {
-        const raw = data.choices[0].message?.content;
-        const generated = JSON.parse(raw);
+      const result = await res.json();
+      const message = result.choices[0].message.content;
 
-        navigation.navigate('Monster Details', {
-          monster: {
-            type: selectedType,
-            race: selectedRace,
-            cr: selectedCR,
-            size: selectedSize,
-            alignment: selectedAlignment,
-            ...generated,
-          },
-        });
-      } else {
-        Alert.alert('Error', 'OpenAI did not return a valid response.');
+      try {
+        const parsed = JSON.parse(message);
+        const enrichedMonster = {
+          ...parsed,
+          promptType: selectedType,
+          promptRace: selectedRace,
+          promptChallengeRating: selectedCR,
+          promptSize: selectedSize,
+          promptAlignment: selectedAlignment,
+        };
+        navigation.navigate('Monster Details', { monster: enrichedMonster }); 
+      } catch (parseErr) {
+        console.error('JSON Parse Error:', parseErr);
+        console.error('Raw response:', message);
+        Alert.alert('Invalid JSON', 'OpenAI returned invalid JSON. Try again.');
       }
     } catch (err) {
-      console.error('API error:', err);
-      Alert.alert('Error', 'Failed to connect to OpenAI.');
+      console.error('Fetch Error:', err);
+      Alert.alert('Error', 'Failed to generate monster. Try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleClear = () => {
-    setSelectedType('');
-    setSelectedRace('');
-    setSelectedCR('');
-    setSelectedSize('');
-    setSelectedAlignment('');
-    setMonster(null);
-  };
+  const isGenerateDisabled = !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
-  return isLoading ? (
-    <LoadingOverlay />
-  ) : (
-    <SafeAreaView style={globalStyles.screen}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={80}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
+  return (
+    isLoading ? <LoadingOverlay /> :
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={GLOBAL_STYLES.screen}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={80}
         >
-          <View style={styles.header}>
-            <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
-            <Image source={require('../assets/logo.png')} style={styles.logo} />
-          </View>
-
-          {[ 
-            { label: 'Monster Type', data: monsterOptions.typeOptions, setter: setSelectedType },
-            { label: 'Race', data: monsterOptions.raceOptions, setter: setSelectedRace },
-            { label: 'Challenge Rating', data: monsterOptions.crOptions, setter: setSelectedCR },
-            { label: 'Size', data: monsterOptions.sizeOptions, setter: setSelectedSize },
-            { label: 'Alignment', data: monsterOptions.alignments, setter: setSelectedAlignment },
-          ].map(({ label, data, setter }) => (
-            <React.Fragment key={label}>
-              <Text style={[styles.label, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>{label}</Text>
-              <SelectList
-                setSelected={setter}
-                data={data}
-                placeholder={label}
-                boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
-                inputStyles={[styles.dropdownInput, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
-                dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
-                dropdownItemStyles={styles.dropdownItem}
-                dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
-              />
-            </React.Fragment>
-          ))}
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={handleClear}
-              style={[styles.clearButton, { backgroundColor: themeColors.button }]}
-            >
-              <Text style={[styles.buttonText, { color: themeColors.text }]}>Clear</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleOutput}
-              style={[
-                styles.generateButton,
-                { backgroundColor: themeColors.button },
-                (isGenerateDisabled || isLoading) && { opacity: 0.5 },
-              ]}
-              disabled={isGenerateDisabled || isLoading}
-            >
-              <Text style={[styles.buttonText, { color: themeColors.text }]}>Generate</Text>
-            </TouchableOpacity>
-          </View>
-
-          {monster && (
-            <View style={styles.monsterInfo}>
-              <Text style={{ color: themeColors.text }}>Generated Monster Info:</Text>
-              {/* Render monster details here */}
-              <Text style={{ color: themeColors.text }}>{JSON.stringify(monster, null, 2)}</Text>
+          <ScrollView
+            contentContainerStyle={styles.formContainer}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.header}>
+              <Text style={styles.title}>Loot & Lore</Text>
+              <Image source={require('../assets/logo.png')} style={styles.logo} />
             </View>
-          )}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+
+            <Text style={styles.label}>Monster Type</Text>
+            <SelectList setSelected={setSelectedType} data={monsterOptions.typeOptions} placeholder="Monster Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            <Text style={styles.label}>Race</Text>
+            <SelectList setSelected={setSelectedRace} data={monsterOptions.raceOptions} placeholder="Race" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            <Text style={styles.label}>Challenge Rating</Text>
+            <SelectList setSelected={setSelectedCR} data={monsterOptions.crOptions} placeholder="CR" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            {/* New Size Dropdown */}
+            <Text style={styles.label}>Size</Text>
+            <SelectList setSelected={setSelectedSize} data={monsterOptions.sizeOptions} placeholder="Size" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            {/* New Alignment Dropdown */}
+            <Text style={styles.label}>Alignment</Text>
+            <SelectList setSelected={setSelectedAlignment} data={monsterOptions.alignments} placeholder="Alignment" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
+                <Text style={styles.buttonText}>Clear</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleGenerate}
+                style={[styles.generateButton, isGenerateDisabled && { opacity: 0.5 }]}
+                disabled={isGenerateDisabled || isLoading}
+              >
+                <Text style={styles.buttonText}>Generate</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
+  formContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
     padding: 20,
     paddingBottom: 40,
   },
@@ -185,6 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
+    color: COLORS.text,
     fontSize: 32,
     fontFamily: 'Aclonica',
     marginTop: 20,
@@ -197,25 +174,29 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
+    color: '#f4a300',
     fontSize: 20,
     marginVertical: 5,
   },
   dropdown: {
+    backgroundColor: COLORS.button,
+    borderColor: '#f4a300',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
   },
   dropdownInput: {
-    fontFamily: 'Aclonica',
+    color: '#000000',
   },
   dropdownList: {
-    borderWidth: 1,
+    backgroundColor: COLORS.button,
+    borderColor: '#f4a300',
   },
   dropdownItem: {
-    borderBottomWidth: 1,
+    borderBottomColor: '#f4a300',
   },
   dropdownText: {
-    fontFamily: 'Aclonica',
+    color: '#000000',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -226,25 +207,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   clearButton: {
+    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginRight: 10,
-    alignItems: 'center',
   },
   generateButton: {
+    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginLeft: 10,
-    alignItems: 'center',
   },
   buttonText: {
+    color: COLORS.text,
     textAlign: 'center',
-    fontFamily: 'Aclonica',
     fontWeight: 'bold',
-  },
-  monsterInfo: {
-    marginTop: 20,
   },
 });

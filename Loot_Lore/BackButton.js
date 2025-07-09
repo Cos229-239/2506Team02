@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ThemeContext } from './ThemeContext'; // adjust path if needed
-import { getGlobalStyles } from './styles';     // adjust path if needed
+import { ThemeContext } from './ThemeContext'; 
+import { getGlobalStyles } from './styles';     
 
 export default function BackButton({ label = 'Back' }) {
   const navigation = useNavigation();

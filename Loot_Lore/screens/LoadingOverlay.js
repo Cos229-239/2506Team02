@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+// components/LoadingOverlay.js
+import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { ThemeContext } from '../ThemeContext';
-import { THEMES } from '../styles';
+import { COLORS } from '../styles';
 
 const messages = [
   'Taming beast...',
@@ -15,9 +15,6 @@ const messages = [
 ];
 
 export default function LoadingOverlay() {
-  const { theme } = useContext(ThemeContext);
-  const themeColors = THEMES[theme];
-
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -28,9 +25,9 @@ export default function LoadingOverlay() {
   }, []);
 
   return (
-    <View style={[styles.overlay, { backgroundColor: themeColors.background }]}>
-      <ActivityIndicator size="large" color={themeColors.button} />
-      <Text style={[styles.text, { color: themeColors.text }]}>{messages[index]}</Text>
+    <View style={styles.overlay}>
+      <ActivityIndicator size="large" color={COLORS.accent || '#f4a300'} />
+      <Text style={styles.text}>{messages[index]}</Text>
     </View>
   );
 }
@@ -38,12 +35,14 @@ export default function LoadingOverlay() {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#3B291C',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 999,
   },
   text: {
     marginTop: 20,
+    color: COLORS.text,
     fontSize: 18,
     fontWeight: 'bold',
   },
