@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,12 +8,16 @@ import {
   Image,
   StyleSheet
 } from 'react-native';
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { getGlobalStyles, THEMES } from '../styles';
+import { ThemeContext } from '../ThemeContext';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
 export default function ResetPasswordScreen({ navigation }) {
   const [input, setInput] = useState('');
+  const { theme } = useContext(ThemeContext);
+  const themeColors = THEMES[theme];
+  const globalStyles = getGlobalStyles(theme);
 
   const handleSendLink = async () => {
     const trimmedInput = input.trim().toLowerCase();
@@ -34,27 +38,32 @@ export default function ResetPasswordScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Loot & Lore</Text>
+    <View style={[globalStyles.screen, styles.container]}>
+      <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
 
       <Image
         source={require('../assets/logo.png')}
         style={styles.logo}
       />
 
-      <Text style={styles.label}>Enter your email</Text>
+      <Text style={[styles.label, { color: themeColors.text }]}>Enter your email</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
         placeholder="Enter your email address"
-        placeholderTextColor="#ccc"
+        placeholderTextColor={themeColors.placeholder}
         value={input}
         onChangeText={setInput}
         keyboardType="email-address"
         autoCapitalize="none"
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSendLink}>
-        <Text style={styles.buttonText}>Send Reset Link</Text>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: themeColors.button }]}
+        onPress={handleSendLink}
+      >
+        <Text style={[styles.buttonText, { color: themeColors.text }]}>
+          Send Reset Link
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -62,13 +71,11 @@ export default function ResetPasswordScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    ...GLOBAL_STYLES.screen,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   title: {
-    color: COLORS.text,
     fontSize: 32,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -80,7 +87,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   label: {
-    color: COLORS.text,
     fontSize: 16,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -89,15 +95,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    backgroundColor: '#fff',
     borderRadius: 6,
     padding: 12,
     marginBottom: 20,
     fontSize: 16,
-    color: '#000',
   },
   button: {
-    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     width: '100%',
@@ -105,8 +108,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
     fontSize: 16,
+    fontFamily: 'Aclonica',
   },
 });
