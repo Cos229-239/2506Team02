@@ -206,11 +206,35 @@ export const crOptions = Array.from({ length: 30 }, (_, i) => ({
   value: `CR ${i + 1}`,
 }));
 
+export const sizeOptions = [
+  { value: 'Tiny', description: '2.5 by 2.5 feet (e.g., pixie, rat)' },
+  { value: 'Small', description: '5 by 5 feet (e.g., goblin, halfling, kobold)' },
+  { value: 'Medium', description: '5 by 5 feet (e.g., human, orc, dragon wyrmling)' },
+  { value: 'Large', description: '10 by 10 feet (e.g., giant rat, owlbear, ogre, brown bear, troll, young dragon)' },
+  { value: 'Huge', description: '15 by 15 feet (e.g., fire giant, hydra, adult dragon)' },
+  { value: 'Gargantuan', description: 'Typically 20 by 20 feet or larger (e.g., kraken, ancient dragon)' },
+  { value: 'Colossal', description: 'Exceeds 64 feet in height or length, and weighs more than 125 tons' }
+];
+
+export const alignments = [
+  { value: 'Chaotic Evil' },
+  { value: 'Chaotic Good' },
+  { value: 'Chaotic Neutral' },
+  { value: 'Lawful Evil' },
+  { value: 'Lawful Good' },
+  { value: 'Lawful Neutral' },
+  { value: 'Neutral Evil' },
+  { value: 'Neutral Good' },
+  { value: 'True Neutral' }
+];
+
 // Unified export for easy import elsewhere
 const monsterOptions = {
   typeOptions,
   raceOptions,
   crOptions,
+  sizeOptions,
+  alignments,
 };
 
 export default monsterOptions;
