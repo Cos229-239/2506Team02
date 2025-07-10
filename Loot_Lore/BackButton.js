@@ -11,7 +11,7 @@ export default function BackButton({ label = 'Back' }) {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.goBack()}
+      onPress={() => navigation.navigate('Other')} // 👈 Navigates to OtherScreen.js
       style={[styles.button, localStyles.backButton]}
     >
       <Text style={[styles.buttonText, boldText && { fontWeight: 'bold' }]}>

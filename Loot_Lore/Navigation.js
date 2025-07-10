@@ -121,7 +121,6 @@ export default function AppNavigator({ user }) {
             <Stack.Screen name="Monster Screen" component={MonsterScreen} />
             <Stack.Screen name="Monster Details" component={MonsterDetailsScreen} />
             <Stack.Screen name="Other" component={OtherScreen} />
-            <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
           </>
         )}
