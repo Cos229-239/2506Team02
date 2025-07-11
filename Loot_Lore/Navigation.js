@@ -25,6 +25,18 @@ import MonsterDetailsScreen from './screens/MonsterDetailsScreen';
 import TermsAndAgreementScreen from './screens/TermsAndAgreementScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import OtherScreen from './screens/OtherScreen'
+import ItemScreen from './screens/ItemScreen';
+import ItemDetailsScreen from './screens/ItemDetailsScreen';
+import SavedDatabaseScreen from './screens/SavedDatabaseScreen';
+import PrivateCharactersScreen from './screens/PrivateCharactersScreen';
+import PrivateMonstersScreen from './screens/PrivateMonstersScreen';
+import PrivateItemsScreen from './screens/PrivateItemsScreen';
+import PrivateSpellsScreen from './screens/PrivateSpellsScreen';
+import GlobalCharactersScreen from './screens/GlobalCharactersScreen';
+import GlobalMonstersScreen from './screens/GlobalMonstersScreen';
+import GlobalItemsScreen from './screens/GlobalItemsScreen';
+import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
+
 
 import HeaderMenuButton from './HeaderMenuButton';
 
@@ -69,14 +81,26 @@ function DrawerNavigator() {
       <Drawer.Screen name="Main Menu" component={HomeScreen} />
       <Drawer.Screen name="Characters" component={PeopleScreen} />
       <Drawer.Screen name="Monsters" component={MonsterScreen} />
-      <Drawer.Screen name="Items" component={PlaceholderScreen} />
+      <Drawer.Screen name="Items" component={ItemScreen} />
       <Drawer.Screen name="Spells" component={SpellsScreen} />
       <Drawer.Screen name="Other" component={OtherScreen} />
       <Drawer.Screen name="Character Details" component={CharacterDetailsScreen} />
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
+      <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
+      <Drawer.Screen name="Saved Databases" component={SavedDatabaseScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
+      <Drawer.Screen name="Private Characters" component={PrivateCharactersScreen} />
+            <Drawer.Screen name="Private Monsters" component={PrivateMonstersScreen} />
+            <Drawer.Screen name="Private Items" component={PrivateItemsScreen} />
+            <Drawer.Screen name="Private Spells" component={PrivateSpellsScreen} />
+            <Drawer.Screen name="Global Characters" component={GlobalCharactersScreen} />
+            <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} />
+            <Drawer.Screen name="Global Items" component={GlobalItemsScreen} />
+            <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} />
+
+      
     </Drawer.Navigator>
   );
 }
@@ -121,7 +145,21 @@ export default function AppNavigator({ user }) {
             <Stack.Screen name="Monster Screen" component={MonsterScreen} />
             <Stack.Screen name="Monster Details" component={MonsterDetailsScreen} />
             <Stack.Screen name="Other" component={OtherScreen} />
+            <Stack.Screen name="Item" component={ItemScreen} />
+            <Stack.Screen name="Item Details" component={ItemDetailsScreen} />
+            <Stack.Screen name="Saved Databases" component ={SavedDatabaseScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
+            <Stack.Screen name="Private Characters" component={PrivateCharactersScreen} />
+            <Stack.Screen name="Private Monsters" component={PrivateMonstersScreen} />
+            <Stack.Screen name="Private Items" component={PrivateItemsScreen} />
+            <Stack.Screen name="Private Spells" component={PrivateSpellsScreen} />
+            <Stack.Screen name="Global Characters" component={GlobalCharactersScreen} />
+            <Stack.Screen name="Global Monsters" component={GlobalMonstersScreen} />
+            <Stack.Screen name="Global Items" component={GlobalItemsScreen} />
+            <Stack.Screen name="Global Spells" component={GlobalSpellsScreen} />
+
+
           </>
         )}
       </Stack.Navigator>

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'; 
-import { useNavigation } from '@react-navigation/native'; 
+/* eslint-disable react/prop-types */
+import React, { useState, useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { OPENAI_API_KEY } from '@env';
 import {
   View,
@@ -12,18 +13,22 @@ import {
   Alert,
   Keyboard,
   TouchableWithoutFeedback,
+  Image,
   StyleSheet,
-  Image
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
-import { ITEM_CREATION_PROMPT } from '../prompts'; // Import the ITEM_CREATION_PROMPT
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { ITEM_CREATION_PROMPT } from '../prompts';
+import { ThemeContext } from '../ThemeContext';
+import { getGlobalStyles, THEMES } from '../styles';
 import itemOptions from '../data/itemOptions';
 import LoadingOverlay from './LoadingOverlay';
 
 export default function ItemDetailsScreen() {
   const navigation = useNavigation();
-  
+  const { theme, boldText } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const themeColors = THEMES[theme];
+
   const [selectedItemType, setSelectedItemType] = useState('');
   const [selectedMagicItem, setSelectedMagicItem] = useState('');
   const [selectedDamageType, setSelectedDamageType] = useState('');
@@ -32,72 +37,76 @@ export default function ItemDetailsScreen() {
   const [item, setItem] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
- const handleGenerate = async () => {
-  if (isGenerateDisabled) {
-    Alert.alert("Missing Info", "Please select all options before generating.");
-    return;
-  }
+  const isGenerateDisabled =
+    !selectedItemType ||
+    !selectedMagicItem ||
+    !selectedDamageType ||
+    !selectedDamageAmount ||
+    !selectedProperties;
 
-  setIsLoading(true);
-
-  const interpolatedPrompt = ITEM_CREATION_PROMPT
-    .replace(/\$\{item.itemType\}/g, selectedItemType)
-    .replace(/\$\{item.magicItem\}/g, selectedMagicItem)
-    .replace(/\$\{item.damageType\}/g, selectedDamageType)
-    .replace(/\$\{item.damageAmount\}/g, selectedDamageAmount)
-    .replace(/\$\{item.properties\}/g, selectedProperties);
-
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          { role: "system", content: ITEM_CREATION_PROMPT },
-          { role: "user", content: interpolatedPrompt }
-        ],
-        temperature: 0.8,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (data.choices && data.choices.length > 0) {
-      try {
-        const raw = data.choices[0].message?.content;
-        const generated = JSON.parse(raw);
-
-        // Ensure properties is always an array
-        const itemWithProperties = {
-          itemType: selectedItemType,
-          magicItem: selectedMagicItem,
-          damageType: selectedDamageType,
-          damageAmount: selectedDamageAmount,
-          properties: Array.isArray(selectedProperties) ? selectedProperties : [selectedProperties],
-          ...generated,
-        };
-
-        navigation.navigate('Item Details', {
-          item: itemWithProperties,
-        });
-      } catch (err) {
-        console.error("Failed to parse JSON:", err, data.choices[0].message?.content);
-        Alert.alert("Error", "Item generation failed. Try again.");
-      }
-    } else {
-      Alert.alert("Error", "OpenAI did not return a valid response.");
+  const handleOutput = async () => {
+    if (isGenerateDisabled) {
+      Alert.alert('Missing Info', 'Please select all options before generating.');
+      return;
     }
-  } catch (fetchErr) {
-    console.error("API request failed:", fetchErr);
-    Alert.alert("Error", "Failed to fetch from OpenAI. Try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    setIsLoading(true);
+
+    const interpolatedPrompt = ITEM_CREATION_PROMPT
+      .replace(/\$\{item.itemType\}/g, selectedItemType)
+      .replace(/\$\{item.magicItem\}/g, selectedMagicItem)
+      .replace(/\$\{item.damageType\}/g, selectedDamageType)
+      .replace(/\$\{item.damageAmount\}/g, selectedDamageAmount)
+      .replace(/\$\{item.properties\}/g, selectedProperties);
+
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [
+            { role: 'system', content: ITEM_CREATION_PROMPT },
+            { role: 'user', content: interpolatedPrompt },
+          ],
+          temperature: 0.8,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.choices && data.choices.length > 0) {
+        try {
+          const raw = data.choices[0].message?.content;
+          const generated = JSON.parse(raw);
+
+          navigation.navigate('Item Details', {
+            item: {
+              itemType: selectedItemType,
+              magicItem: selectedMagicItem,
+              damageType: selectedDamageType,
+              damageAmount: selectedDamageAmount,
+              properties: Array.isArray(selectedProperties) ? selectedProperties : [selectedProperties],
+              ...generated,
+            },
+          });
+        } catch (err) {
+          console.error('Failed to parse JSON:', err, data.choices[0].message?.content);
+          Alert.alert('Error', 'Item generation failed. Try again.');
+        }
+      } else {
+        Alert.alert('Error', 'OpenAI did not return a valid response.');
+      }
+    } catch (fetchErr) {
+      console.error('API request failed:', fetchErr);
+      Alert.alert('Error', 'Failed to fetch from OpenAI. Try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleClear = () => {
     setSelectedItemType('');
@@ -108,64 +117,121 @@ export default function ItemDetailsScreen() {
     setItem(null);
   };
 
-  const isGenerateDisabled = !selectedItemType || !selectedMagicItem || !selectedDamageType || !selectedDamageAmount || !selectedProperties;
-
-  return (
-    isLoading ? <LoadingOverlay /> :
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={GLOBAL_STYLES.screen}>
+  return isLoading ? (
+    <LoadingOverlay />
+  ) : (
+      <SafeAreaView style={globalStyles.screen}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={80}
         >
-          <ScrollView contentContainerStyle={styles.formContainer} keyboardShouldPersistTaps="handled">
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
             <View style={styles.header}>
-              <Text style={styles.title}>Loot & Lore</Text>
+              <Text
+                style={[
+                  styles.title,
+                  { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' },
+                ]}
+              >
+                Loot & Lore
+              </Text>
               <Image source={require('../assets/logo.png')} style={styles.logo} />
             </View>
 
-            <Text style={styles.label}>Item Type</Text>
-            <SelectList setSelected={setSelectedItemType} data={itemOptions.itemType} placeholder="Item Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            {/* Item Type Dropdown */}
+            <Text style={[styles.label, { color: themeColors.text }]}>Item Type</Text>
+            <SelectList
+              setSelected={setSelectedItemType}
+              data={itemOptions.itemType}
+              placeholder="Item Type"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
-            <Text style={styles.label}>Magic Item</Text>
-            <SelectList setSelected={setSelectedMagicItem} data={itemOptions.magicItem} placeholder="Magic Item" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            {/* Magic Item */}
+            <Text style={[styles.label, { color: themeColors.text }]}>Magic Item</Text>
+            <SelectList
+              setSelected={setSelectedMagicItem}
+              data={itemOptions.magicItem}
+              placeholder="Magic Item"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
-            <Text style={styles.label}>Damage Type</Text>
-            <SelectList setSelected={setSelectedDamageType} data={itemOptions.damageType} placeholder="Damage Type" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            {/* Damage Type */}
+            <Text style={[styles.label, { color: themeColors.text }]}>Damage Type</Text>
+            <SelectList
+              setSelected={setSelectedDamageType}
+              data={itemOptions.damageType}
+              placeholder="Damage Type"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
-            <Text style={styles.label}>Damage Amount</Text>
-            <SelectList setSelected={setSelectedDamageAmount} data={itemOptions.damageAmount} placeholder="Damage Amount" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            {/* Damage Amount */}
+            <Text style={[styles.label, { color: themeColors.text }]}>Damage Amount</Text>
+            <SelectList
+              setSelected={setSelectedDamageAmount}
+              data={itemOptions.damageAmount}
+              placeholder="Damage Amount"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
-            <Text style={styles.label}>Properties</Text>
-            <SelectList setSelected={setSelectedProperties} data={itemOptions.properties} placeholder="Properties" boxStyles={styles.dropdown} inputStyles={styles.dropdownInput} dropdownStyles={styles.dropdownList} dropdownItemStyles={styles.dropdownItem} dropdownTextStyles={styles.dropdownText} />
+            {/* Properties */}
+            <Text style={[styles.label, { color: themeColors.text }]}>Properties</Text>
+            <SelectList
+              setSelected={setSelectedProperties}
+              data={itemOptions.properties}
+              placeholder="Properties"
+              boxStyles={[styles.dropdown, { backgroundColor: themeColors.button, borderColor: themeColors.text }]}
+              inputStyles={[styles.dropdownInput, { color: themeColors.text }]}
+              dropdownStyles={[styles.dropdownList, { backgroundColor: themeColors.button }]}
+              dropdownItemStyles={styles.dropdownItem}
+              dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
+            />
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-                <Text style={styles.buttonText}>Clear</Text>
+              <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: themeColors.button }]}>
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>Clear</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={handleGenerate}
-                style={[styles.generateButton, (isGenerateDisabled || isLoading) && { opacity: 0.5 }]}
-                disabled={isGenerateDisabled || isLoading}
+                onPress={handleOutput}
+                style={[styles.generateButton, { backgroundColor: themeColors.button }, isGenerateDisabled && { opacity: 0.5 }]}
+                disabled={isGenerateDisabled}
               >
-                <Text style={styles.buttonText}>Generate</Text>
+                <Text style={[styles.buttonText, { color: themeColors.text }]}>Generate</Text>
               </TouchableOpacity>
             </View>
 
-            {item && <Text style={styles.generatedItemText}>Generated Item: {item}</Text>}
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  formContainer: {
+  scrollContainer: {
     flexGrow: 1,
-    padding: 20,
     paddingBottom: 40,
+    paddingHorizontal: 20,
   },
   header: {
     alignItems: 'center',
@@ -173,7 +239,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    color: COLORS.text,
     fontSize: 32,
     fontFamily: 'Aclonica',
     marginTop: 20,
@@ -186,61 +251,41 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    color: '#f4a300',
     fontSize: 20,
     marginVertical: 5,
   },
   dropdown: {
-    backgroundColor: COLORS.button,
-    borderColor: '#f4a300',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
   },
-  dropdownInput: {
-    color: '#000000',
-  },
-  dropdownList: {
-    backgroundColor: COLORS.button,
-    borderColor: '#f4a300',
-  },
+  dropdownInput: {},
+  dropdownList: {},
   dropdownItem: {
-    borderBottomColor: '#f4a300',
+    borderBottomWidth: 1,
   },
-  dropdownText: {
-    color: '#000000',
-  },
+  dropdownText: {},
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     marginTop: 20,
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   clearButton: {
-    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginRight: 10,
   },
   generateButton: {
-    backgroundColor: COLORS.button,
     padding: 15,
     borderRadius: 5,
     flex: 1,
     marginLeft: 10,
   },
   buttonText: {
-    color: COLORS.text,
     textAlign: 'center',
     fontWeight: 'bold',
-  },
-  generatedItemText: {
-    color: COLORS.text,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
   },
 });

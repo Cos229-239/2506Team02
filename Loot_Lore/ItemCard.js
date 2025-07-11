@@ -1,58 +1,38 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS } from './styles';
+import { ThemeContext } from './ThemeContext'; // Import ThemeContext
+import { getGlobalStyles } from './styles'; // Import getGlobalStyles function
 
 function DisplayItemInfo({ name, description, damage, properties, effect, origin }) {
+  const { theme } = useContext(ThemeContext); // Access the current theme from ThemeContext
+  const globalStyles = getGlobalStyles(theme); // Get styles based on the current theme
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Item Information</Text>
-      <Text>Name: {name}</Text>
-      <Text>Description: {description}</Text>
-      <Text>Damage: {damage.amount} {damage.type}</Text>
+    <View style={globalStyles.container}>
+      <Text style={globalStyles.header}>Item Information</Text>
+      <Text style={globalStyles.text}>Name: {name}</Text>
+      <Text style={globalStyles.text}>Description: {description}</Text>
+      <Text style={globalStyles.text}>Damage: {damage.amount} {damage.type}</Text>
 
-      <Text style={styles.subHeader}>Properties:</Text>
+      <Text style={globalStyles.subHeader}>Properties:</Text>
       {properties && properties.length > 0 ? (
-        properties.map((prop, index) => <Text key={index}>- {prop}</Text>)
+        properties.map((prop, index) => <Text key={index} style={globalStyles.text}>- {prop}</Text>)
       ) : (
-        <Text>- No properties available</Text>
+        <Text style={globalStyles.text}>- No properties available</Text>
       )}
 
-      <Text style={styles.subHeader}>Effects:</Text>
+      <Text style={globalStyles.subHeader}>Effects:</Text>
       {effect && effect.length > 0 ? (
-        effect.map((eff, index) => <Text key={index}>- {eff}</Text>)
+        effect.map((eff, index) => <Text key={index} style={globalStyles.text}>- {eff}</Text>)
       ) : (
-        <Text>- No effects available</Text>
+        <Text style={globalStyles.text}>- No effects available</Text>
       )}
 
-      <Text style={styles.subHeader}>Origin:</Text>
-      <Text>{origin || 'No origin available'}</Text>
+      <Text style={globalStyles.subHeader}>Origin:</Text>
+      <Text style={globalStyles.text}>{origin || 'No origin available'}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: COLORS.background,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.text,
-    marginBottom: 10,
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: COLORS.text,
-  },
-  subHeader: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginTop: 10,
-    marginBottom: 5,
-    color: COLORS.text,
-  },
-});
 
 export default DisplayItemInfo;

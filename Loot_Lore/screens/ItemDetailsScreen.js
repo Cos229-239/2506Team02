@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,17 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import { COLORS } from '../styles';
+import { ThemeContext } from '../ThemeContext'; // Import ThemeContext
+import { getGlobalStyles, THEMES } from '../styles'; // Import getGlobalStyles
 
 export default function ItemDetailsScreen({ route, navigation }) {
-  const initialItem = route.params?.item || null;
+  const { item: initialItem } = route.params || {};
   const [item, setItem] = useState(initialItem);
   const [isEditing, setIsEditing] = useState(false);
+
+  const { theme, boldText } = useContext(ThemeContext);  // Get the current theme from ThemeContext
+  const themeColors = THEMES[theme] || THEMES.default;  // Retrieve colors based on selected theme
+  const textWeight = boldText ? 'bold' : 'normal';  // Adjust text weight based on boldText
 
   useEffect(() => {
     setItem(initialItem);
@@ -25,10 +30,13 @@ export default function ItemDetailsScreen({ route, navigation }) {
 
   if (!item || typeof item !== 'object') {
     return (
-      <View style={styles.centeredContainer}>
-        <Text style={styles.title}>No item data found.</Text>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Go Back</Text>
+      <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
+        <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>No item data found.</Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: themeColors.button }]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: textWeight }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -36,6 +44,19 @@ export default function ItemDetailsScreen({ route, navigation }) {
 
   const updateField = (field, value) => {
     setItem((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const generateItemText = () => {
+    return (
+      `Name: ${item.name}\n\n` +
+      `Type: ${item.type}\n` +
+      `Magic: ${item.magicItem}\n\n` +
+      `Damage: ${item.damage?.amount || ''} ${item.damage?.type || ''}\n\n` +
+      `Properties:\n${(item.properties || []).join('\n')}\n\n` +
+      `Effect:\n${(item.effect || []).join('\n')}\n\n` +
+      `Origin:\n${item.origin}\n\n` +
+      `Description:\n${item.description}`
+    );
   };
 
   const handleShare = async () => {
@@ -64,50 +85,37 @@ export default function ItemDetailsScreen({ route, navigation }) {
     }
   };
 
-  const generateItemText = () => {
-    return (
-      `Name: ${item.name}\n\n` +
-      `Type: ${item.type}\n` +
-      `Magic: ${item.magicItem}\n\n` +
-      `Damage: ${item.damage?.amount || ''} ${item.damage?.type || ''}\n\n` +
-      `Properties:\n${(item.properties || []).join('\n')}\n\n` +
-      `Effect:\n${(item.effect || []).join('\n')}\n\n` +
-      `Origin:\n${item.origin}\n\n` +
-      `Description:\n${item.description}`
-    );
-  };
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{item.name || 'Unnamed Item'}</Text>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
+      <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>{item.name || 'Unnamed Item'}</Text>
 
-      <Text style={styles.sectionTitle}>Basic Info</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Basic Info</Text>
       {isEditing ? (
         <>
-          <TextInput style={styles.input} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" />
-          <TextInput style={styles.input} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" />
+          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" />
+          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" />
         </>
       ) : (
         <>
-          <Text style={styles.text}>Type: {item.type}</Text>
-          <Text style={styles.text}>Magic: {item.magicItem}</Text>
+          <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>Type: {item.type}</Text>
+          <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>Magic: {item.magicItem}</Text>
         </>
       )}
 
-      <Text style={styles.sectionTitle}>Damage</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Damage</Text>
       {isEditing ? (
         <>
-          <TextInput style={styles.input} value={item.damage?.amount} onChangeText={(text) => setItem((prev) => ({ ...prev, damage: { ...prev.damage, amount: text } }))} placeholder="Damage Amount" />
-          <TextInput style={styles.input} value={item.damage?.type} onChangeText={(text) => setItem((prev) => ({ ...prev, damage: { ...prev.damage, type: text } }))} placeholder="Damage Type" />
+          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.damage?.amount} onChangeText={(text) => updateField('damage', { ...item.damage, amount: text })} placeholder="Damage Amount" />
+          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.damage?.type} onChangeText={(text) => updateField('damage', { ...item.damage, type: text })} placeholder="Damage Type" />
         </>
       ) : (
-        <Text style={styles.text}>{item.damage?.amount} {item.damage?.type}</Text>
+        <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>{item.damage?.amount} {item.damage?.type}</Text>
       )}
 
-      <Text style={styles.sectionTitle}>Properties</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Properties</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80 }]}
+          style={[styles.input, { height: 80, color: themeColors.text }]}
           multiline
           value={(item.properties || []).join('\n')}
           onChangeText={(text) => updateField('properties', text.split('\n'))}
@@ -115,14 +123,14 @@ export default function ItemDetailsScreen({ route, navigation }) {
         />
       ) : (
         (item.properties || []).map((prop, idx) => (
-          <Text key={idx} style={styles.text}>- {prop}</Text>
+          <Text key={idx} style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>- {prop}</Text>
         ))
       )}
 
-      <Text style={styles.sectionTitle}>Effects</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Effects</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80 }]}
+          style={[styles.input, { height: 80, color: themeColors.text }]}
           multiline
           value={(item.effect || []).join('\n')}
           onChangeText={(text) => updateField('effect', text.split('\n'))}
@@ -130,34 +138,34 @@ export default function ItemDetailsScreen({ route, navigation }) {
         />
       ) : (
         (item.effect || []).map((eff, idx) => (
-          <Text key={idx} style={styles.text}>- {eff}</Text>
+          <Text key={idx} style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>- {eff}</Text>
         ))
       )}
 
-      <Text style={styles.sectionTitle}>Origin</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Origin</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80 }]}
+          style={[styles.input, { height: 80, color: themeColors.text }]}
           multiline
           value={item.origin}
           onChangeText={(text) => updateField('origin', text)}
           placeholder="Origin"
         />
       ) : (
-        <Text style={styles.text}>{item.origin}</Text>
+        <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>{item.origin}</Text>
       )}
 
-      <Text style={styles.sectionTitle}>Description</Text>
+      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Description</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80 }]}
+          style={[styles.input, { height: 80, color: themeColors.text }]}
           multiline
           value={item.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
         />
       ) : (
-        <Text style={styles.text}>{item.description}</Text>
+        <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>{item.description}</Text>
       )}
 
       <View style={styles.buttonRow}>
@@ -191,52 +199,43 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flexGrow: 1,
-    backgroundColor: COLORS.background,
   },
   centeredContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: COLORS.background,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 15,
     marginBottom: 6,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
   },
   text: {
     fontSize: 16,
     marginBottom: 5,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
   },
   input: {
     borderWidth: 1,
-    borderColor: COLORS.text,
+    borderColor: '#ccc',
     borderRadius: 6,
     padding: 8,
     marginBottom: 8,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
   },
   buttonRow: {
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   buttonHalf: {
-    backgroundColor: COLORS.button,
+    backgroundColor: '#0066cc',
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -246,23 +245,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    color: COLORS.text,
+    color: '#000',
     marginTop: 30,
     alignItems: 'center',
   },
   button: {
-    backgroundColor: COLORS.button,
+    backgroundColor: '#0066cc',
     paddingVertical: 16,
     paddingHorizontal: 40,
     borderRadius: 8,
-    marginHorizontal: 5,
     marginBottom: 10,
     alignItems: 'center',
   },
   buttonText: {
-    color: COLORS.text,
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    fontFamily: 'Aclonica',
   },
 });
