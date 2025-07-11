@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-
+import ImageGenerator from '../ImageGenerator'
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
 
@@ -196,6 +196,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <ImageGenerator prompt={editableMonster.shortDescription} />
       {/* render content here using styles */}
     </ScrollView>
   );

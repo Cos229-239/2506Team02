@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
+import ImageGenerator from '../ImageGenerator';
 import { ThemeContext } from '../ThemeContext';
 import { THEMES, getGlobalStyles } from '../styles';
 
@@ -182,6 +183,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <ImageGenerator prompt= {editableSpell.name + editableSpell.description} />
       {isEditing ? (
         <TextInput
           style={styles.input}

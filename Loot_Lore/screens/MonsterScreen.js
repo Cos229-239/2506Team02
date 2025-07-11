@@ -33,7 +33,6 @@ export default function MonsterScreen() {
   const { theme, boldText } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
-
   const isGenerateDisabled =
     !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
