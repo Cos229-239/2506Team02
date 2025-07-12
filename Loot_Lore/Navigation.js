@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity, ActivityIndicator, View } from 'react-native';
 
@@ -24,6 +24,7 @@ import MonsterDetailsScreen from './screens/MonsterDetailsScreen';
 import ItemScreen from './screens/ItemScreen';
 import ItemDetailsScreen from './screens/ItemDetailsScreen';
 import HeaderMenuButton from './HeaderMenuButton';
+import SavedDatabaseScreen from './screens/SavedDatabaseScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -77,6 +78,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
       <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
+      <Drawer.Screen name="Saved Database" component={SavedDatabaseScreen} options={{drawerItemStyle:{display: 'none'}}} />
     </Drawer.Navigator>
   );
 }

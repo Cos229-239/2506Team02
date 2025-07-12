@@ -14,6 +14,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
+import{ handleSaveCreation } from '../data/SaveCreation'; 
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
@@ -71,17 +72,10 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_monsters');
-      const monsters = existing ? JSON.parse(existing) : [];
-      monsters.push(editableMonster);
-      await AsyncStorage.setItem('@saved_monsters', JSON.stringify(monsters));
-      Alert.alert('Success', 'Monster saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
-  };
+  const handleCreateNewMonster = () => {
+  setEditableMonster(null);
+  navigation.navigate('Monsters');
+};
 
   const updateField = (field, value) => {
     setEditableMonster((prev) => ({ ...prev, [field]: value }));
@@ -241,8 +235,8 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(editableMonster, 'monster')}>
+        <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
           <Text style={styles.buttonText}>Share</Text>
@@ -259,7 +253,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewMonster}>
           <Text style={styles.buttonText}>Create New Monster</Text>
         </TouchableOpacity>
       </View>

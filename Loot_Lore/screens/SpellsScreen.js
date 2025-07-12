@@ -99,13 +99,11 @@ const [isLoading, setIsLoading] = useState(false);
 };
 
   const handleClear = () => {
-    setSelectedSpellType('');
-    setSelectedSpellLevel('');
-    setSelectedCastingTime('');
-    setSelectedDuration('');
-    setSelectedRangeArea('');
-    setSpell(null);
-  };
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Spells' }], 
+  });
+};
 
   const isGenerateDisabled = !selectedSpellType || !selectedSpellLevel || !selectedCastingTime || !selectedDuration || !selectedRangeArea;
 

@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.menuButton}
-          onPress={() => navigation.navigate('SavedDatabase')}
+          onPress={() => navigation.navigate('Saved Database')}
         >
           <Text style={styles.buttonText}>Saved Database</Text>
         </TouchableOpacity>

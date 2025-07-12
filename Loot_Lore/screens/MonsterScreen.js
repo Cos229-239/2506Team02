@@ -32,12 +32,11 @@ export default function MonsterScreen() {
   const navigation = useNavigation();
 
   const handleClear = () => {
-    setSelectedType('');
-    setSelectedRace('');
-    setSelectedCR('');
-    setSelectedSize('');
-    setSelectedAlignment('');
-  };
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Monsters' }], 
+  });
+};
 
   const handleGenerate = async () => {
     if (!selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment) {

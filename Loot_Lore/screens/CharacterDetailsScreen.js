@@ -13,6 +13,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
+import { handleSaveCreation } from '../data/SaveCreation';
 
 export default function CharacterDetailsScreen({ route, navigation }) {
   const initialCharacter = route.params?.character || null;
@@ -68,17 +69,10 @@ export default function CharacterDetailsScreen({ route, navigation }) {
     Alert.alert('Copied', 'Character copied to clipboard!');
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_characters');
-      const characters = existing ? JSON.parse(existing) : [];
-      characters.push(character);
-      await AsyncStorage.setItem('@saved_characters', JSON.stringify(characters));
-      Alert.alert('Success', 'Character saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
-  };
+  const handleCreateNewCharacter = () => {
+  setCharacter(null);
+  navigation.navigate('Characters');
+};
 
   const updateField = (field, value) => {
     setCharacter((prev) => ({ ...prev, [field]: value }));
@@ -204,8 +198,8 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(character, 'character')}>
+        <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
           <Text style={styles.buttonText}>Share</Text>
@@ -225,7 +219,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewCharacter}>
           <Text style={styles.buttonText}>Create New Character</Text>
         </TouchableOpacity>
       </View>

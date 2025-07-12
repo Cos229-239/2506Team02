@@ -13,6 +13,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { COLORS } from '../styles';
+import { handleSaveCreation } from '../data/SaveCreation';
 
 export default function ItemDetailsScreen({ route, navigation }) {
   const initialItem = route.params?.item || null;
@@ -47,21 +48,14 @@ export default function ItemDetailsScreen({ route, navigation }) {
     }
   };
 
+  const handleCreateNewItem = () => {
+  setItem(null);
+  navigation.navigate('Items');
+  };
+
   const handleCopy = async () => {
     await Clipboard.setStringAsync(generateItemText());
     Alert.alert('Copied', 'Item copied to clipboard!');
-  };
-
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_items');
-      const items = existing ? JSON.parse(existing) : [];
-      items.push(item);
-      await AsyncStorage.setItem('@saved_items', JSON.stringify(items));
-      Alert.alert('Success', 'Item saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
   };
 
   const generateItemText = () => {
@@ -161,7 +155,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(item, 'item')}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
@@ -179,7 +173,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewItem}>
           <Text style={styles.buttonText}>Create New Item</Text>
         </TouchableOpacity>
       </View>

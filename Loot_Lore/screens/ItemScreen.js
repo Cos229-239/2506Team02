@@ -100,13 +100,11 @@ export default function ItemDetailsScreen() {
 };
 
   const handleClear = () => {
-    setSelectedItemType('');
-    setSelectedMagicItem('');
-    setSelectedDamageType('');
-    setSelectedDamageAmount('');
-    setSelectedProperties('');
-    setItem(null);
-  };
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Items' }], 
+  });
+};
 
   const isGenerateDisabled = !selectedItemType || !selectedMagicItem || !selectedDamageType || !selectedDamageAmount || !selectedProperties;
 
