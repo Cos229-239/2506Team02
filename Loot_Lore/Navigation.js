@@ -39,6 +39,9 @@ import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
 
 
 import HeaderMenuButton from './HeaderMenuButton';
+import SavedDatabaseScreen from './screens/SavedDatabaseScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import TermsAndAgreementScreen from './screens/TermsAndAgreementScreen';
 
 
 
@@ -88,7 +91,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
       <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
-      <Drawer.Screen name="Saved Databases" component={SavedDatabaseScreen} />
+      <Drawer.Screen name="Terms and Agreement" component={TermsAndAgreementScreen} options={{drawerItemStyle:{display: 'none'}}} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
       <Drawer.Screen name="Private Characters" component={PrivateCharactersScreen} />
@@ -99,8 +102,6 @@ function DrawerNavigator() {
             <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} />
             <Drawer.Screen name="Global Items" component={GlobalItemsScreen} />
             <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} />
-
-      
     </Drawer.Navigator>
   );
 }

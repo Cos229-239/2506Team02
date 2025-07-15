@@ -15,6 +15,7 @@ import * as Clipboard from 'expo-clipboard';
 import ImageGenerator from '../ImageGenerator';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
+import { handleSaveCreation } from '../data/SaveCreation';
 
 export default function CharacterDetailsScreen({ route, navigation }) {
   const { character: initialCharacter } = route.params || {};
@@ -80,23 +81,17 @@ export default function CharacterDetailsScreen({ route, navigation }) {
     Alert.alert('Copied', 'Character copied to clipboard!');
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_characters');
-      const characters = existing ? JSON.parse(existing) : [];
-      characters.push(character);
-      await AsyncStorage.setItem('@saved_characters', JSON.stringify(characters));
-      Alert.alert('Success', 'Character saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
-  };
+  const handleCreateNewCharacter = () => {
+  setCharacter(null);
+  navigation.navigate('Characters');
+};
 
   const updateField = (field, value) => {
     setCharacter((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
+
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
       <ImageGenerator prompt={character.race + character.backstory } />
       <Text style={[styles.title, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
@@ -157,6 +152,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       <View style={styles.buttonRow}>
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSave}>
           <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Save</Text>
+
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleShare}>
           <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Share</Text>
@@ -167,7 +163,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCreateNewCharacter}>
           <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
             Create New Character
           </Text>
@@ -211,6 +207,15 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: 'Aclonica',
     marginBottom: 15,
+  },
+  inputTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderColor: COLORS.text,
+    color: COLORS.text,
+    fontFamily: 'Aclonica',
   },
   sectionTitle: {
     fontSize: 20,

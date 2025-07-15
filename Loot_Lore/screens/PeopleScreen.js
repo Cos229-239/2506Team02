@@ -98,13 +98,11 @@ export default function PeopleScreen() {
   };
 
   const handleClear = () => {
-    setSelectedRace('');
-    setSelectedClass('');
-    setSelectedLevel('');
-    setSelectedBackground('');
-    setSelectedAlignment('');
-    setCharacter(null);
-  };
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Characters' }], 
+  });
+};
 
   return isLoading ? (
     <LoadingOverlay />

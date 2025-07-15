@@ -15,6 +15,7 @@ import * as Clipboard from 'expo-clipboard';
 import ImageGenerator from '../ImageGenerator';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
+import{ handleSaveCreation } from '../data/SaveCreation'; 
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
@@ -78,17 +79,10 @@ export default function MonsterDetailsScreen({ route, navigation }) {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_monsters');
-      const monsters = existing ? JSON.parse(existing) : [];
-      monsters.push(editableMonster);
-      await AsyncStorage.setItem('@saved_monsters', JSON.stringify(monsters));
-      Alert.alert('Success', 'Monster saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
-  };
+  const handleCreateNewMonster = () => {
+  setEditableMonster(null);
+  navigation.navigate('Monsters');
+};
 
   const updateField = (field, value) => {
     setEditableMonster((prev) => ({ ...prev, [field]: value }));
@@ -203,8 +197,10 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}>
+      
+        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}> onPress={() => handleSaveCreation(editableMonster, 'monster')}>
           <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
+          
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleShare}>
           <Text style={[styles.buttonText, applyTextStyle]}>Share</Text>
@@ -224,8 +220,10 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={() => navigation.goBack()}>
+
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCreateNewMonster}>
           <Text style={[styles.buttonText, applyTextStyle]}>Create New Monster</Text>
+
         </TouchableOpacity>
       </View>
 

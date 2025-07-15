@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { ThemeContext } from '../ThemeContext'; // Import ThemeContext
 import { getGlobalStyles, THEMES } from '../styles'; // Import getGlobalStyles
+import { handleSaveCreation } from '../data/SaveCreation';
 
 export default function ItemDetailsScreen({ route, navigation }) {
   const { item: initialItem } = route.params || {};
@@ -68,26 +69,41 @@ export default function ItemDetailsScreen({ route, navigation }) {
     }
   };
 
+  const handleCreateNewItem = () => {
+  setItem(null);
+  navigation.navigate('Items');
+  };
+
   const handleCopy = async () => {
     await Clipboard.setStringAsync(generateItemText());
     Alert.alert('Copied', 'Item copied to clipboard!');
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_items');
-      const items = existing ? JSON.parse(existing) : [];
-      items.push(item);
-      await AsyncStorage.setItem('@saved_items', JSON.stringify(items));
-      Alert.alert('Success', 'Item saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
+  const generateItemText = () => {
+    return (
+      `Name: ${item.name}\n\n` +
+      `Type: ${item.type}\n` +
+      `Magic: ${item.magicItem}\n\n` +
+      `Damage: ${item.damage?.amount || ''} ${item.damage?.type || ''}\n\n` +
+      `Properties:\n${(item.properties || []).join('\n')}\n\n` +
+      `Effect:\n${(item.effect || []).join('\n')}\n\n` +
+      `Origin:\n${item.origin}\n\n` +
+      `Description:\n${item.description}`
+    );
   };
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
-      <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>{item.name || 'Unnamed Item'}</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      {isEditing ? (
+                  <TextInput
+                    style={styles.inputTitle}
+                    value={item.name}
+                    onChangeText={(text) => updateField('name', text)}
+                    placeholder="Name"
+                  />
+                ) : (
+                  <Text style={styles.title}>{item.name}</Text>
+                )}
 
       <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Basic Info</Text>
       {isEditing ? (
@@ -169,7 +185,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(item, 'item')}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
@@ -187,7 +203,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewItem}>
           <Text style={styles.buttonText}>Create New Item</Text>
         </TouchableOpacity>
       </View>
@@ -210,6 +226,15 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
+  },
+  inputTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderColor: COLORS.text,
+    color: COLORS.text,
+    fontFamily: 'Aclonica',
   },
   sectionTitle: {
     fontSize: 20,
