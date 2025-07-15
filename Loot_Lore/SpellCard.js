@@ -2,16 +2,17 @@
 import React, { useContext } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { ThemeContext } from './ThemeContext';
+import { THEMES } from './styles';
 
 export default function SpellCard({ spell }) {
   const { theme } = useContext(ThemeContext);
-  const colors = theme;
+  const colors = THEMES[theme];
 
   if (!spell) return null;
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={[styles.container, { backgroundColor: colors.button || '#ccc' }]}>
+      <View style={[styles.container, { backgroundColor: colors.button }]}>
         <Text style={[styles.title, { color: colors.text }]}>{spell.name}</Text>
         <Text style={[styles.text, { color: colors.text }]}>Level: {spell.level}</Text>
         <Text style={[styles.text, { color: colors.text }]}>School: {spell.school}</Text>

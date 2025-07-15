@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */ 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,8 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { getGlobalStyles, THEMES } from '../styles';
+import { ThemeContext } from '../ThemeContext';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -17,12 +18,15 @@ export default function SignInScreen({ navigation }) {
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const { theme } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const themeColors = THEMES[theme];
+
   const handleLogin = async () => {
     try {
       let loginEmail = emailOrUsername;
 
       if (!emailOrUsername.includes('@')) {
-        // Assume username, find email
         const q = query(collection(db, 'users'), where('username', '==', emailOrUsername));
         const snapshot = await getDocs(q);
 
@@ -51,26 +55,32 @@ export default function SignInScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Loot & Lore</Text>
+    <View style={[globalStyles.screen, styles.container]}>
+      <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
 
       <Image source={require('../assets/logo.png')} style={styles.logo} />
 
-      <Text style={styles.label}>Username or Email</Text>
+      <Text style={[styles.label, { color: themeColors.text }]}>Username or Email</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: themeColors.inputBackground, color: themeColors.inputText },
+        ]}
         placeholder="Type your username or e-mail"
-        placeholderTextColor="#ccc"
+        placeholderTextColor={themeColors.placeholder}
         value={emailOrUsername}
         onChangeText={setEmailOrUsername}
         autoCapitalize="none"
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={[styles.label, { color: themeColors.text }]}>Password</Text>
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: themeColors.inputBackground, color: themeColors.inputText },
+        ]}
         placeholder="Type your password"
-        placeholderTextColor="#ccc"
+        placeholderTextColor={themeColors.placeholder}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -78,17 +88,23 @@ export default function SignInScreen({ navigation }) {
 
       <View style={styles.forgotContainer}>
         <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
-          <Text style={styles.forgot}>FORGOT PASSWORD</Text>
+          <Text style={[styles.forgot, { color: themeColors.text }]}>FORGOT PASSWORD</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.secondaryButton} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+        <TouchableOpacity
+          style={[styles.secondaryButton, { backgroundColor: themeColors.button }]}
+          onPress={handleSignUp}
+        >
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Sign Up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
+        <TouchableOpacity
+          style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
+          onPress={handleLogin}
+        >
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -97,13 +113,11 @@ export default function SignInScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    ...GLOBAL_STYLES.screen,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   title: {
-    color: COLORS.text,
     fontSize: 32,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -116,15 +130,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    backgroundColor: '#fff',
     borderRadius: 6,
     padding: 12,
     marginVertical: 8,
     fontSize: 16,
-    color: '#000',
   },
   label: {
-    color: COLORS.text,
     fontSize: 16,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -138,7 +149,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   forgot: {
-    color: COLORS.text,
     textDecorationLine: 'underline',
     fontSize: 14,
     fontWeight: 'bold',
@@ -149,21 +159,18 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   primaryButton: {
-    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     flex: 1,
     alignItems: 'center',
   },
   secondaryButton: {
-    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     flex: 1,
     alignItems: 'center',
   },
   buttonText: {
-    color: COLORS.text,
     fontFamily: 'Aclonica',
     fontSize: 16,
   },

@@ -1,6 +1,5 @@
 // prompts.js
 
-// MONSTER CREATION PROMPT
 export const MONSTER_CREATION_PROMPT = `
 You are an AI assistant that generates **unique** fantasy RPG monsters. Respond ONLY with a valid JSON object matching the following schema:
 
@@ -28,6 +27,7 @@ You are an AI assistant that generates **unique** fantasy RPG monsters. Respond 
 - Invent a **fully original name** that feels authentic in a fantasy setting. It should evoke the monster’s role, nature, or environment.
 - Use **invented words**, compound roots, or phonetic blends from real-world ancient, mythic, or arcane-sounding languages (e.g., Latin, Norse, Sumerian, Sanskrit).
 - Avoid using existing names from popular games or mythology (e.g., "Dragon", "Goblin", "Demon", "Orc", etc.).
+- If helpful, blend syllables or phrases (e.g., “Vraelor”, “Nyssith”, “Karnithul”).
 - The name should be **memorable, thematically aligned**, and **not resemble generic creatures**.
 
 **shortDescription**:
@@ -45,7 +45,7 @@ You are an AI assistant that generates **unique** fantasy RPG monsters. Respond 
 - Do NOT include preamble, commentary, or notes before or after the JSON.
 `;
 
-// CHARACTER CREATION PROMPT
+//  CHARACTER PROMPT
 export const CHARACTER_CREATION_PROMPT = `
 Create a fantasy RPG character with the following traits:
 
@@ -88,42 +88,7 @@ Respond ONLY with valid JSON in this structure:
 Return ONLY valid JSON. Do not include any commentary, markdown, or formatting outside the object.
 `;
 
-// ITEM CREATION PROMPT
-export const ITEM_CREATION_PROMPT = `
-You are an AI item crafter creating **unique** fantasy RPG items. Given the input parameters, return ONLY a valid JSON object in this format:
-
-{
-  "name": "Item Name",
-  "description": "A vivid, immersive item description (1-2 paragraphs)...",
-  "damage": {
-    "amount": "\${item.damageAmount}",
-    "type": "\${item.damageType}"
-  },
-  "properties": [
-    "\${item.properties}"
-  ],
-  "effect": [
-    "Primary effect (e.g., 'Grants the user +2 Strength for 1 hour')",
-    "Secondary effect (e.g., 'On wearer's death, item turns to dust')",
-    "Quirk or drawback (e.g., 'Glows faintly in darkness and attracts enemies')"
-  ],
-  "origin": "1-2 paragraphs describing the item's history, origin, how it was created, its role in the world, and any famous events or legends surrounding it.",
-  "type": "\${item.itemType}",
-  "magicItem": "\${item.magicItem}"
-}
-
-Instructions:
-- Invent an **original** and **creative** item name that evokes its purpose, history, or the lore surrounding it.
-- The description should include the item’s aesthetic, its look and feel, and how it fits in the fantasy world (e.g., glowing swords, cursed rings, enchanted armor).
-- The damage should align with the item type and follow D&D 5e rules or similar systems for balanced gameplay.
-- Properties should include any unique or legendary attributes that make the item stand out.
-- Provide a **lore section** that describes the origin and magical nature of the item, its history, how adventurers might find it, and the role it plays in the world.
-- Avoid using well-known names or items from popular games and franchises.
-- Ensure that the item is consistent with the provided parameters, particularly the damage amount and type, the properties selected, and the item’s magical nature.
-- Return ONLY the JSON object without any extra commentary, markdown, or explanations.
-`;
-
-// SPELL CREATION PROMPT
+// SPELL PROMPT
 export const SPELL_CREATION_PROMPT = `
 You are an AI spellcrafter creating **unique** fantasy RPG spells. Given the input parameters, return ONLY a valid JSON object in this format:
 

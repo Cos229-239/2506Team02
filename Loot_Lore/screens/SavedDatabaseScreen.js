@@ -1,149 +1,170 @@
-/* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import {
   View,
   Text,
+  StyleSheet,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
-import { collection, getDocs } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
-import { COLORS } from '../styles';
-import { useFocusEffect } from '@react-navigation/native';
+import { SelectList } from 'react-native-dropdown-select-list';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { ThemeContext } from '../ThemeContext';
+import { getGlobalStyles, THEMES } from '../styles';
+import BackButton from '../BackButton';
+import { savedDataOptions, savedDataRouteMap } from '../data/savedDataOptions';
 
-export default function SavedDatabaseScreen({ navigation }) {
-  const [creations, setCreations] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function SavedDatabaseScreen() {
+  const navigation = useNavigation();
+  const [selectedSavedData, setSelectedSavedData] = useState('');
+  const [dropdownResetKey, setDropdownResetKey] = useState(0);
+  const { theme, boldText } = useContext(ThemeContext);
 
+  const styles = getGlobalStyles(theme);
+  const colors = THEMES[theme];
+
+  // ✅ Automatically reset when screen regains focus
   useFocusEffect(
-    React.useCallback(() => {
-      let isActive = true;
-
-      const fetchCreations = async () => {
-        try {
-          setLoading(true);
-          const user = auth.currentUser;
-          if (!user) return;
-          const snapshot = await getDocs(
-            collection(db, 'users', user.uid, 'creations')
-          );
-          if (isActive) {
-            const data = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-            setCreations(data);
-          }
-        } catch (error) {
-          console.error('Error fetching creations:', error);
-        } finally {
-          if (isActive) setLoading(false);
-        }
-      };
-
-      fetchCreations();
-
-      return () => {
-        isActive = false;
-      };
+    useCallback(() => {
+      setSelectedSavedData('');
+      setDropdownResetKey((prev) => prev + 1);
     }, [])
   );
 
-  const groupByType = (type) =>
-    creations.filter((entry) => entry.type === type);
-
-  const renderSection = (title, data, detailScreen) => {
-    if (data.length === 0) return null;
-
-    const typeKeyMap = {
-      Spells: 'spell',
-      Items: 'item',
-      Monsters: 'monster',
-      Characters: 'character',
-    };
-
-    return (
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{title}</Text>
-        {data.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.card}
-            onPress={() =>
-              navigation.navigate(detailScreen, { [typeKeyMap[title]]: item })
-            }
-          >
-            <Text style={styles.cardText}>{item.name || 'Unnamed'}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
+  const handleConfirm = () => {
+    const targetRoute = savedDataRouteMap[selectedSavedData];
+    if (targetRoute) {
+      navigation.navigate(targetRoute);
+      setSelectedSavedData('');
+      setDropdownResetKey((prev) => prev + 1); // manual reset
+    } else {
+      alert('Please select a saved data type first.');
+    }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={COLORS.text} />
-      </View>
-    );
-  }
+  const handleBack = () => {
+    navigation.goBack(); // ✅ no manual reset needed anymore
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Your Saved Creations</Text>
-        {renderSection('Characters', groupByType('character'), 'Character Details')}
-        {renderSection('Monsters', groupByType('monster'), 'Monster Details')}
-        {renderSection('Items', groupByType('item'), 'Item Details')}
-        {renderSection('Spells', groupByType('spell'), 'Spell Details')}
-      </ScrollView>
+    <SafeAreaView style={localStyles.container}>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={[
+            localStyles.scroll,
+            { backgroundColor: colors.background },
+          ]}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text
+            style={[
+              styles.header,
+              { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' },
+            ]}
+          >
+            Select Saved Data
+          </Text>
+
+          <SelectList
+            key={dropdownResetKey}
+            setSelected={(key) => {
+              const selected = savedDataOptions.find((option) => option.key === key);
+              setSelectedSavedData(selected?.value || '');
+            }}
+            data={savedDataOptions}
+            placeholder="Choose Saved Database"
+            boxStyles={[
+              localStyles.dropdown,
+              {
+                backgroundColor: colors.button,
+                borderColor: colors.text,
+              },
+            ]}
+            inputStyles={{
+              color: colors.text,
+              fontWeight: boldText ? 'bold' : 'normal',
+              textAlign: 'center',
+            }}
+            dropdownStyles={[
+              localStyles.dropdownList,
+              { backgroundColor: colors.button },
+            ]}
+            dropdownItemStyles={localStyles.dropdownItem}
+            dropdownTextStyles={{
+              color: colors.text,
+              fontWeight: boldText ? 'bold' : 'normal',
+              textAlign: 'center',
+            }}
+          />
+        </ScrollView>
+
+        <View
+          style={[
+            localStyles.footer,
+            {
+              backgroundColor: colors.background,
+              borderTopColor: colors.text,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            onPress={handleConfirm}
+            disabled={!selectedSavedData}
+            style={[
+              localStyles.confirmButton,
+              { backgroundColor: colors.button },
+              !selectedSavedData && { opacity: 0.5 },
+            ]}
+          >
+            <Text style={[styles.buttonText, { color: colors.text }]}>
+              Confirm
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleBack} style={{ marginTop: 10 }}>
+            <BackButton />
+          </TouchableOpacity>
+        </View>
+      </View>
+
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
+
+const localStyles = StyleSheet.create({
+  container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
-  scrollContainer: {
+  scroll: {
     flexGrow: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: 'Aclonica',
-    color: COLORS.text,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  section: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontFamily: 'Aclonica',
-    color: COLORS.text,
-    marginBottom: 10,
-  },
-  card: {
-    backgroundColor: COLORS.button,
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  cardText: {
-    color: COLORS.text,
-    fontSize: 18,
-    fontFamily: 'Aclonica',
-  },
-  centered: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.background,
+    padding: 20,
+  },
+  dropdown: {
+    width: '80%',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  dropdownList: {
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  dropdownItem: {
+    borderBottomWidth: 1,
+  },
+  confirmButton: {
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
+  footer: {
+    borderTopWidth: 1,
+    padding: 10,
+    width: '100%',
   },
 });

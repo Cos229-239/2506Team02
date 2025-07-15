@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { ThemeContext } from '../ThemeContext';
-import { getGlobalStyles } from '../styles'; // 👈 import THEMES
+import { getGlobalStyles, THEMES } from '../styles'; // 👈 import THEMES
 import BackButton from '../BackButton';
 
 const themes = ['default', 'light', 'dark'];
@@ -15,7 +15,7 @@ const themes = ['default', 'light', 'dark'];
 export default function SettingsScreen() {
   const { theme, changeTheme, boldText, toggleBoldText } = useContext(ThemeContext);
   const styles = getGlobalStyles(theme);
-  const colors = theme; // 👈 extract theme colors
+  const colors = THEMES[theme] || THEMES.default; // 👈 extract theme colors
 
   return (
     <View style={localStyles.container}>
@@ -25,7 +25,7 @@ export default function SettingsScreen() {
         {themes.map((t) => (
           <TouchableOpacity
             key={t}
-            style={[styles.button, { marginTop: 10, opacity: themeName === t ? 1 : 0.7 }]}
+            style={[styles.button, { marginTop: 10, opacity: theme === t ? 1 : 0.7 }]}
             onPress={() => changeTheme(t)}
           >
             <Text style={styles.buttonText}>{t.toUpperCase()}</Text>

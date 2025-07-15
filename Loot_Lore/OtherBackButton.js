@@ -4,14 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from './ThemeContext'; // adjust path if needed
 import { getGlobalStyles } from './styles';     // adjust path if needed
 
-export default function BackButton({ label = 'Back' }) {
+
+export default function OtherBackButton({ label = 'Back' }) {
   const navigation = useNavigation();
   const { theme, boldText } = useContext(ThemeContext);
   const styles = getGlobalStyles(theme);
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Other')} // 👈 Navigates to OtherScreen.js
+      onPress={() => navigation.navigate('Saved Databases')}
       style={[styles.button, localStyles.backButton]}
     >
       <Text style={[styles.buttonText, boldText && { fontWeight: 'bold' }]}>
