@@ -5,23 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ThemeContext = createContext();
 
-// Define your themes here
-const themes = {
-  default: {
-    text: '#000', // black text
-    background: '#fff', // white background
-    // add more theme properties as needed
-  },
-  dark: {
-    text: '#fff',
-    background: '#000',
-    // add more theme properties as needed
-  },
-};
-
 export const ThemeProvider = ({ children }) => {
-  const [themeName, setThemeName] = useState(undefined);
-  const [theme, setTheme] = useState(themes.default);
+  const [theme, setTheme] = useState(undefined);
   const [boldText, setBoldText] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
@@ -30,14 +15,11 @@ export const ThemeProvider = ({ children }) => {
       try {
         const storedTheme = await AsyncStorage.getItem('appTheme');
         const storedBold = await AsyncStorage.getItem('appBoldText');
-        const name = storedTheme || 'default';
-        setThemeName(name);
-        setTheme(themes[name] || themes.default);
-        setBoldText(storedBold === 'true');
+        setTheme(storedTheme || 'default');
+        setBoldText(storedBold === 'true'); // note: storedBold is a string
       } catch (err) {
         console.warn('Failed to load theme settings:', err);
-        setThemeName('default');
-        setTheme(themes.default);
+        setTheme('default');
         setBoldText(false);
       } finally {
         setIsReady(true);
@@ -45,10 +27,9 @@ export const ThemeProvider = ({ children }) => {
     })();
   }, []);
 
-  const changeTheme = async (newThemeName) => {
-    setThemeName(newThemeName);
-    setTheme(themes[newThemeName] || themes.default);
-    await AsyncStorage.setItem('appTheme', newThemeName);
+  const changeTheme = async (newTheme) => {
+    setTheme(newTheme);
+    await AsyncStorage.setItem('appTheme', newTheme);
   };
 
   const toggleBoldText = async () => {
@@ -67,7 +48,7 @@ export const ThemeProvider = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, changeTheme, boldText, toggleBoldText, themeName }}>
+    <ThemeContext.Provider value={{ theme, changeTheme, boldText, toggleBoldText }}>
       {children}
     </ThemeContext.Provider>
   );

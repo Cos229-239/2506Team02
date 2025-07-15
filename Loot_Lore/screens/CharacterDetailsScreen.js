@@ -80,7 +80,16 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{character.name}</Text>
+    {isEditing ? (
+            <TextInput
+              style={styles.inputTitle}
+              value={character.name}
+              onChangeText={(text) => updateField('name', text)}
+              placeholder="Name"
+            />
+          ) : (
+            <Text style={styles.title}>{character.name}</Text>
+          )}
 
       <Text style={styles.sectionTitle}>Basic Info</Text>
       {isEditing ? (
@@ -244,6 +253,15 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: COLORS.text,
+    fontFamily: 'Aclonica',
+  },
+  inputTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderColor: COLORS.text,
     color: COLORS.text,
     fontFamily: 'Aclonica',
   },

@@ -25,6 +25,8 @@ import ItemScreen from './screens/ItemScreen';
 import ItemDetailsScreen from './screens/ItemDetailsScreen';
 import HeaderMenuButton from './HeaderMenuButton';
 import SavedDatabaseScreen from './screens/SavedDatabaseScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import TermsAndAgreementScreen from './screens/TermsAndAgreementScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -79,7 +81,9 @@ function DrawerNavigator() {
       <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
       <Drawer.Screen name="Saved Database" component={SavedDatabaseScreen} options={{drawerItemStyle:{display: 'none'}}} />
-    </Drawer.Navigator>
+      <Drawer.Screen name="Settings" component={SettingsScreen} options={{drawerItemStyle:{display: 'none'}}}/>
+      <Drawer.Screen name="Terms and Agreement" component={TermsAndAgreementScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      </Drawer.Navigator> 
   );
 }
 

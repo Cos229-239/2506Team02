@@ -88,7 +88,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       {isEditing ? (
         <TextInput
-          style={styles.input}
+          style={styles.inputTitle}
           value={editableSpell.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Spell Name"
@@ -277,6 +277,15 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontFamily: 'Aclonica',
   },
+  inputTitle: {
+      fontSize: 26,
+      fontWeight: 'bold',
+      marginBottom: 15,
+      borderBottomWidth: 1,
+      borderColor: COLORS.text,
+      color: COLORS.text,
+      fontFamily: 'Aclonica',
+    },
   buttonRow: {
     marginTop: 20,
     flexDirection: 'row',
