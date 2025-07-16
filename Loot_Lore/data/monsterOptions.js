@@ -69,6 +69,7 @@ export const raceOptions = [
   { value: 'Devourer' },
   { value: 'Dhampir' },
   { value: 'Dracolich' },
+  { value: 'Dragon' },
   { value: 'Drider' },
   { value: 'Dryad' },
   { value: 'Duergar' },

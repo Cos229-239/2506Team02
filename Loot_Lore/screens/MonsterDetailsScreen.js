@@ -27,7 +27,18 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
-    setEditableMonster(monster);
+     console.log('Monster passed to screen:', monster);
+    if (monster) {
+    const transformed = {
+      ...monster,
+      promptType: monster.promptType || monster.type || '',
+      promptRace: monster.promptRace || monster.race || '',
+      promptChallengeRating: monster.promptChallengeRating || monster.challengeRating || '',
+      promptSize: monster.promptSize || monster.size || '',
+      promptAlignment: monster.promptAlignment || monster.alignment || '',
+    };
+    setEditableMonster(transformed);
+  }
   }, [monster]);
 
   if (!editableMonster || typeof editableMonster !== 'object') {
@@ -104,6 +115,8 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
+      <ImageGenerator prompt={editableMonster.shortDescription} onImageGenerated={setImageUrl} />
+   
       {isEditing ? (
         <TextInput
           style={[styles.inputTitle, applyTextStyle, { borderColor: themeColors.text }]}
@@ -229,8 +242,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-<ImageGenerator prompt={editableMonster.shortDescription} onImageGenerated={setImageUrl} />
-    </ScrollView>
+     </ScrollView>
   );
 }
 
