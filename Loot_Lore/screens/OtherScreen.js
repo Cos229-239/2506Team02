@@ -30,7 +30,7 @@ export default function OtherScreen({ navigation }) {
         <TouchableOpacity
 
           style={[styles.menuButton, { backgroundColor: themeColors.button }]}
-         onPress={() => navigation.navigate('Saved Database')}
+         onPress={() => navigation.navigate('Saved Databases')}
 
         >
           <Text style={[styles.buttonText, { color: themeColors.text }]}>Saved Databases</Text>

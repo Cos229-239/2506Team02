@@ -22,6 +22,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
   const { spell } = route.params || {};
   const [editableSpell, setEditableSpell] = useState(spell);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const { theme, boldText } = useContext(ThemeContext);
   const themeColors = THEMES[theme] || THEMES.default;
@@ -179,7 +180,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <ImageGenerator prompt= {editableSpell.name + editableSpell.description} />
+    <ImageGenerator prompt={editableSpell.name + editableSpell.description} onImageGenerated={setImageUrl} />
       {isEditing ? (
         <TextInput
           style={styles.inputTitle}
@@ -255,7 +256,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(editableSpell, 'spell')}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation({ ...editableSpell, imageUrl }, 'spell')}>
         <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>

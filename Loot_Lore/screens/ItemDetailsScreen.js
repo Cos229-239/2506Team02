@@ -12,18 +12,20 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import { ThemeContext } from '../ThemeContext'; // Import ThemeContext
-import { getGlobalStyles, THEMES } from '../styles'; // Import getGlobalStyles
+import { ThemeContext } from '../ThemeContext';
+import { getGlobalStyles, THEMES } from '../styles';
 import { handleSaveCreation } from '../data/SaveCreation';
+import ImageGenerator from '../ImageGenerator';
 
 export default function ItemDetailsScreen({ route, navigation }) {
   const { item: initialItem } = route.params || {};
   const [item, setItem] = useState(initialItem);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  const { theme, boldText } = useContext(ThemeContext);  // Get the current theme from ThemeContext
-  const themeColors = THEMES[theme] || THEMES.default;  // Retrieve colors based on selected theme
-  const textWeight = boldText ? 'bold' : 'normal';  // Adjust text weight based on boldText
+  const { theme, boldText } = useContext(ThemeContext);
+  const themeColors = THEMES[theme] || THEMES.default;
+  const textWeight = boldText ? 'bold' : 'normal';
 
   useEffect(() => {
     setItem(initialItem);
@@ -60,18 +62,8 @@ export default function ItemDetailsScreen({ route, navigation }) {
     );
   };
 
-  const handleShare = async () => {
-    try {
-      const message = generateItemText();
-      await Share.share({ message });
-    } catch (error) {
-      Alert.alert('Error sharing', error.message);
-    }
-  };
-
-  const handleCreateNewItem = () => {
-  setItem(null);
-  navigation.navigate('Items');
+  const handleSave = () => {
+    handleSaveCreation({ ...item, imageUrl }, 'item');
   };
 
   const handleCopy = async () => {
@@ -79,47 +71,66 @@ export default function ItemDetailsScreen({ route, navigation }) {
     Alert.alert('Copied', 'Item copied to clipboard!');
   };
 
+<<<<<<< HEAD
+=======
+  const handleShare = async () => {
+    try {
+      await Share.share({ message: generateItemText() });
+    } catch (error) {
+      Alert.alert('Error sharing', error.message);
+    }
+  };
+
+  const handleCreateNewItem = () => {
+    setItem(null);
+    navigation.navigate('Items');
+  };
+>>>>>>> 847483776d90417d3300704939e88e67bf0ac036
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {isEditing ? (
-                  <TextInput
-                    style={styles.inputTitle}
-                    value={item.name}
-                    onChangeText={(text) => updateField('name', text)}
-                    placeholder="Name"
-                  />
-                ) : (
-                  <Text style={styles.title}>{item.name}</Text>
-                )}
+      <ImageGenerator prompt={item.name + ' ' + item.description} onImageGenerated={setImageUrl} />
 
-      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Basic Info</Text>
-      {isEditing ? (
-        <>
-          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" />
-          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" />
-        </>
-      ) : (
-        <>
-          <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>Type: {item.type}</Text>
-          <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>Magic: {item.magicItem}</Text>
-        </>
-      )}
+      {imageUrl && <Text style={styles.text}>Image URL: {imageUrl}</Text>}
 
-      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Damage</Text>
-      {isEditing ? (
-        <>
-          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.damage?.amount} onChangeText={(text) => updateField('damage', { ...item.damage, amount: text })} placeholder="Damage Amount" />
-          <TextInput style={[styles.input, { color: themeColors.text }]} value={item.damage?.type} onChangeText={(text) => updateField('damage', { ...item.damage, type: text })} placeholder="Damage Type" />
-        </>
-      ) : (
-        <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>{item.damage?.amount} {item.damage?.type}</Text>
-      )}
-
-      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Properties</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, color: themeColors.text }]}
+          style={styles.inputTitle}
+          value={item.name}
+          onChangeText={(text) => updateField('name', text)}
+          placeholder="Name"
+        />
+      ) : (
+        <Text style={styles.title}>{item.name}</Text>
+      )}
+
+      <Text style={styles.sectionTitle}>Basic Info</Text>
+      {isEditing ? (
+        <>
+          <TextInput style={styles.input} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" />
+          <TextInput style={styles.input} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" />
+        </>
+      ) : (
+        <>
+          <Text style={styles.text}>Type: {item.type}</Text>
+          <Text style={styles.text}>Magic: {item.magicItem}</Text>
+        </>
+      )}
+
+      <Text style={styles.sectionTitle}>Damage</Text>
+      {isEditing ? (
+        <>
+          <TextInput style={styles.input} value={item.damage?.amount} onChangeText={(text) => updateField('damage', { ...item.damage, amount: text })} placeholder="Damage Amount" />
+          <TextInput style={styles.input} value={item.damage?.type} onChangeText={(text) => updateField('damage', { ...item.damage, type: text })} placeholder="Damage Type" />
+        </>
+      ) : (
+        <Text style={styles.text}>{item.damage?.amount} {item.damage?.type}</Text>
+      )}
+
+      <Text style={styles.sectionTitle}>Properties</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, { height: 80 }]}
           multiline
           value={(item.properties || []).join('\n')}
           onChangeText={(text) => updateField('properties', text.split('\n'))}
@@ -127,14 +138,14 @@ export default function ItemDetailsScreen({ route, navigation }) {
         />
       ) : (
         (item.properties || []).map((prop, idx) => (
-          <Text key={idx} style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>- {prop}</Text>
+          <Text key={idx} style={styles.text}>- {prop}</Text>
         ))
       )}
 
-      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Effects</Text>
+      <Text style={styles.sectionTitle}>Effects</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, color: themeColors.text }]}
+          style={[styles.input, { height: 80 }]}
           multiline
           value={(item.effect || []).join('\n')}
           onChangeText={(text) => updateField('effect', text.split('\n'))}
@@ -142,38 +153,38 @@ export default function ItemDetailsScreen({ route, navigation }) {
         />
       ) : (
         (item.effect || []).map((eff, idx) => (
-          <Text key={idx} style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>- {eff}</Text>
+          <Text key={idx} style={styles.text}>- {eff}</Text>
         ))
       )}
 
-      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Origin</Text>
+      <Text style={styles.sectionTitle}>Origin</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, color: themeColors.text }]}
+          style={[styles.input, { height: 80 }]}
           multiline
           value={item.origin}
           onChangeText={(text) => updateField('origin', text)}
           placeholder="Origin"
         />
       ) : (
-        <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>{item.origin}</Text>
+        <Text style={styles.text}>{item.origin}</Text>
       )}
 
-      <Text style={[styles.sectionTitle, { color: themeColors.text, fontWeight: textWeight }]}>Description</Text>
+      <Text style={styles.sectionTitle}>Description</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, color: themeColors.text }]}
+          style={[styles.input, { height: 80 }]}
           multiline
           value={item.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
         />
       ) : (
-        <Text style={[styles.text, { color: themeColors.text, fontWeight: textWeight }]}>{item.description}</Text>
+        <Text style={styles.text}>{item.description}</Text>
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(item, 'item')}>
+        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
@@ -191,7 +202,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewItem}>
+        <TouchableOpacity style={styles.button} onPress={handleCreateNewItem}>
           <Text style={styles.buttonText}>Create New Item</Text>
         </TouchableOpacity>
       </View>
@@ -256,7 +267,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    color: '#000',
     marginTop: 30,
     alignItems: 'center',
   },

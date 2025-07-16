@@ -24,6 +24,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   const textWeight = boldText ? 'bold' : 'normal';
   const [editableMonster, setEditableMonster] = useState(monster);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     setEditableMonster(monster);
@@ -198,9 +199,10 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
       <View style={styles.buttonRow}>
       
-        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}> onPress={() => handleSaveCreation(editableMonster, 'monster')}>
-          <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
-          
+        <TouchableOpacity
+        style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+        onPress={() => handleSaveCreation({ ...editableMonster, imageUrl }, 'monster')}>
+        <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleShare}>
           <Text style={[styles.buttonText, applyTextStyle]}>Share</Text>
@@ -227,7 +229,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      <ImageGenerator prompt={editableMonster.shortDescription} />
+<ImageGenerator prompt={editableMonster.shortDescription} onImageGenerated={setImageUrl} />
     </ScrollView>
   );
 }
