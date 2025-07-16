@@ -37,10 +37,6 @@ export default function MonsterScreen() {
   const isGenerateDisabled =
     !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 847483776d90417d3300704939e88e67bf0ac036
   const handleClear = () => {
   navigation.reset({
     index: 0,

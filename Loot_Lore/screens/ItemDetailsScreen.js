@@ -71,8 +71,6 @@ export default function ItemDetailsScreen({ route, navigation }) {
     Alert.alert('Copied', 'Item copied to clipboard!');
   };
 
-<<<<<<< HEAD
-=======
   const handleShare = async () => {
     try {
       await Share.share({ message: generateItemText() });
@@ -85,7 +83,6 @@ export default function ItemDetailsScreen({ route, navigation }) {
     setItem(null);
     navigation.navigate('Items');
   };
->>>>>>> 847483776d90417d3300704939e88e67bf0ac036
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

@@ -153,18 +153,12 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       ))}
 
       <View style={styles.buttonRow}>
-<<<<<<< HEAD
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSaveCreation}>
-          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Save</Text>
-
-=======
        <TouchableOpacity
         style={[styles.button, { backgroundColor: themeColors.button }]}
         onPress={() => handleSaveCreation({ ...character, imageUrl }, 'character')}>
         <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
         Save
         </Text>
->>>>>>> 847483776d90417d3300704939e88e67bf0ac036
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleShare}>
           <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Share</Text>
