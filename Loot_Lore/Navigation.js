@@ -37,11 +37,7 @@ import GlobalMonstersScreen from './screens/GlobalMonstersScreen';
 import GlobalItemsScreen from './screens/GlobalItemsScreen';
 import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
 
-
 import HeaderMenuButton from './HeaderMenuButton';
-import SavedDatabaseScreen from './screens/SavedDatabaseScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import TermsAndAgreementScreen from './screens/TermsAndAgreementScreen';
 
 
 

@@ -79,18 +79,6 @@ export default function ItemDetailsScreen({ route, navigation }) {
     Alert.alert('Copied', 'Item copied to clipboard!');
   };
 
-  const generateItemText = () => {
-    return (
-      `Name: ${item.name}\n\n` +
-      `Type: ${item.type}\n` +
-      `Magic: ${item.magicItem}\n\n` +
-      `Damage: ${item.damage?.amount || ''} ${item.damage?.type || ''}\n\n` +
-      `Properties:\n${(item.properties || []).join('\n')}\n\n` +
-      `Effect:\n${(item.effect || []).join('\n')}\n\n` +
-      `Origin:\n${item.origin}\n\n` +
-      `Description:\n${item.description}`
-    );
-  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -232,8 +220,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     borderBottomWidth: 1,
-    borderColor: COLORS.text,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   sectionTitle: {

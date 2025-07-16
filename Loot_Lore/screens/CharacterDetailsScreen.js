@@ -150,7 +150,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       ))}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSave}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSaveCreation}>
           <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Save</Text>
 
         </TouchableOpacity>
@@ -213,8 +213,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     borderBottomWidth: 1,
-    borderColor: COLORS.text,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   sectionTitle: {
