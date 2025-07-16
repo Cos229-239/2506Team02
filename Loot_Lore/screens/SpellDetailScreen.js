@@ -15,6 +15,8 @@ import * as Clipboard from 'expo-clipboard';
 import ImageGenerator from '../ImageGenerator';
 import { ThemeContext } from '../ThemeContext';
 import { THEMES, getGlobalStyles } from '../styles';
+import { handleSaveCreation } from '../data/SaveCreation';
+
 
 export default function SpellDetailsScreen({ route, navigation }) {
   const { spell } = route.params || {};
@@ -76,6 +78,10 @@ export default function SpellDetailsScreen({ route, navigation }) {
     );
   };
 
+  const handleCreateNewSpell = () => {
+  setEditableSpell(null);
+  navigation.navigate('Spells');
+};
   const handleCopy = async () => {
     await Clipboard.setStringAsync(generateSpellText());
     Alert.alert('Copied', 'Spell copied to clipboard!');
@@ -89,17 +95,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_spells');
-      const spells = existing ? JSON.parse(existing) : [];
-      spells.push(editableSpell);
-      await AsyncStorage.setItem('@saved_spells', JSON.stringify(spells));
-      Alert.alert('Success', 'Spell saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
-  };
+
 
   const styles = StyleSheet.create({
     centeredContainer: {
@@ -186,7 +182,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <ImageGenerator prompt= {editableSpell.name + editableSpell.description} />
       {isEditing ? (
         <TextInput
-          style={styles.input}
+          style={styles.inputTitle}
           value={editableSpell.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Spell Name"
@@ -259,8 +255,8 @@ export default function SpellDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation(editableSpell, 'spell')}>
+        <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
           <Text style={styles.buttonText}>Share</Text>
@@ -277,8 +273,8 @@ export default function SpellDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Create New Spell</Text>
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewSpell}>
+        <Text style={styles.buttonText}>Create New Spell</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

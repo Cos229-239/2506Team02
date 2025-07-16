@@ -126,9 +126,11 @@ export default function SavedDatabaseScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
     </SafeAreaView>
   );
 }
+
 
 const localStyles = StyleSheet.create({
   container: {

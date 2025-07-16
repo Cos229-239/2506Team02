@@ -106,13 +106,11 @@ export default function SpellsScreen() {
   };
 
   const handleClear = () => {
-    setSelectedSpellType('');
-    setSelectedSpellLevel('');
-    setSelectedCastingTime('');
-    setSelectedDuration('');
-    setSelectedRangeArea('');
-    setSpell(null);
-  };
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Spells' }], 
+  });
+};
 
   return isLoading ? (
     <LoadingOverlay />
