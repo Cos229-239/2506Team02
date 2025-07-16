@@ -24,6 +24,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   const [character, setCharacter] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     setCharacter(initialCharacter);
@@ -93,8 +94,10 @@ export default function CharacterDetailsScreen({ route, navigation }) {
   return (
 
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
-      <ImageGenerator prompt={character.race + character.backstory } />
-      <Text style={[styles.title, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+    <ImageGenerator
+    prompt={character.race + character.backstory}
+    onImageGenerated={setImageUrl}/> 
+     <Text style={[styles.title, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
         {character.name}
       </Text>
 
@@ -150,9 +153,12 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       ))}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleSave}>
-          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Save</Text>
-
+       <TouchableOpacity
+        style={[styles.button, { backgroundColor: themeColors.button }]}
+        onPress={() => handleSaveCreation({ ...character, imageUrl }, 'character')}>
+        <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+        Save
+        </Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleShare}>
           <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Share</Text>
@@ -213,8 +219,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     borderBottomWidth: 1,
-    borderColor: COLORS.text,
-    color: COLORS.text,
     fontFamily: 'Aclonica',
   },
   sectionTitle: {

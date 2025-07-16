@@ -36,14 +36,7 @@ import GlobalCharactersScreen from './screens/GlobalCharactersScreen';
 import GlobalMonstersScreen from './screens/GlobalMonstersScreen';
 import GlobalItemsScreen from './screens/GlobalItemsScreen';
 import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
-
-
 import HeaderMenuButton from './HeaderMenuButton';
-import SavedDatabaseScreen from './screens/SavedDatabaseScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import TermsAndAgreementScreen from './screens/TermsAndAgreementScreen';
-
-
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -91,17 +84,18 @@ function DrawerNavigator() {
       <Drawer.Screen name="Monster Details" component={MonsterDetailsScreen} />
       <Drawer.Screen name="Item Details" component={ItemDetailsScreen} />
       <Drawer.Screen name="Spell Details" component={SpellDetailsScreen} />
+      <Drawer.Screen name="Saved Databases" component={SavedDatabaseScreen} options={{drawerItemStyle:{display: 'none'}}} />
       <Drawer.Screen name="Terms and Agreement" component={TermsAndAgreementScreen} options={{drawerItemStyle:{display: 'none'}}} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
-      <Drawer.Screen name="Private Characters" component={PrivateCharactersScreen} />
-            <Drawer.Screen name="Private Monsters" component={PrivateMonstersScreen} />
-            <Drawer.Screen name="Private Items" component={PrivateItemsScreen} />
-            <Drawer.Screen name="Private Spells" component={PrivateSpellsScreen} />
-            <Drawer.Screen name="Global Characters" component={GlobalCharactersScreen} />
-            <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} />
-            <Drawer.Screen name="Global Items" component={GlobalItemsScreen} />
-            <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Private Characters" component={PrivateCharactersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Private Monsters" component={PrivateMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Private Items" component={PrivateItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Private Spells" component={PrivateSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Global Characters" component={GlobalCharactersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Global Items" component={GlobalItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
     </Drawer.Navigator>
   );
 }
@@ -159,8 +153,6 @@ export default function AppNavigator({ user }) {
             <Stack.Screen name="Global Monsters" component={GlobalMonstersScreen} />
             <Stack.Screen name="Global Items" component={GlobalItemsScreen} />
             <Stack.Screen name="Global Spells" component={GlobalSpellsScreen} />
-
-
           </>
         )}
       </Stack.Navigator>

@@ -7,14 +7,19 @@ import { ThemeContext } from './ThemeContext'; // Import your ThemeContext
 import { getGlobalStyles, THEMES } from './styles'; // Import your global styles
 import LoadingOverlay from './screens/LoadingOverlay';
 
-export default function ImageGenerator({ prompt }) {
+export default function ImageGenerator({ prompt, onImageGenerated }) {
   const [imageUri, setImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
-  const finalPrompt = "one D&D style portrait using this description as a guide " + prompt + " no text, no logos, no lettering.";
-  
-  const { theme, boldText } = useContext(ThemeContext);  // Get theme and boldText from context
-  const globalStyles = getGlobalStyles(theme);  // Fetch styles based on the active theme
-  const themeColors = THEMES[theme];  // Get the colors for the active theme
+
+  const finalPrompt = `
+  A highly detailed Dungeons & Dragons style portrait of ${prompt}.
+  No text, no letters, no writing, no logos, no symbols, no watermarks, no captions, no typography, no signatures anywhere.
+  Background should be plain or artistic with no characters, numbers, or text.
+  `;
+
+  const { theme, boldText } = useContext(ThemeContext);  
+  const globalStyles = getGlobalStyles(theme);  
+  const themeColors = THEMES[theme];  
   
   const generateImage = async () => {
     try {
@@ -34,7 +39,15 @@ export default function ImageGenerator({ prompt }) {
           },
         }
       );
-      setImageUri(response.data.data[0].url);
+
+      const imageUrl = response.data.data[0].url;
+      setImageUri(imageUrl);
+
+      // Notify parent
+      if (onImageGenerated) {
+        onImageGenerated(imageUrl);
+      }
+
     } catch (err) {
       console.error('❌ Error generating image:', err.message);
       setImageUri(null);
@@ -52,11 +65,21 @@ export default function ImageGenerator({ prompt }) {
       {loading ? (
         <LoadingOverlay />
       ) : imageUri ? (
-        <Image source={{ uri: imageUri }} style={[globalStyles.image, { width: 300, height: 300, borderRadius: 10, marginBottom: 10 }]} resizeMode="cover" />
+        <Image
+          source={{ uri: imageUri }}
+          style={[globalStyles.image, { width: 300, height: 300, borderRadius: 10, marginBottom: 10 }]}
+          resizeMode="cover"
+        />
       ) : (
-        <Text style={[globalStyles.buttonText, { color: themeColors.text, fontStyle: 'italic', marginBottom: 10 }]}>Image could not be generated.</Text>
+        <Text style={[globalStyles.buttonText, { color: themeColors.text, fontStyle: 'italic', marginBottom: 10 }]}>
+          Image could not be generated.
+        </Text>
       )}
-      <TouchableOpacity style={[globalStyles.button, { backgroundColor: themeColors.button, marginTop: 10 }]} onPress={generateImage}>
+
+      <TouchableOpacity
+        style={[globalStyles.button, { backgroundColor: themeColors.button, marginTop: 10 }]}
+        onPress={generateImage}
+      >
         <Text style={[globalStyles.buttonText, { color: themeColors.text }]}>Regenerate Image</Text>
       </TouchableOpacity>
     </View>

@@ -37,7 +37,6 @@ export default function MonsterScreen() {
   const isGenerateDisabled =
     !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
-  const navigation = useNavigation();
 
   const handleClear = () => {
   navigation.reset({
@@ -100,14 +99,6 @@ export default function MonsterScreen() {
     }
   };
 
-  const handleClear = () => {
-    setSelectedType('');
-    setSelectedRace('');
-    setSelectedCR('');
-    setSelectedSize('');
-    setSelectedAlignment('');
-    setMonster(null);
-  };
 
   return isLoading ? (
     <LoadingOverlay />
