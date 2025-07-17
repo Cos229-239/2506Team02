@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const COLORS = {
   button: '#944C17',
   text: '#E59F34',
-  background: '#3B291C',
+  background: '#422900',
 };
 
 export const GLOBAL_STYLES = StyleSheet.create({
@@ -46,10 +46,4 @@ export const GLOBAL_STYLES = StyleSheet.create({
     marginTop: 10,
     fontFamily: 'Aclonica',
   },
-  drawerStyle: {
-  shadowColor: '#000',
-  shadowOffset: { width: -2, height: 4 },
-  shadowOpacity: 0.2,
-  shadowRadius: 8,
-},
 });
