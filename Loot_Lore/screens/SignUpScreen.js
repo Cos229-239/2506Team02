@@ -11,7 +11,6 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  CheckBox,
 } from 'react-native';
 import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
@@ -52,7 +51,7 @@ export default function SignUpScreen({ navigation }) {
     }
 
     if (!termsAccepted) {
-      alert("You must accept the terms and conditions to sign up.")
+      alert("You must accept the terms and conditions to sign up.");
       return;
     }
 
@@ -176,6 +175,23 @@ export default function SignUpScreen({ navigation }) {
             onChangeText={setConfirmPassword}
           />
 
+          {/* ✅ Custom checkbox using TouchableOpacity */}
+          <TouchableOpacity
+            onPress={() => setTermsAccepted(!termsAccepted)}
+            style={styles.checkboxContainer}
+          >
+            <View style={[styles.checkboxBase, termsAccepted && styles.checkboxChecked]}>
+              {termsAccepted && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={[styles.termsText, { color: themeColors.text }]}>
+              I accept the terms and conditions.
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={[styles.legalText, { color: themeColors.text }]}>
+            By signing up, you agree to our Terms of Service and Privacy Policy.
+          </Text>
+
           <TouchableOpacity
             style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
             onPress={handleSignUp}
@@ -238,5 +254,36 @@ const styles = StyleSheet.create({
     fontFamily: 'Aclonica',
     fontSize: 14,
     textDecorationLine: 'underline',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkboxBase: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#999',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  checkboxChecked: {
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+  },
+  checkmark: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  termsText: {
+    fontSize: 14,
+  },
+  legalText: {
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
   },
 });
