@@ -37,6 +37,10 @@ import GlobalMonstersScreen from './screens/GlobalMonstersScreen';
 import GlobalItemsScreen from './screens/GlobalItemsScreen';
 import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
 import HeaderMenuButton from './HeaderMenuButton';
+import CharacterDisplayScreen from './screens/CharacterDisplayScreen';
+import MonsterDisplayScreen from './screens/MonsterDisplayScreen';
+import ItemDisplayScreen from './screens/ItemDisplayScreen';
+import SpellDisplayScreen from './screens/SpellDisplayScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -89,13 +93,17 @@ function DrawerNavigator() {
       <Drawer.Screen name="Settings" component={SettingsScreen} options={{drawerItemStyle:{display: 'none'}}} />
       <Drawer.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} options={{drawerItemStyle:{display: 'none'}}} />
       <Drawer.Screen name="Private Characters" component={PrivateCharactersScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Private Monsters" component={PrivateMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Private Items" component={PrivateItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Private Spells" component={PrivateSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Global Characters" component={GlobalCharactersScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Global Items" component={GlobalItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
-            <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Private Monsters" component={PrivateMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Private Items" component={PrivateItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Private Spells" component={PrivateSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Global Characters" component={GlobalCharactersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Global Items" component={GlobalItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Character Display" component={CharacterDisplayScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Monster Display" component={MonsterDisplayScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Item Display" component={ItemDisplayScreen} options={{drawerItemStyle:{display: 'none'}}} />
+      <Drawer.Screen name="Spell Display" component={SpellDisplayScreen} options={{drawerItemStyle:{display: 'none'}}} />
     </Drawer.Navigator>
   );
 }

@@ -83,7 +83,7 @@ export default function ItemDetailsScreen() {
           const raw = data.choices[0].message?.content;
           const generated = JSON.parse(raw);
 
-          navigation.navigate('Item Details', {
+          navigation.navigate("Item Details", {
             item: {
               itemType: selectedItemType,
               magicItem: selectedMagicItem,

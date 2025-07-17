@@ -104,7 +104,7 @@ export default function PrivateItemsScreen() {
             <TouchableOpacity
               key={item.id}
               style={[localStyles.card, { backgroundColor: colors.button }]}
-              onPress={() => navigation.navigate('Item Details', { item })}
+              onPress={() => navigation.navigate('Item Display', { item })}
             >
               <Text style={[styles.text, { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
                 {item.name || 'Unnamed'}

@@ -34,9 +34,11 @@ export default function PrivateCharactersScreen() {
           setLoading(true);
           const user = auth.currentUser;
           if (!user) return;
+
           const snapshot = await getDocs(
             collection(db, 'users', user.uid, 'creations')
           );
+
           if (isActive) {
             const data = snapshot.docs.map((doc) => ({
               id: doc.id,
@@ -104,9 +106,31 @@ export default function PrivateCharactersScreen() {
             <TouchableOpacity
               key={character.id}
               style={[localStyles.card, { backgroundColor: colors.button }]}
-              onPress={() => navigation.navigate('Character Details', { character })}
+              onPress={() =>
+                navigation.navigate('Character Display', {
+                  type: 'character',
+                  data: character,
+                  fields: [
+                    'race',
+                    'class',
+                    'level',
+                    'background',
+                    'alignment',
+                    'personality',
+                    'backstory',
+                    'traits',
+                    'stats',
+                  ],
+                  imageField: 'imageUrl', // Ensure this matches your Firestore key
+                })
+              }
             >
-              <Text style={[styles.text, { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+              <Text
+                style={[
+                  styles.text,
+                  { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' },
+                ]}
+              >
                 {character.name || 'Unnamed'}
               </Text>
             </TouchableOpacity>

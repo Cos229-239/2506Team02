@@ -1,3 +1,4 @@
+// firebaseConfig.js
 import { initializeApp } from 'firebase/app';
 import {
   initializeAuth,
@@ -7,9 +8,10 @@ import {
   initializeFirestore,
   memoryLocalCache
 } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Firebase config object
+// Your Firebase project configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCrCgdysOFJauQ1me7oCO5L3p1hdCUZ6eo",
   authDomain: "loot-and-lore.firebaseapp.com",
@@ -23,14 +25,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Auth (Only use initializeAuth here)
+// Export Auth with persistence for React Native
 export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage)
 });
 
-// Firestore
+// Export Firestore with offline caching
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
   useFetchStreams: false,
   localCache: memoryLocalCache(),
 });
+
+// Export Firebase Storage
+export const storage = getStorage(app);
