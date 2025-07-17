@@ -36,9 +36,8 @@ import GlobalCharactersScreen from './screens/GlobalCharactersScreen';
 import GlobalMonstersScreen from './screens/GlobalMonstersScreen';
 import GlobalItemsScreen from './screens/GlobalItemsScreen';
 import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
+import DeleteAccountScreen from './screens/DeleteAccountScreen';
 import HeaderMenuButton from './HeaderMenuButton';
-
-
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -98,6 +97,7 @@ function DrawerNavigator() {
             <Drawer.Screen name="Global Monsters" component={GlobalMonstersScreen} options={{drawerItemStyle:{display: 'none'}}} />
             <Drawer.Screen name="Global Items" component={GlobalItemsScreen} options={{drawerItemStyle:{display: 'none'}}} />
             <Drawer.Screen name="Global Spells" component={GlobalSpellsScreen} options={{drawerItemStyle:{display: 'none'}}} />
+            <Drawer.Screen name="Delete Account" component={DeleteAccountScreen} options={{drawerItemStyle:{display: 'none'}}} />
     </Drawer.Navigator>
   );
 }
@@ -155,6 +155,7 @@ export default function AppNavigator({ user }) {
             <Stack.Screen name="Global Monsters" component={GlobalMonstersScreen} />
             <Stack.Screen name="Global Items" component={GlobalItemsScreen} />
             <Stack.Screen name="Global Spells" component={GlobalSpellsScreen} />
+            <Stack.Screen name="Delete Account" component={DeleteAccountScreen} />
           </>
         )}
       </Stack.Navigator>
