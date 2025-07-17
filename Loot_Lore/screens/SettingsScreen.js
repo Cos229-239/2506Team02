@@ -49,10 +49,11 @@ export default function SettingsScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* Delete Account Button */}
-        <View style={{ marginTop: 80 }}> {/* Added more space here */}
-          <DeleteAccountButton /> {/* Button that navigates to the DeleteAccountScreen */}
+        
+        <View style={{ marginTop: 80 }}>
+          <DeleteAccountButton />
         </View>
+
       </ScrollView>
 
       {/* 🔧 Footer now uses themed background and border color */}

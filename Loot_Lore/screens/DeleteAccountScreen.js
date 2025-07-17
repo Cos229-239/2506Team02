@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ThemeContext } from '../ThemeContext';  // Import ThemeContext
 import { getGlobalStyles, THEMES } from '../styles'; // Import global styles function
+import { auth } from '../firebaseConfig'; 
+import { signOut } from 'firebase/auth'; 
 
 export default function DeleteAccountScreen({ navigation }) {
   const { theme } = useContext(ThemeContext);  // Get the current theme

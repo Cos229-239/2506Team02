@@ -82,7 +82,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
   const handleCreateNewSpell = () => {
   setEditableSpell(null);
   navigation.navigate('Spells');
-};
+  };
   const handleCopy = async () => {
     await Clipboard.setStringAsync(generateSpellText());
     Alert.alert('Copied', 'Spell copied to clipboard!');
@@ -95,88 +95,6 @@ export default function SpellDetailsScreen({ route, navigation }) {
       Alert.alert('Error sharing', error.message);
     }
   };
-
-
-
-  const styles = StyleSheet.create({
-    centeredContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      backgroundColor: themeColors.background,
-    },
-    container: {
-      padding: 20,
-      flexGrow: 1,
-      backgroundColor: themeColors.background,
-    },
-    title: {
-      fontSize: 26,
-      marginBottom: 15,
-      fontFamily: 'Aclonica',
-      color: themeColors.text,
-      fontWeight: textWeight,
-    },
-    sectionTitle: {
-      fontSize: 20,
-      marginTop: 15,
-      marginBottom: 6,
-      fontFamily: 'Aclonica',
-      color: themeColors.text,
-      fontWeight: textWeight,
-    },
-    text: {
-      fontSize: 16,
-      marginBottom: 5,
-      fontFamily: 'Aclonica',
-      color: themeColors.text,
-      fontWeight: textWeight,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: themeColors.text,
-      borderRadius: 6,
-      padding: 8,
-      marginBottom: 10,
-      color: themeColors.text,
-      fontFamily: 'Aclonica',
-      fontWeight: textWeight,
-    },
-    buttonRow: {
-      marginTop: 20,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    buttonHalf: {
-      backgroundColor: themeColors.button,
-      paddingVertical: 16,
-      paddingHorizontal: 20,
-      borderRadius: 8,
-      marginHorizontal: 5,
-      marginBottom: 10,
-      alignItems: 'center',
-      flex: 1,
-    },
-    backButton: {
-      marginTop: 30,
-      alignItems: 'center',
-    },
-    button: {
-      backgroundColor: themeColors.button,
-      paddingVertical: 16,
-      paddingHorizontal: 40,
-      borderRadius: 8,
-      marginBottom: 10,
-      alignItems: 'center',
-    },
-    buttonText: {
-      color: themeColors.text,
-      fontSize: 16,
-      fontFamily: 'Aclonica',
-      fontWeight: textWeight,
-    },
-  });
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -281,3 +199,68 @@ export default function SpellDetailsScreen({ route, navigation }) {
     </ScrollView>
   );
 }
+
+  const styles = StyleSheet.create({
+    centeredContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    container: {
+      padding: 20,
+      flexGrow: 1,
+    },
+    title: {
+      fontSize: 26,
+      marginBottom: 15,
+      fontFamily: 'Aclonica',
+    },
+    sectionTitle: {
+      fontSize: 20,
+      marginTop: 15,
+      marginBottom: 6,
+      fontFamily: 'Aclonica',
+    },
+    text: {
+      fontSize: 16,
+      marginBottom: 5,
+      fontFamily: 'Aclonica',
+    },
+    input: {
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: 8,
+      marginBottom: 10,
+      fontFamily: 'Aclonica',
+    },
+    buttonRow: {
+      marginTop: 20,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    buttonHalf: {
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      marginHorizontal: 5,
+      marginBottom: 10,
+      alignItems: 'center',
+      flex: 1,
+    },
+    backButton: {
+      marginTop: 30,
+      alignItems: 'center',
+    },
+    button: {
+      paddingVertical: 16,
+      paddingHorizontal: 40,
+      borderRadius: 8,
+      marginBottom: 10,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontFamily: 'Aclonica',
+    },
+  });
