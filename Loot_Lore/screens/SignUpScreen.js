@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */ 
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,19 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  CheckBox,
 } from 'react-native';
-import { GLOBAL_STYLES, COLORS } from '../styles';
+import { getGlobalStyles, THEMES } from '../styles';
+import { ThemeContext } from '../ThemeContext';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function SignUpScreen({ navigation }) {
+  const { theme } = useContext(ThemeContext);
+  const globalStyles = getGlobalStyles(theme);
+  const themeColors = THEMES[theme];
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -25,6 +31,7 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false); 
 
   const isUsernameTaken = async (usernameToCheck) => {
     const normalized = usernameToCheck.trim().toLowerCase();
@@ -41,6 +48,11 @@ export default function SignUpScreen({ navigation }) {
 
     if (!username || username.trim() === '') {
       alert("Please enter a valid username");
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert("You must accept the terms and conditions to sign up.")
       return;
     }
 
@@ -76,7 +88,7 @@ export default function SignUpScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={GLOBAL_STYLES.screen}>
+    <SafeAreaView style={globalStyles.screen}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -92,84 +104,104 @@ export default function SignUpScreen({ navigation }) {
           }}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Loot & Lore</Text>
+          <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
           <Image source={require('../assets/logo.png')} style={styles.logo} />
 
-          <Text style={styles.label}>First Name</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>First Name</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Enter your first name"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             value={firstName}
             onChangeText={setFirstName}
           />
 
-          <Text style={styles.label}>Last Name</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>Last Name</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Enter your last name"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             value={lastName}
             onChangeText={setLastName}
           />
 
-          <Text style={styles.label}>Phone Number</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>Phone Number</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Enter phone number"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             value={phone}
             onChangeText={setPhone}
             keyboardType="phone-pad"
           />
 
-          <Text style={styles.label}>Username</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>Username</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Enter username"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Email</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>Email</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Enter email"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Password</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>Password</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Enter password"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
 
-          <Text style={styles.label}>Confirm Password</Text>
+          <Text style={[styles.label, { color: themeColors.text }]}>Confirm Password</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeColors.inputBackground, color: themeColors.inputText }]}
             placeholder="Confirm password"
-            placeholderTextColor="#ccc"
+            placeholderTextColor={themeColors.placeholder}
             secureTextEntry
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
 
-          <TouchableOpacity style={styles.primaryButton} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Create Account</Text>
+           <View style={styles.termsContainer}>
+            <CheckBox
+              value={termsAccepted}
+              onValueChange={setTermsAccepted}
+              style={styles.checkbox}
+            />
+            <Text style={[styles.termsText, { color: themeColors.text }]}>
+              I accept the terms and conditions.
+            </Text>
+          </View>
+          <Text style={[styles.legalText, { color: themeColors.text }]}>
+            By signing up, you agree to our Terms of Service and Privacy Policy.
+          </Text>
+          
+
+          <TouchableOpacity
+            style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
+            onPress={handleSignUp}
+          >
+            <Text style={[styles.buttonText, { color: themeColors.text }]}>Create Account</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backToSignIn}>
-            <Text style={styles.backToSignInText}>Already have an account? Sign In</Text>
+            <Text style={[styles.backToSignInText, { color: themeColors.text }]}>
+              Already have an account? Sign In
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -179,7 +211,6 @@ export default function SignUpScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   title: {
-    color: COLORS.text,
     fontSize: 32,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -192,15 +223,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    backgroundColor: '#fff',
     borderRadius: 6,
     padding: 12,
     marginBottom: 10,
     fontSize: 16,
-    color: '#000',
   },
   label: {
-    color: COLORS.text,
     fontSize: 16,
     marginBottom: 4,
     fontFamily: 'Aclonica',
@@ -208,7 +236,6 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   primaryButton: {
-    backgroundColor: COLORS.button,
     padding: 12,
     borderRadius: 6,
     alignItems: 'center',
@@ -216,7 +243,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: COLORS.text,
     fontFamily: 'Aclonica',
     fontSize: 16,
   },
@@ -224,9 +250,24 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   backToSignInText: {
-    color: COLORS.text,
     fontFamily: 'Aclonica',
     fontSize: 14,
     textDecorationLine: 'underline',
+  },
+  termsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkbox: {
+    marginRight: 10.
+  },
+  termsText: {
+  fontSize: 14,
+},
+legalText: {
+  fontSize: 12,
+  marginTop: 5,
+  textAlign: 'center',
   },
 });
