@@ -22,6 +22,12 @@ export default function OtherScreen({ navigation }) {
   };
 
   return (
+    <SafeAreaView style={globalStyles.screen}>
+       <ScrollView
+                contentContainerStyle={styles.scroll}
+                keyboardShouldPersistTaps="handled"
+              >
+
     <View style={[globalStyles.screen, styles.container, { backgroundColor: themeColors.background }]}>
       <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
       <Image source={require('../assets/logo.png')} style={styles.logo} />
@@ -58,6 +64,8 @@ export default function OtherScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     </View>
+     </ScrollView>
+    </SafeAreaView>
   );
 }
 

@@ -51,7 +51,7 @@ export default function SignUpScreen({ navigation }) {
     }
 
     if (!termsAccepted) {
-      alert("You must accept the terms and conditions to sign up.");
+      alert("You must accept the Terms and Agreement to sign up.");
       return;
     }
 
@@ -184,7 +184,7 @@ export default function SignUpScreen({ navigation }) {
               {termsAccepted && <Text style={styles.checkmark}>✓</Text>}
             </View>
             <Text style={[styles.termsText, { color: themeColors.text }]}>
-              I accept the terms and conditions.
+              I accept the Terms and Agreement.
             </Text>
           </TouchableOpacity>
 
