@@ -1,55 +1,70 @@
 // data/itemOptions.js
 
 export const itemType = [
-   { value: 'Armor' },
   { value: 'Weapon' },
-  { value: 'Wand/Staff/Rod' },
-  { value: 'Consumables(Non-Potion & Non-Scroll' },
+  { value: 'Armor' },
   { value: 'Potion' },
   { value: 'Scroll' },
-  { value: 'Ring)' },
-  { value: 'Pendant)' },
+  { value: 'Ring' },
+  { value: 'Amulet' },
+  { value: 'Wand' },
 ];
 
-export const MagicType = [
-  { value: 'Common' },
-  { value: 'Uncommon' },
-  { value: 'Rare' },
-  { value: 'Very Rare' },
-  { value: 'Legendary' },
-  { value: 'Artifact' },
-  { value: 'None' },
-  { value: 'Cursed Common' },
+export const magicItem = [
+  { value: 'Yes' },
+  { value: 'No' },
 ];
 
-export const damage = [
- { value: 'Acolyte' },
-  { value: 'Anthropologist' },
-  { value: 'Archaeologist' },
-  { value: 'Astral Drifter' },
-  { value: 'Azorius Functionary' },
-  { value: 'Boros Legionnaire' },
-  { value: 'Charlatan' },
-  { value: 'City Watch' },
+export const damageType = [
+  { value: 'Bludgeoning' },
+  { value: 'Slashing' },
+  { value: 'Piercing' },
+  { value: 'Fire' },
+  { value: 'Cold' },
+  { value: 'Lightning' },
+  { value: 'Necrotic' },
+  { value: 'Radiant' },
+  { value: 'Psychic' },
+  { value: 'Force' },
+  { value: 'Acid' },
+  { value: 'Poison' },
+  { value: 'Healing' },
+  { value: 'Arcane' },
+  { value: 'Divine' },
+  { value: 'Shadow' },
+  { value: 'Astral' },
+];
+
+export const damageAmount = [
+  { value: '1d4' },
+  { value: '1d6' },
+  { value: '1d8' },
+  { value: '1d10' },
+  { value: '1d12' },
+  { value: '2d6' },
+  { value: '2d8' },
+  { value: '2d10' },
+  { value: '3d6' },
+  { value: '3d8' },
+  { value: '4d6' },
+  { value: '4d8' },
+  { value: '5d6' },
 ];
 
 export const properties = [
-  { value: 'Chaotic Evil' },
-  { value: 'Chaotic Good' },
-  { value: 'Chaotic Neutral' },
-  { value: 'Lawful Evil' },
-  { value: 'Lawful Good' },
-  { value: 'Lawful Neutral' },
-  { value: 'Neutral Evil' },
-  { value: 'Neutral Good' },
+  { value: 'Mythical' },
+  { value: 'Cursed' },
+  { value: 'Artifact' },
+  { value: 'Unique' },
+  { value: 'Legendary' },
 ];
 
 const itemOptions = {
   itemType,
-  MagicItem,
+  magicItem,
   damageType,
-  damage,
-  properties
+  damageAmount,
+  properties,
 };
 
 export default itemOptions;

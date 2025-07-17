@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,22 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import { COLORS } from '../styles';
+import ImageGenerator from '../ImageGenerator';
+import { ThemeContext } from '../ThemeContext';
+import { THEMES, getGlobalStyles } from '../styles';
+import { handleSaveCreation } from '../data/SaveCreation';
+
 
 export default function SpellDetailsScreen({ route, navigation }) {
   const { spell } = route.params || {};
   const [editableSpell, setEditableSpell] = useState(spell);
   const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const { theme, boldText } = useContext(ThemeContext);
+  const themeColors = THEMES[theme] || THEMES.default;
+  const globalStyles = getGlobalStyles(theme);
+  const textWeight = boldText ? 'bold' : 'normal';
 
   useEffect(() => {
     setEditableSpell(spell);
@@ -25,10 +35,13 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
   if (!editableSpell || typeof editableSpell !== 'object') {
     return (
-      <View style={styles.centeredContainer}>
-        <Text style={styles.title}>No spell data found.</Text>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Go Back</Text>
+      <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
+        <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>No spell data found.</Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: themeColors.button }]}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: textWeight }]}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -66,6 +79,10 @@ export default function SpellDetailsScreen({ route, navigation }) {
     );
   };
 
+  const handleCreateNewSpell = () => {
+  setEditableSpell(null);
+  navigation.navigate('Spells');
+  };
   const handleCopy = async () => {
     await Clipboard.setStringAsync(generateSpellText());
     Alert.alert('Copied', 'Spell copied to clipboard!');
@@ -79,23 +96,12 @@ export default function SpellDetailsScreen({ route, navigation }) {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      const existing = await AsyncStorage.getItem('@saved_spells');
-      const spells = existing ? JSON.parse(existing) : [];
-      spells.push(editableSpell);
-      await AsyncStorage.setItem('@saved_spells', JSON.stringify(spells));
-      Alert.alert('Success', 'Spell saved successfully!');
-    } catch (error) {
-      Alert.alert('Error saving', error.message);
-    }
-  };
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
+    <ImageGenerator prompt={editableSpell.name + editableSpell.description} onImageGenerated={setImageUrl} />
       {isEditing ? (
         <TextInput
-          style={styles.input}
+          style={styles.inputTitle}
           value={editableSpell.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Spell Name"
@@ -108,36 +114,11 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
       {isEditing ? (
         <>
-          <TextInput
-            style={styles.input}
-            value={editableSpell.school}
-            onChangeText={(text) => updateField('school', text)}
-            placeholder="School"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.level}
-            onChangeText={(text) => updateField('level', text)}
-            placeholder="Level"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.castingTime}
-            onChangeText={(text) => updateField('castingTime', text)}
-            placeholder="Casting Time"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.duration}
-            onChangeText={(text) => updateField('duration', text)}
-            placeholder="Duration"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.range}
-            onChangeText={(text) => updateField('range', text)}
-            placeholder="Range"
-          />
+          <TextInput style={styles.input} value={editableSpell.school} onChangeText={(text) => updateField('school', text)} placeholder="School" />
+          <TextInput style={styles.input} value={editableSpell.level} onChangeText={(text) => updateField('level', text)} placeholder="Level" />
+          <TextInput style={styles.input} value={editableSpell.castingTime} onChangeText={(text) => updateField('castingTime', text)} placeholder="Casting Time" />
+          <TextInput style={styles.input} value={editableSpell.duration} onChangeText={(text) => updateField('duration', text)} placeholder="Duration" />
+          <TextInput style={styles.input} value={editableSpell.range} onChangeText={(text) => updateField('range', text)} placeholder="Range" />
         </>
       ) : (
         <>
@@ -152,28 +133,9 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <Text style={styles.sectionTitle}>Components</Text>
       {isEditing ? (
         <>
-          <TextInput
-            style={styles.input}
-            value={editableSpell.components?.verbal ? 'Yes' : 'No'}
-            onChangeText={(text) =>
-              updateComponent('verbal', text.toLowerCase() === 'yes')
-            }
-            placeholder="Verbal (Yes/No)"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.components?.somatic ? 'Yes' : 'No'}
-            onChangeText={(text) =>
-              updateComponent('somatic', text.toLowerCase() === 'yes')
-            }
-            placeholder="Somatic (Yes/No)"
-          />
-          <TextInput
-            style={styles.input}
-            value={editableSpell.components?.material || ''}
-            onChangeText={(text) => updateComponent('material', text)}
-            placeholder="Material"
-          />
+          <TextInput style={styles.input} value={editableSpell.components?.verbal ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')} placeholder="Verbal (Yes/No)" />
+          <TextInput style={styles.input} value={editableSpell.components?.somatic ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')} placeholder="Somatic (Yes/No)" />
+          <TextInput style={styles.input} value={editableSpell.components?.material || ''} onChangeText={(text) => updateComponent('material', text)} placeholder="Material" />
         </>
       ) : (
         <>
@@ -212,8 +174,8 @@ export default function SpellDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation({ ...editableSpell, imageUrl }, 'spell')}>
+        <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
           <Text style={styles.buttonText}>Share</Text>
@@ -224,97 +186,81 @@ export default function SpellDetailsScreen({ route, navigation }) {
         <TouchableOpacity style={styles.buttonHalf} onPress={handleCopy}>
           <Text style={styles.buttonText}>Copy</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttonHalf}
-          onPress={() => setIsEditing((prev) => !prev)}
-        >
+        <TouchableOpacity style={styles.buttonHalf} onPress={() => setIsEditing((prev) => !prev)}>
           <Text style={styles.buttonText}>{isEditing ? 'Done' : 'Edit'}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Create New Spell</Text>
+        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewSpell}>
+        <Text style={styles.buttonText}>Create New Spell</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: COLORS.background,
-  },
-  container: {
-    padding: 20,
-    flexGrow: 1,
-    backgroundColor: COLORS.background,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginTop: 15,
-    marginBottom: 6,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: COLORS.text,
-    borderRadius: 6,
-    padding: 8,
-    marginBottom: 10,
-    color: COLORS.text,
-    fontFamily: 'Aclonica',
-  },
-  buttonRow: {
-    marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonHalf: {
-    backgroundColor: COLORS.button,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    marginBottom: 10,
-    alignItems: 'center',
-    flex: 1,
-  },
-  backButton: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: COLORS.button,
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: COLORS.text,
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'Aclonica',
-  },
-});
+  const styles = StyleSheet.create({
+    centeredContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    container: {
+      padding: 20,
+      flexGrow: 1,
+    },
+    title: {
+      fontSize: 26,
+      marginBottom: 15,
+      fontFamily: 'Aclonica',
+    },
+    sectionTitle: {
+      fontSize: 20,
+      marginTop: 15,
+      marginBottom: 6,
+      fontFamily: 'Aclonica',
+    },
+    text: {
+      fontSize: 16,
+      marginBottom: 5,
+      fontFamily: 'Aclonica',
+    },
+    input: {
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: 8,
+      marginBottom: 10,
+      fontFamily: 'Aclonica',
+    },
+    buttonRow: {
+      marginTop: 20,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    buttonHalf: {
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      marginHorizontal: 5,
+      marginBottom: 10,
+      alignItems: 'center',
+      flex: 1,
+    },
+    backButton: {
+      marginTop: 30,
+      alignItems: 'center',
+    },
+    button: {
+      paddingVertical: 16,
+      paddingHorizontal: 40,
+      borderRadius: 8,
+      marginBottom: 10,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontFamily: 'Aclonica',
+    },
+  });

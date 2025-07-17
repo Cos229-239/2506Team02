@@ -176,21 +176,6 @@ export default function SignUpScreen({ navigation }) {
             onChangeText={setConfirmPassword}
           />
 
-           <View style={styles.termsContainer}>
-            <CheckBox
-              value={termsAccepted}
-              onValueChange={setTermsAccepted}
-              style={styles.checkbox}
-            />
-            <Text style={[styles.termsText, { color: themeColors.text }]}>
-              I accept the terms and conditions.
-            </Text>
-          </View>
-          <Text style={[styles.legalText, { color: themeColors.text }]}>
-            By signing up, you agree to our Terms of Service and Privacy Policy.
-          </Text>
-          
-
           <TouchableOpacity
             style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
             onPress={handleSignUp}
@@ -253,21 +238,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Aclonica',
     fontSize: 14,
     textDecorationLine: 'underline',
-  },
-  termsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  checkbox: {
-    marginRight: 10.
-  },
-  termsText: {
-  fontSize: 14,
-},
-legalText: {
-  fontSize: 12,
-  marginTop: 5,
-  textAlign: 'center',
   },
 });
