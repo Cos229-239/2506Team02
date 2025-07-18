@@ -27,17 +27,6 @@ export default function DeleteAccountScreen({ navigation }) {
         Are you sure you want to delete your account?
       </Text>
 
-      {/* No Button in a Square */}
-      <TouchableOpacity 
-        style={[styles.square, { backgroundColor: themeColors.button }]}
-        onPress={handleGoBack}
-      >
-        <View style={styles.buttonTextContainer}>
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>NO!</Text>
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>GO BACK!</Text>
-        </View>
-      </TouchableOpacity>
-
       {/* Yes Button in a Square */}
       <TouchableOpacity 
         style={[styles.square, { backgroundColor: '#FF0000'  }]}
@@ -46,6 +35,18 @@ export default function DeleteAccountScreen({ navigation }) {
         <View style={styles.buttonTextContainer}>
           <Text style={[styles.buttonText, { color: '#000000' }]}>YES</Text>
           <Text style={[styles.buttonText, { color: '#000000' }]}>DELETE ACCOUNT</Text>
+        </View>
+      </TouchableOpacity>
+
+      
+      {/* No Button in a Square */}
+      <TouchableOpacity 
+        style={[styles.square, { backgroundColor: themeColors.button }]}
+        onPress={handleGoBack}
+      >
+        <View style={styles.buttonTextContainer}>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>NO!</Text>
+          <Text style={[styles.buttonText, { color: themeColors.text }]}>GO BACK!</Text>
         </View>
       </TouchableOpacity>
 
