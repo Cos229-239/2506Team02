@@ -15,7 +15,7 @@ import * as Clipboard from 'expo-clipboard';
 import ImageGenerator from '../ImageGenerator';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
-import{ handleSaveCreation } from '../data/SaveCreation'; 
+import { handleSaveCreation } from '../data/SaveCreation';
 
 export default function MonsterDetailsScreen({ route, navigation }) {
   const { monster } = route.params || {};
@@ -92,9 +92,9 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   };
 
   const handleCreateNewMonster = () => {
-  setEditableMonster(null);
-  navigation.navigate('Monsters');
-};
+    setEditableMonster(null);
+    navigation.navigate('Monsters');
+  };
 
   const updateField = (field, value) => {
     setEditableMonster((prev) => ({ ...prev, [field]: value }));
@@ -116,7 +116,6 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
       <ImageGenerator prompt={editableMonster.shortDescription} onImageGenerated={setImageUrl} />
-   
       {isEditing ? (
         <TextInput
           style={[styles.inputTitle, applyTextStyle, { borderColor: themeColors.text }]}
@@ -130,7 +129,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
       <Text style={[styles.sectionTitle, applyTextStyle]}>Monster Details</Text>
       {isEditing ? (
-        <>
+        <View>
           {['promptType', 'promptRace', 'promptChallengeRating', 'promptSize', 'promptAlignment'].map((field) => (
             <TextInput
               key={field}
@@ -140,15 +139,16 @@ export default function MonsterDetailsScreen({ route, navigation }) {
               placeholder={field}
             />
           ))}
-        </>
+        </View>
       ) : (
-        <>
-          <Text style={[styles.text, applyTextStyle]}>Type: {editableMonster.promptType || 'N/A'}</Text>
-          <Text style={[styles.text, applyTextStyle]}>Race: {editableMonster.promptRace || 'N/A'}</Text>
-          <Text style={[styles.text, applyTextStyle]}>Challenge Rating: {editableMonster.promptChallengeRating || 'N/A'}</Text>
-          <Text style={[styles.text, applyTextStyle]}>Size: {editableMonster.promptSize || 'N/A'}</Text>
-          <Text style={[styles.text, applyTextStyle]}>Alignment: {editableMonster.promptAlignment || 'N/A'}</Text>
-        </>
+        <View>
+          <Text style={[styles.sectionTitle, applyTextStyle]}>Monster Details</Text>
+      <Text style={[styles.text, applyTextStyle]}>Type: {editableMonster.type}</Text>
+      <Text style={[styles.text, applyTextStyle]}>Race: {editableMonster.race}</Text>
+      <Text style={[styles.text, applyTextStyle]}>Challenge Rating: {editableMonster.challengeRating}</Text>
+      <Text style={[styles.text, applyTextStyle]}>Size: {editableMonster.size}</Text>
+      <Text style={[styles.text, applyTextStyle]}>Alignment: {editableMonster.alignment}</Text>
+        </View>
       )}
 
       <Text style={[styles.sectionTitle, applyTextStyle]}>Stats</Text>
@@ -211,11 +211,11 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       )}
 
       <View style={styles.buttonRow}>
-      
         <TouchableOpacity
-        style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
-        onPress={() => handleSaveCreation({ ...editableMonster, imageUrl }, 'monster')}>
-        <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
+          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+          onPress={() => handleSaveCreation({ ...editableMonster, imageUrl }, 'monster')}
+        >
+          <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleShare}>
           <Text style={[styles.buttonText, applyTextStyle]}>Share</Text>
@@ -235,14 +235,11 @@ export default function MonsterDetailsScreen({ route, navigation }) {
       </View>
 
       <View style={styles.backButton}>
-
         <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleCreateNewMonster}>
           <Text style={[styles.buttonText, applyTextStyle]}>Create New Monster</Text>
-
         </TouchableOpacity>
       </View>
-
-     </ScrollView>
+    </ScrollView>
   );
 }
 

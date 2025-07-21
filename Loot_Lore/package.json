@@ -10,6 +10,7 @@
     "expo-clipboard": "~7.1.5",
     "expo-web-browser": "^14.2.0",
     "firebase": "^11.10.0",
+    "firebase-admin": "^13.4.0",
     "react-native-dotenv": "^3.4.11",
     "react-native-dropdown-select-list": "^2.0.5",
     "react-native-gesture-handler": "~2.24.0",

@@ -30,7 +30,6 @@ export default function MonsterScreen() {
   const [monster, setMonster] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const { theme, boldText } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
@@ -38,12 +37,11 @@ export default function MonsterScreen() {
     !selectedType || !selectedRace || !selectedCR || !selectedSize || !selectedAlignment;
 
   const handleClear = () => {
-  navigation.reset({
-    index: 0,
-    routes: [{ name: 'Monsters' }], 
-  });
-};
-
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Monsters' }],
+    });
+  };
 
   const handleOutput = async () => {
     if (isGenerateDisabled) {
@@ -53,7 +51,17 @@ export default function MonsterScreen() {
 
     setIsLoading(true);
 
-    const monsterRequest = `Create a ${selectedRace} of type ${selectedType} with challenge rating ${selectedCR}, size ${selectedSize}, and alignment ${selectedAlignment}.`;
+    // Log the request before sending to the API
+    const monsterRequest = `
+    Create a unique fantasy RPG monster:
+    - Type: ${selectedType}
+    - Race: ${selectedRace}
+    - Challenge Rating: ${selectedCR}
+    - Size: ${selectedSize}
+    - Alignment: ${selectedAlignment}
+    `;
+
+    console.log("Monster Request:", monsterRequest);  // Log the request to check the values
 
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -77,6 +85,9 @@ export default function MonsterScreen() {
         const raw = data.choices[0].message?.content;
         const generated = JSON.parse(raw);
 
+        console.log('Generated Monster:', generated); // Log the generated response
+
+        // Pass the monster data to the next screen
         navigation.navigate('Monster Details', {
           monster: {
             type: selectedType,
@@ -84,7 +95,7 @@ export default function MonsterScreen() {
             cr: selectedCR,
             size: selectedSize,
             alignment: selectedAlignment,
-            ...generated,
+            ...generated, // Ensure generated data matches structure you're expecting
           },
         });
       } else {
@@ -97,7 +108,6 @@ export default function MonsterScreen() {
       setIsLoading(false);
     }
   };
-
 
   return isLoading ? (
     <LoadingOverlay />
@@ -148,11 +158,7 @@ export default function MonsterScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleOutput}
-              style={[
-                styles.generateButton,
-                { backgroundColor: themeColors.button },
-                (isGenerateDisabled || isLoading) && { opacity: 0.5 },
-              ]}
+              style={[styles.generateButton, { backgroundColor: themeColors.button }, (isGenerateDisabled || isLoading) && { opacity: 0.5 }]}
               disabled={isGenerateDisabled || isLoading}
             >
               <Text style={[styles.buttonText, { color: themeColors.text }]}>Generate</Text>
@@ -162,7 +168,6 @@ export default function MonsterScreen() {
           {monster && (
             <View style={styles.monsterInfo}>
               <Text style={{ color: themeColors.text }}>Generated Monster Info:</Text>
-              {/* Render monster details here */}
               <Text style={{ color: themeColors.text }}>{JSON.stringify(monster, null, 2)}</Text>
             </View>
           )}
