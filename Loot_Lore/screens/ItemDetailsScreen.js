@@ -127,7 +127,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Properties</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, borderColor: themeColors.text }]}
+          style={[styles.input, applyTextStyle, { height: 80, borderColor: themeColors.text }]}
           multiline
           value={(item.properties || []).join('\n')}
           onChangeText={(text) => updateField('properties', text.split('\n'))}
@@ -142,7 +142,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Effects</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, borderColor: themeColors.text }]}
+          style={[styles.input, applyTextStyle, { height: 80, borderColor: themeColors.text }]}
           multiline
           value={(item.effect || []).join('\n')}
           onChangeText={(text) => updateField('effect', text.split('\n'))}
@@ -157,7 +157,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Origin</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, borderColor: themeColors.text }]}
+          style={[styles.input, applyTextStyle, { height: 80, borderColor: themeColors.text }]}
           multiline
           value={item.origin}
           onChangeText={(text) => updateField('origin', text)}
@@ -170,7 +170,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Description</Text>
       {isEditing ? (
         <TextInput
-          style={[styles.input, { height: 80, borderColor: themeColors.text }]}
+          style={[styles.input, applyTextStyle, { height: 80, borderColor: themeColors.text }]}
           multiline
           value={item.description}
           onChangeText={(text) => updateField('description', text)}

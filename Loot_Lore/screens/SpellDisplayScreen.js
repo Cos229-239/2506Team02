@@ -75,7 +75,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
     const effects = (spell.effects || []).join('\n- ');
     return (
       `Name: ${spell.name}\n\n` +
-      `School: ${spell.school}\nLevel: ${spell.level}\n` +
+      `School: ${spell.school}\nLevel: ${spell.spellLevel}\n` +
       `Casting Time: ${spell.castingTime}\nDuration: ${spell.duration}\nRange: ${spell.range}\n\n` +
       `Description:\n${spell.description}\n\n` +
       `Effects:\n- ${effects}\n\n` +
@@ -193,7 +193,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Spell Details</Text>
       {isEditing ? (
         <>
-          {['school', 'level', 'castingTime', 'duration', 'range'].map((field) => (
+          {['school', 'spellLevel', 'castingTime', 'duration', 'range'].map((field) => (
             <TextInput
               key={field}
               style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
@@ -206,7 +206,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
       ) : (
         <>
           <Text style={[styles.text, applyTextStyle]}>School: {spell.school}</Text>
-          <Text style={[styles.text, applyTextStyle]}>Level: {spell.level}</Text>
+          <Text style={[styles.text, applyTextStyle]}>Level: {spell.spellLevel}</Text>
           <Text style={[styles.text, applyTextStyle]}>Casting Time: {spell.castingTime}</Text>
           <Text style={[styles.text, applyTextStyle]}>Duration: {spell.duration}</Text>
           <Text style={[styles.text, applyTextStyle]}>Range: {spell.range}</Text>
