@@ -27,7 +27,6 @@ export default function MonsterDetailsScreen({ route, navigation }) {
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
-     console.log('Monster passed to screen:', monster);
     if (monster) {
     const transformed = {
       ...monster,

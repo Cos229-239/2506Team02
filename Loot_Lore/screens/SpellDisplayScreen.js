@@ -306,22 +306,22 @@ export default function SpellDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Delete Button */}
-      <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[styles.buttonHalf, { backgroundColor: 'red' }]}
-          onPress={handleDeleteSpell}
-        >
-          <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>Delete Spell</Text>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.backButton}>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: themeColors.button }]}
           onPress={handleCreateNewSpell}
         >
           <Text style={[styles.buttonText, applyTextStyle]}>Create New Spell</Text>
+        </TouchableOpacity>
+      </View>
+
+            {/* Delete Button */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={[styles.buttonHalf, { backgroundColor: 'red' }]}
+          onPress={handleDeleteSpell}
+        >
+          <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>Delete Spell</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

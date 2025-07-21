@@ -18,7 +18,7 @@ export default function DeleteAccountScreen({ navigation }) {
 
   const handleGoBack = () => {
     // Go back to the previous screen
-    navigation.navigate('Settings');
+    navigation.goBack('Settings');
   };
 
   return (
