@@ -47,7 +47,7 @@ export default function PrivateCharactersScreen() {
             setCreations(data);
           }
         } catch (error) {
-          console.error('Error fetching characters:', error);
+          console.log('Error fetching characters:', error);
         } finally {
           if (isActive) setLoading(false);
         }

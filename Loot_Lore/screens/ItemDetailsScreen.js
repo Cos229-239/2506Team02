@@ -96,6 +96,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
           value={item.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{item.name}</Text>
@@ -104,8 +105,8 @@ export default function ItemDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Basic Info</Text>
       {isEditing ? (
         <>
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" />
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.type} onChangeText={(text) => updateField('type', text)} placeholder="Type" placeholderTextColor={themeColors.text} />
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.magicItem} onChangeText={(text) => updateField('magicItem', text)} placeholder="Magic" placeholderTextColor={themeColors.text} />
         </>
       ) : (
         <>
@@ -117,8 +118,8 @@ export default function ItemDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Damage</Text>
       {isEditing ? (
         <>
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.damage?.amount} onChangeText={(text) => updateField('damage', { ...item.damage, amount: text })} placeholder="Damage Amount" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.damage?.type} onChangeText={(text) => updateField('damage', { ...item.damage, type: text })} placeholder="Damage Type" />
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.damage?.amount} onChangeText={(text) => updateField('damage', { ...item.damage, amount: text })} placeholder="Damage Amount" placeholderTextColor={themeColors.text} />
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={item.damage?.type} onChangeText={(text) => updateField('damage', { ...item.damage, type: text })} placeholder="Damage Type" placeholderTextColor={themeColors.text} />
         </>
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{item.damage?.amount} {item.damage?.type}</Text>
@@ -132,6 +133,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
           value={(item.properties || []).join('\n')}
           onChangeText={(text) => updateField('properties', text.split('\n'))}
           placeholder="Properties (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (item.properties || []).map((prop, idx) => (
@@ -147,6 +149,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
           value={(item.effect || []).join('\n')}
           onChangeText={(text) => updateField('effect', text.split('\n'))}
           placeholder="Effects (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (item.effect || []).map((eff, idx) => (
@@ -162,6 +165,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
           value={item.origin}
           onChangeText={(text) => updateField('origin', text)}
           placeholder="Origin"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{item.origin}</Text>
@@ -175,6 +179,7 @@ export default function ItemDetailsScreen({ route, navigation }) {
           value={item.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{item.description}</Text>

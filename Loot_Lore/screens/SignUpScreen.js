@@ -75,9 +75,25 @@ export default function SignUpScreen({ navigation }) {
 
       console.log('✅ User signed up & saved:', user.uid);
     } catch (error) {
-      console.error('Signup error:', error.message);
-      alert(error.message);
-    }
+  console.log('Signup error:', error.code); // Optional for dev
+
+  switch (error.code) {
+    case 'auth/email-already-in-use':
+      alert('This email is already in use. Try signing in instead.');
+      break;
+    case 'auth/invalid-email':
+      alert('Please enter a valid email address.');
+      break;
+    case 'auth/weak-password':
+      alert('Password is too weak. It should be at least 6 characters.');
+      break;
+    case 'auth/missing-password':
+      alert('Please enter a password.');
+      break;
+    default:
+      alert('Failed to create account. Please check your info and try again.');
+  }
+}
   };
 
   return (

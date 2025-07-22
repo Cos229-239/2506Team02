@@ -127,7 +127,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
       Alert.alert('Success', 'Spell saved successfully!');
     } catch (error) {
-      console.error('Save error:', error);
+      console.log('Save error:', error);
       Alert.alert('Save error', error.message || 'Unknown error occurred.');
     }
     setUploading(false);
@@ -154,7 +154,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
               Alert.alert('Deleted', 'Spell deleted successfully!');
               navigation.navigate('Spells');
             } catch (error) {
-              console.error('Delete error:', error);
+              console.log('Delete error:', error);
               Alert.alert('Delete error', error.message || 'Unknown error occurred.');
             }
           },
@@ -185,6 +185,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={spell.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Spell Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{spell.name}</Text>
@@ -200,6 +201,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
               value={spell[field]}
               onChangeText={(text) => updateField(field, text)}
               placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              placeholderTextColor={themeColors.text}
             />
           ))}
         </>
@@ -221,18 +223,21 @@ export default function SpellDetailsScreen({ route, navigation }) {
             value={spell.components?.verbal ? 'Yes' : 'No'}
             onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')}
             placeholder="Verbal (Yes/No)"
+            placeholderTextColor={themeColors.text}
           />
           <TextInput
             style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
             value={spell.components?.somatic ? 'Yes' : 'No'}
             onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')}
             placeholder="Somatic (Yes/No)"
+            placeholderTextColor={themeColors.text}
           />
           <TextInput
             style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
             value={spell.components?.material || ''}
             onChangeText={(text) => updateComponent('material', text)}
             placeholder="Material"
+            placeholderTextColor={themeColors.text}
           />
         </>
       ) : (
@@ -251,6 +256,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={spell.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{spell.description}</Text>
@@ -264,6 +270,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={(spell.effects || []).join('\n')}
           onChangeText={updateEffects}
           placeholder="Effects (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (spell.effects || []).map((effect, idx) => (

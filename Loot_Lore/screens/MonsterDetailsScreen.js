@@ -121,6 +121,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
           value={editableMonster.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{editableMonster.name}</Text>
@@ -136,6 +137,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
               value={editableMonster[field]}
               onChangeText={(text) => updateField(field, text)}
               placeholder={field}
+              placeholderTextColor={themeColors.text}
             />
           ))}
         </View>
@@ -160,6 +162,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
             onChangeText={(text) => updateStat(key, text)}
             placeholder={key}
             keyboardType="numeric"
+            placeholderTextColor={themeColors.text}
           />
         ) : (
           <Text key={key} style={[styles.text, applyTextStyle]}>{`${key}: ${value}`}</Text>
@@ -176,6 +179,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
               value={(editableMonster[field] || []).join('\n')}
               onChangeText={(text) => updateListField(field, text)}
               placeholder={`One ${field.slice(0, -1)} per line`}
+              placeholderTextColor={themeColors.text}
             />
           ) : (
             editableMonster[field].map((item, i) => (
@@ -192,6 +196,8 @@ export default function MonsterDetailsScreen({ route, navigation }) {
           multiline
           value={editableMonster.shortDescription}
           onChangeText={(text) => updateField('shortDescription', text)}
+          placeholder='Description'
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{editableMonster.shortDescription}</Text>
@@ -204,6 +210,8 @@ export default function MonsterDetailsScreen({ route, navigation }) {
           multiline
           value={editableMonster.lore}
           onChangeText={(text) => updateField('lore', text)}
+          placeholder='Lore'
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{editableMonster.lore}</Text>

@@ -33,7 +33,7 @@ export default function ResetPasswordScreen({ navigation }) {
       alert("✅ Password reset email sent! Please check your inbox.");
       navigation.goBack();
     } catch (error) {
-      console.error('Password reset error:', error.message);
+      console.log('Password reset error:', error.message);
       alert("❌ Error: " + error.message);
     }
   };

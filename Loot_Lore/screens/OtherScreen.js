@@ -17,7 +17,7 @@ export default function OtherScreen({ navigation }) {
       await signOut(auth);
       console.log('👋 User signed out');
     } catch (error) {
-      console.error('Sign out error:', error.message);
+      console.log('Sign out error:', error.message);
     }
   };
 

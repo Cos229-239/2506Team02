@@ -44,12 +44,15 @@ export default function DeleteAccountScreen({ navigation }) {
       { cancelable: false }
     );
     } catch (error) {
-      console.error('Account deletion error:', error);
-      if (error.code === 'auth/wrong-password') {
-        Alert.alert('Incorrect Password', 'Please check your password and try again.');
-      } else {
-        Alert.alert('Error', 'Failed to delete account. Please try again later.');
-      }
+       if (error.code === 'auth/wrong-password') {
+    alert('Incorrect password. Please try again.');
+  } else if (error.code === 'auth/invalid-credential') {
+    alert('Invalid credentials provided. Please re-enter your password.');
+  } else if (error.code === 'auth/requires-recent-login') {
+    alert('Your session has expired. Please log in again to continue.');
+  } else {
+    alert('Failed to delete account. Please try again later.');
+  }
     }
   };
 

@@ -111,6 +111,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={editableSpell.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Spell Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{editableSpell.name}</Text>
@@ -120,11 +121,11 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
       {isEditing ? (
         <>
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.school} onChangeText={(text) => updateField('school', text)} placeholder="School" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.spellLevel} onChangeText={(text) => updateField('spellLevel', text)} placeholder="Level" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.castingTime} onChangeText={(text) => updateField('castingTime', text)} placeholder="Casting Time" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.duration} onChangeText={(text) => updateField('duration', text)} placeholder="Duration" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.range} onChangeText={(text) => updateField('range', text)} placeholder="Range" />
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.school} onChangeText={(text) => updateField('school', text)} placeholder="School" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.spellLevel} onChangeText={(text) => updateField('spellLevel', text)} placeholder="Level" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.castingTime} onChangeText={(text) => updateField('castingTime', text)} placeholder="Casting Time" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.duration} onChangeText={(text) => updateField('duration', text)} placeholder="Duration" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.range} onChangeText={(text) => updateField('range', text)} placeholder="Range" placeholderTextColor={themeColors.text}/>
         </>
       ) : (
         <>
@@ -139,9 +140,9 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <Text  style={[styles.sectionTitle, applyTextStyle]}>Components</Text>
       {isEditing ? (
         <>
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.verbal ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')} placeholder="Verbal (Yes/No)" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.somatic ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')} placeholder="Somatic (Yes/No)" />
-          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.material || ''} onChangeText={(text) => updateComponent('material', text)} placeholder="Material" />
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.verbal ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')} placeholder="Verbal (Yes/No)" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.somatic ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')} placeholder="Somatic (Yes/No)" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.material || ''} onChangeText={(text) => updateComponent('material', text)} placeholder="Material" placeholderTextColor={themeColors.text}/>
         </>
       ) : (
         <>
@@ -159,6 +160,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={editableSpell.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{editableSpell.description}</Text>
@@ -172,6 +174,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={(editableSpell.effects || []).join('\n')}
           onChangeText={updateEffects}
           placeholder="Effects (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (editableSpell.effects || []).map((effect, idx) => (

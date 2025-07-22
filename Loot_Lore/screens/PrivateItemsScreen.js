@@ -45,7 +45,7 @@ export default function PrivateItemsScreen() {
             setCreations(data);
           }
         } catch (error) {
-          console.error('Error fetching items:', error);
+          console.log('Error fetching items:', error);
         } finally {
           if (isActive) setLoading(false);
         }
