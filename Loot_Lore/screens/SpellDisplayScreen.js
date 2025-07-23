@@ -75,7 +75,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
     const effects = (spell.effects || []).join('\n- ');
     return (
       `Name: ${spell.name}\n\n` +
-      `School: ${spell.school}\nLevel: ${spell.level}\n` +
+      `School: ${spell.school}\nLevel: ${spell.spellLevel}\n` +
       `Casting Time: ${spell.castingTime}\nDuration: ${spell.duration}\nRange: ${spell.range}\n\n` +
       `Description:\n${spell.description}\n\n` +
       `Effects:\n- ${effects}\n\n` +
@@ -127,7 +127,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
       Alert.alert('Success', 'Spell saved successfully!');
     } catch (error) {
-      console.error('Save error:', error);
+      console.log('Save error:', error);
       Alert.alert('Save error', error.message || 'Unknown error occurred.');
     }
     setUploading(false);
@@ -154,7 +154,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
               Alert.alert('Deleted', 'Spell deleted successfully!');
               navigation.navigate('Spells');
             } catch (error) {
-              console.error('Delete error:', error);
+              console.log('Delete error:', error);
               Alert.alert('Delete error', error.message || 'Unknown error occurred.');
             }
           },
@@ -185,6 +185,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={spell.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Spell Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{spell.name}</Text>
@@ -193,20 +194,21 @@ export default function SpellDetailsScreen({ route, navigation }) {
       <Text style={[styles.sectionTitle, applyTextStyle]}>Spell Details</Text>
       {isEditing ? (
         <>
-          {['school', 'level', 'castingTime', 'duration', 'range'].map((field) => (
+          {['school', 'spellLevel', 'castingTime', 'duration', 'range'].map((field) => (
             <TextInput
               key={field}
               style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
               value={spell[field]}
               onChangeText={(text) => updateField(field, text)}
               placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              placeholderTextColor={themeColors.text}
             />
           ))}
         </>
       ) : (
         <>
           <Text style={[styles.text, applyTextStyle]}>School: {spell.school}</Text>
-          <Text style={[styles.text, applyTextStyle]}>Level: {spell.level}</Text>
+          <Text style={[styles.text, applyTextStyle]}>Level: {spell.spellLevel}</Text>
           <Text style={[styles.text, applyTextStyle]}>Casting Time: {spell.castingTime}</Text>
           <Text style={[styles.text, applyTextStyle]}>Duration: {spell.duration}</Text>
           <Text style={[styles.text, applyTextStyle]}>Range: {spell.range}</Text>
@@ -221,18 +223,21 @@ export default function SpellDetailsScreen({ route, navigation }) {
             value={spell.components?.verbal ? 'Yes' : 'No'}
             onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')}
             placeholder="Verbal (Yes/No)"
+            placeholderTextColor={themeColors.text}
           />
           <TextInput
             style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
             value={spell.components?.somatic ? 'Yes' : 'No'}
             onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')}
             placeholder="Somatic (Yes/No)"
+            placeholderTextColor={themeColors.text}
           />
           <TextInput
             style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
             value={spell.components?.material || ''}
             onChangeText={(text) => updateComponent('material', text)}
             placeholder="Material"
+            placeholderTextColor={themeColors.text}
           />
         </>
       ) : (
@@ -251,6 +256,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={spell.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{spell.description}</Text>
@@ -264,6 +270,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
           value={(spell.effects || []).join('\n')}
           onChangeText={updateEffects}
           placeholder="Effects (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (spell.effects || []).map((effect, idx) => (
@@ -306,22 +313,22 @@ export default function SpellDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Delete Button */}
-      <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[styles.buttonHalf, { backgroundColor: 'red' }]}
-          onPress={handleDeleteSpell}
-        >
-          <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>Delete Spell</Text>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.backButton}>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: themeColors.button }]}
           onPress={handleCreateNewSpell}
         >
           <Text style={[styles.buttonText, applyTextStyle]}>Create New Spell</Text>
+        </TouchableOpacity>
+      </View>
+
+            {/* Delete Button */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={[styles.buttonHalf, { backgroundColor: 'red' }]}
+          onPress={handleDeleteSpell}
+        >
+          <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>Delete Spell</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

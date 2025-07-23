@@ -45,7 +45,7 @@ export default function PrivateMonstersScreen() {
             setCreations(data);
           }
         } catch (error) {
-          console.error('Error fetching monsters:', error);
+          console.log('Error fetching monsters:', error);
         } finally {
           if (isActive) setLoading(false);
         }

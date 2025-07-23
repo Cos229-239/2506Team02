@@ -109,6 +109,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
           value={character.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{character.name}</Text>
@@ -123,6 +124,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
             value={character[field]}
             onChangeText={(text) => updateField(field, text)}
             placeholder={field}
+            placeholderTextColor={themeColors.text}
           />
         ) : (
           <Text key={field} style={[styles.text, applyTextStyle]}>
@@ -141,6 +143,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
             onChangeText={(text) => updateStat(stat, text)}
             placeholder={stat}
             keyboardType="numeric"
+            placeholderTextColor={themeColors.text}
           />
         ) : (
           <Text key={stat} style={[styles.text, applyTextStyle]}>
@@ -156,6 +159,8 @@ export default function CharacterDetailsScreen({ route, navigation }) {
           multiline
           value={character.personality}
           onChangeText={(text) => updateField('personality', text)}
+          placeholder='Personality traits, ideals, bonds, and flaws'
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{character.personality}</Text>
@@ -168,6 +173,8 @@ export default function CharacterDetailsScreen({ route, navigation }) {
           multiline
           value={character.backstory}
           onChangeText={(text) => updateField('backstory', text)}
+          placeholder='Once upon a time.... backstory'
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{character.backstory}</Text>
@@ -181,6 +188,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
           value={(character.traits || []).join('\n')}
           onChangeText={(text) => updateListField('traits', text)}
           placeholder="One trait per line"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (character.traits || []).map((trait, i) => (

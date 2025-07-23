@@ -12,6 +12,7 @@ import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import LoginBackButton from '../LoginBackButton';
 
 export default function ResetPasswordScreen({ navigation }) {
   const [input, setInput] = useState('');
@@ -32,12 +33,13 @@ export default function ResetPasswordScreen({ navigation }) {
       alert("✅ Password reset email sent! Please check your inbox.");
       navigation.goBack();
     } catch (error) {
-      console.error('Password reset error:', error.message);
+      console.log('Password reset error:', error.message);
       alert("❌ Error: " + error.message);
     }
   };
 
   return (
+  <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View style={[globalStyles.screen, styles.container]}>
       <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
 
@@ -66,7 +68,17 @@ export default function ResetPasswordScreen({ navigation }) {
         </Text>
       </TouchableOpacity>
     </View>
-  );
+
+    {/* Footer Back Button */}
+    <View style={[styles.footer, {
+            backgroundColor: themeColors.background,
+            borderTopColor: themeColors.text,
+            }]}>
+      <LoginBackButton />
+    </View>
+  </View>
+);
+
 }
 
 const styles = StyleSheet.create({
@@ -111,4 +123,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Aclonica',
   },
+  footer: {
+    borderTopWidth: 1,
+    padding: 10,
+  },
+
 });

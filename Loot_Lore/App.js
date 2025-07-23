@@ -30,7 +30,7 @@ export default function App() {
             }
           },
           (error) => {
-            console.error("🔥 Firestore listener error:", error.message);
+            console.log("🔥 Firestore listener error:", error.message);
           }
         );
       } else {

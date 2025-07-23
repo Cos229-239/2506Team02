@@ -50,8 +50,31 @@ export default function SignInScreen({ navigation }) {
       await signInWithEmailAndPassword(auth, loginEmail, password);
       console.log('✅ Logged in as', loginEmail);
     } catch (error) {
-      console.error('Login error:', error.message);
-      alert(error.message);
+  console.log('Login error:', error.code); // Optional: for dev visibility
+
+  switch (error.code) {
+    case 'auth/invalid-email':
+      alert('The email address is badly formatted.');
+      break;
+    case 'auth/missing-password':
+      alert('Please enter your password.');
+      break;
+    case 'auth/internal-error':
+      // This often means password was missing
+      alert('Password is required. Please try again.');
+      break;
+    case 'auth/wrong-password':
+      alert('Incorrect password. Please try again.');
+      break;
+    case 'auth/user-not-found':
+      alert('No user found with that email or username.');
+      break;
+    case 'auth/too-many-requests':
+      alert('Too many attempts. Try again later.');
+      break;
+    default:
+      alert('Login failed. Please check your input and try again.');
+  }
     } finally {
       setLoading(false); // Reset loading state when login finishes
     }

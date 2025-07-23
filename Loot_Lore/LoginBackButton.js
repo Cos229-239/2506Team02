@@ -11,7 +11,7 @@ export default function BackButton({ label = 'Back' }) {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Other')} // 👈 Navigates to OtherScreen.js
+      onPress={() => navigation.navigate('SignIn')} // 👈 Navigates to OtherScreen.js
       style={[styles.button, localStyles.backButton]}
     >
       <Text style={[styles.buttonText, boldText && { fontWeight: 'bold' }]}>
@@ -24,9 +24,6 @@ export default function BackButton({ label = 'Back' }) {
 const localStyles = StyleSheet.create({
   backButton: {
     marginVertical: 20,
-    borderRadius: 8,
     alignSelf: 'center',
-     paddingVertical: 14,
-    paddingHorizontal: 40,
   },
 });

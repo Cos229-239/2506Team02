@@ -30,6 +30,7 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false); 
 
   const isUsernameTaken = async (usernameToCheck) => {
     const normalized = usernameToCheck.trim().toLowerCase();
@@ -46,6 +47,11 @@ export default function SignUpScreen({ navigation }) {
 
     if (!username || username.trim() === '') {
       alert("Please enter a valid username");
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert("You must accept the Terms and Agreement to sign up.");
       return;
     }
 
@@ -75,9 +81,25 @@ export default function SignUpScreen({ navigation }) {
 
       console.log('✅ User signed up & saved:', user.uid);
     } catch (error) {
-      console.error('Signup error:', error.message);
-      alert(error.message);
-    }
+  console.log('Signup error:', error.code); // Optional for dev
+
+  switch (error.code) {
+    case 'auth/email-already-in-use':
+      alert('This email is already in use. Try signing in instead.');
+      break;
+    case 'auth/invalid-email':
+      alert('Please enter a valid email address.');
+      break;
+    case 'auth/weak-password':
+      alert('Password is too weak. It should be at least 6 characters.');
+      break;
+    case 'auth/missing-password':
+      alert('Please enter a password.');
+      break;
+    default:
+      alert('Failed to create account. Please check your info and try again.');
+  }
+}
   };
 
   return (
@@ -169,6 +191,23 @@ export default function SignUpScreen({ navigation }) {
             onChangeText={setConfirmPassword}
           />
 
+          {/* ✅ Custom checkbox using TouchableOpacity */}
+          <TouchableOpacity
+            onPress={() => setTermsAccepted(!termsAccepted)}
+            style={styles.checkboxContainer}
+          >
+            <View style={[styles.checkboxBase, termsAccepted && styles.checkboxChecked]}>
+              {termsAccepted && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={[styles.termsText, { color: themeColors.text }]}>
+              I accept the Terms and Agreement.
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={[styles.legalText, { color: themeColors.text }]}>
+            By signing up, you agree to our Terms of Service and Privacy Policy.
+          </Text>
+
           <TouchableOpacity
             style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
             onPress={handleSignUp}
@@ -231,5 +270,36 @@ const styles = StyleSheet.create({
     fontFamily: 'Aclonica',
     fontSize: 14,
     textDecorationLine: 'underline',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkboxBase: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#999',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  checkboxChecked: {
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+  },
+  checkmark: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  termsText: {
+    fontSize: 14,
+  },
+  legalText: {
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
   },
 });

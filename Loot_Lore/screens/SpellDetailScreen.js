@@ -69,7 +69,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
     const effects = (editableSpell.effects || []).join('\n- ');
     return (
       `Name: ${editableSpell.name}\n\n` +
-      `School: ${editableSpell.school}\nLevel: ${editableSpell.level}\n` +
+      `School: ${editableSpell.school}\nLevel: ${editableSpell.spellLevel}\n` +
       `Casting Time: ${editableSpell.castingTime}\nDuration: ${editableSpell.duration}\nRange: ${editableSpell.range}\n\n` +
       `Description:\n${editableSpell.description}\n\n` +
       `Effects:\n- ${effects}\n\n` +
@@ -82,7 +82,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
   const handleCreateNewSpell = () => {
   setEditableSpell(null);
   navigation.navigate('Spells');
-};
+  };
   const handleCopy = async () => {
     await Clipboard.setStringAsync(generateSpellText());
     Alert.alert('Copied', 'Spell copied to clipboard!');
@@ -96,7 +96,118 @@ export default function SpellDetailsScreen({ route, navigation }) {
     }
   };
 
+ const applyTextStyle = {
+    color: themeColors.text,
+    fontWeight: textWeight,
+    fontFamily: 'Aclonica',
+  };
 
+  return (
+    <ScrollView contentContainerStyle={[styles.container, {backgroundColor: themeColors.background}]}>
+    <ImageGenerator prompt={editableSpell.name + editableSpell.description} onImageGenerated={setImageUrl} />
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
+          value={editableSpell.name}
+          onChangeText={(text) => updateField('name', text)}
+          placeholder="Spell Name"
+          placeholderTextColor={themeColors.text}
+        />
+      ) : (
+        <Text style={[styles.title, applyTextStyle]}>{editableSpell.name}</Text>
+      )}
+
+      <Text style={[styles.sectionTitle, applyTextStyle]}>Spell Details</Text>
+
+      {isEditing ? (
+        <>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.school} onChangeText={(text) => updateField('school', text)} placeholder="School" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.spellLevel} onChangeText={(text) => updateField('spellLevel', text)} placeholder="Level" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.castingTime} onChangeText={(text) => updateField('castingTime', text)} placeholder="Casting Time" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.duration} onChangeText={(text) => updateField('duration', text)} placeholder="Duration" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.range} onChangeText={(text) => updateField('range', text)} placeholder="Range" placeholderTextColor={themeColors.text}/>
+        </>
+      ) : (
+        <>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>School: {editableSpell.school}</Text>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Level: {editableSpell.spellLevel}</Text>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Casting Time: {editableSpell.castingTime}</Text>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Duration: {editableSpell.duration}</Text>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Range: {editableSpell.range}</Text>
+        </>
+      )}
+
+      <Text  style={[styles.sectionTitle, applyTextStyle]}>Components</Text>
+      {isEditing ? (
+        <>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.verbal ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')} placeholder="Verbal (Yes/No)" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.somatic ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')} placeholder="Somatic (Yes/No)" placeholderTextColor={themeColors.text}/>
+          <TextInput style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]} value={editableSpell.components?.material || ''} onChangeText={(text) => updateComponent('material', text)} placeholder="Material" placeholderTextColor={themeColors.text}/>
+        </>
+      ) : (
+        <>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Verbal: {editableSpell.components?.verbal ? 'Yes' : 'No'}</Text>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Somatic: {editableSpell.components?.somatic ? 'Yes' : 'No'}</Text>
+          <Text style={[styles.input, applyTextStyle, { borderColor: themeColors.background }]}>Material: {editableSpell.components?.material || 'None'}</Text>
+        </>
+      )}
+
+      <Text style={[styles.sectionTitle, applyTextStyle]}>Description</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, applyTextStyle, { height: 100, borderColor: themeColors.text }]}
+          multiline
+          value={editableSpell.description}
+          onChangeText={(text) => updateField('description', text)}
+          placeholder="Description"
+          placeholderTextColor={themeColors.text}
+        />
+      ) : (
+        <Text style={[styles.text, applyTextStyle]}>{editableSpell.description}</Text>
+      )}
+
+      <Text style={[styles.sectionTitle, applyTextStyle]}>Effects</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.input, applyTextStyle, { height: 100, borderColor: themeColors.text }]}
+          multiline
+          value={(editableSpell.effects || []).join('\n')}
+          onChangeText={updateEffects}
+          placeholder="Effects (one per line)"
+          placeholderTextColor={themeColors.text}
+        />
+      ) : (
+        (editableSpell.effects || []).map((effect, idx) => (
+          <Text key={idx} style={[styles.text, applyTextStyle]}>- {effect}</Text>
+        ))
+      )}
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={() => handleSaveCreation({ ...editableSpell, imageUrl }, 'spell')}>
+        <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleShare}>
+          <Text style={[styles.buttonText, applyTextStyle]}>Share</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleCopy}>
+          <Text style={[styles.buttonText, applyTextStyle]}>Copy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={() => setIsEditing((prev) => !prev)}>
+          <Text style={[styles.buttonText, applyTextStyle]}>{isEditing ? 'Done' : 'Edit'}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.backButton}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }, { width: '100%' }]} onPress={handleCreateNewSpell}>
+        <Text style={[styles.buttonText, applyTextStyle]}>Create New Spell</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
+}
 
   const styles = StyleSheet.create({
     centeredContainer: {
@@ -104,44 +215,33 @@ export default function SpellDetailsScreen({ route, navigation }) {
       justifyContent: 'center',
       alignItems: 'center',
       padding: 20,
-      backgroundColor: themeColors.background,
     },
     container: {
       padding: 20,
       flexGrow: 1,
-      backgroundColor: themeColors.background,
     },
     title: {
       fontSize: 26,
       marginBottom: 15,
       fontFamily: 'Aclonica',
-      color: themeColors.text,
-      fontWeight: textWeight,
     },
     sectionTitle: {
       fontSize: 20,
       marginTop: 15,
       marginBottom: 6,
       fontFamily: 'Aclonica',
-      color: themeColors.text,
-      fontWeight: textWeight,
     },
     text: {
       fontSize: 16,
       marginBottom: 5,
       fontFamily: 'Aclonica',
-      color: themeColors.text,
-      fontWeight: textWeight,
     },
     input: {
       borderWidth: 1,
-      borderColor: themeColors.text,
       borderRadius: 6,
       padding: 8,
       marginBottom: 10,
-      color: themeColors.text,
       fontFamily: 'Aclonica',
-      fontWeight: textWeight,
     },
     buttonRow: {
       marginTop: 20,
@@ -149,7 +249,6 @@ export default function SpellDetailsScreen({ route, navigation }) {
       justifyContent: 'space-between',
     },
     buttonHalf: {
-      backgroundColor: themeColors.button,
       paddingVertical: 16,
       paddingHorizontal: 20,
       borderRadius: 8,
@@ -163,7 +262,6 @@ export default function SpellDetailsScreen({ route, navigation }) {
       alignItems: 'center',
     },
     button: {
-      backgroundColor: themeColors.button,
       paddingVertical: 16,
       paddingHorizontal: 40,
       borderRadius: 8,
@@ -171,113 +269,7 @@ export default function SpellDetailsScreen({ route, navigation }) {
       alignItems: 'center',
     },
     buttonText: {
-      color: themeColors.text,
       fontSize: 16,
       fontFamily: 'Aclonica',
-      fontWeight: textWeight,
     },
   });
-
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-    <ImageGenerator prompt={editableSpell.name + editableSpell.description} onImageGenerated={setImageUrl} />
-      {isEditing ? (
-        <TextInput
-          style={styles.inputTitle}
-          value={editableSpell.name}
-          onChangeText={(text) => updateField('name', text)}
-          placeholder="Spell Name"
-        />
-      ) : (
-        <Text style={styles.title}>{editableSpell.name}</Text>
-      )}
-
-      <Text style={styles.sectionTitle}>Spell Details</Text>
-
-      {isEditing ? (
-        <>
-          <TextInput style={styles.input} value={editableSpell.school} onChangeText={(text) => updateField('school', text)} placeholder="School" />
-          <TextInput style={styles.input} value={editableSpell.level} onChangeText={(text) => updateField('level', text)} placeholder="Level" />
-          <TextInput style={styles.input} value={editableSpell.castingTime} onChangeText={(text) => updateField('castingTime', text)} placeholder="Casting Time" />
-          <TextInput style={styles.input} value={editableSpell.duration} onChangeText={(text) => updateField('duration', text)} placeholder="Duration" />
-          <TextInput style={styles.input} value={editableSpell.range} onChangeText={(text) => updateField('range', text)} placeholder="Range" />
-        </>
-      ) : (
-        <>
-          <Text style={styles.text}>School: {editableSpell.school}</Text>
-          <Text style={styles.text}>Level: {editableSpell.level}</Text>
-          <Text style={styles.text}>Casting Time: {editableSpell.castingTime}</Text>
-          <Text style={styles.text}>Duration: {editableSpell.duration}</Text>
-          <Text style={styles.text}>Range: {editableSpell.range}</Text>
-        </>
-      )}
-
-      <Text style={styles.sectionTitle}>Components</Text>
-      {isEditing ? (
-        <>
-          <TextInput style={styles.input} value={editableSpell.components?.verbal ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('verbal', text.toLowerCase() === 'yes')} placeholder="Verbal (Yes/No)" />
-          <TextInput style={styles.input} value={editableSpell.components?.somatic ? 'Yes' : 'No'} onChangeText={(text) => updateComponent('somatic', text.toLowerCase() === 'yes')} placeholder="Somatic (Yes/No)" />
-          <TextInput style={styles.input} value={editableSpell.components?.material || ''} onChangeText={(text) => updateComponent('material', text)} placeholder="Material" />
-        </>
-      ) : (
-        <>
-          <Text style={styles.text}>Verbal: {editableSpell.components?.verbal ? 'Yes' : 'No'}</Text>
-          <Text style={styles.text}>Somatic: {editableSpell.components?.somatic ? 'Yes' : 'No'}</Text>
-          <Text style={styles.text}>Material: {editableSpell.components?.material || 'None'}</Text>
-        </>
-      )}
-
-      <Text style={styles.sectionTitle}>Description</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          multiline
-          value={editableSpell.description}
-          onChangeText={(text) => updateField('description', text)}
-          placeholder="Description"
-        />
-      ) : (
-        <Text style={styles.text}>{editableSpell.description}</Text>
-      )}
-
-      <Text style={styles.sectionTitle}>Effects</Text>
-      {isEditing ? (
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          multiline
-          value={(editableSpell.effects || []).join('\n')}
-          onChangeText={updateEffects}
-          placeholder="Effects (one per line)"
-        />
-      ) : (
-        (editableSpell.effects || []).map((effect, idx) => (
-          <Text key={idx} style={styles.text}>- {effect}</Text>
-        ))
-      )}
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={() => handleSaveCreation({ ...editableSpell, imageUrl }, 'spell')}>
-        <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleShare}>
-          <Text style={styles.buttonText}>Share</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonHalf} onPress={handleCopy}>
-          <Text style={styles.buttonText}>Copy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonHalf} onPress={() => setIsEditing((prev) => !prev)}>
-          <Text style={styles.buttonText}>{isEditing ? 'Done' : 'Edit'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.backButton}>
-        <TouchableOpacity style={[styles.button, { width: '100%' }]} onPress={handleCreateNewSpell}>
-        <Text style={styles.buttonText}>Create New Spell</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
-}

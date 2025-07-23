@@ -36,6 +36,7 @@ import GlobalCharactersScreen from './screens/GlobalCharactersScreen';
 import GlobalMonstersScreen from './screens/GlobalMonstersScreen';
 import GlobalItemsScreen from './screens/GlobalItemsScreen';
 import GlobalSpellsScreen from './screens/GlobalSpellsScreen';
+import DeleteAccountScreen from './screens/DeleteAccountScreen';
 import HeaderMenuButton from './HeaderMenuButton';
 import CharacterDisplayScreen from './screens/CharacterDisplayScreen';
 import MonsterDisplayScreen from './screens/MonsterDisplayScreen';
@@ -153,6 +154,7 @@ export default function AppNavigator({ user }) {
             <Stack.Screen name="Saved Databases" component ={SavedDatabaseScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="Terms & Agreement" component={TermsAndAgreementScreen} />
+            <Stack.Screen name="Delete Account" component={DeleteAccountScreen} />
             <Stack.Screen name="Private Characters" component={PrivateCharactersScreen} />
             <Stack.Screen name="Private Monsters" component={PrivateMonstersScreen} />
             <Stack.Screen name="Private Items" component={PrivateItemsScreen} />

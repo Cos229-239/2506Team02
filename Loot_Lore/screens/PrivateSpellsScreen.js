@@ -45,7 +45,7 @@ export default function PrivateSpellsScreen() {
             setCreations(data);
           }
         } catch (error) {
-          console.error('Error fetching spells:', error);
+          console.log('Error fetching spells:', error);
         } finally {
           if (isActive) setLoading(false);
         }

@@ -131,7 +131,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
       Alert.alert('Success', 'Monster saved successfully!');
     } catch (error) {
-      console.error('Save error:', error);
+      console.log('Save error:', error);
       Alert.alert('Save error', error.message || 'Unknown error occurred.');
     }
     setUploading(false);
@@ -157,7 +157,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
               Alert.alert('Deleted', 'Monster deleted successfully!');
               navigation.navigate('Private Monsters');
             } catch (error) {
-              console.error('Delete error:', error);
+              console.log('Delete error:', error);
               Alert.alert('Delete error', error.message || 'Unknown error occurred.');
             }
           },
@@ -187,6 +187,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
           value={monster.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{monster.name}</Text>
@@ -202,6 +203,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
               value={monster[field]}
               onChangeText={(text) => updateField(field, text)}
               placeholder={field}
+              placeholderTextColor={themeColors.text}
             />
           ))}
         </>
@@ -226,6 +228,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
             onChangeText={(text) => updateStat(key, text)}
             placeholder={key}
             keyboardType="numeric"
+            placeholderTextColor={themeColors.text}
           />
         ) : (
           <Text key={key} style={[styles.text, applyTextStyle]}>{`${key}: ${value}`}</Text>
@@ -244,6 +247,7 @@ export default function MonsterDetailsScreen({ route, navigation }) {
               value={(monster[field] || []).join('\n')}
               onChangeText={(text) => updateListField(field, text)}
               placeholder={`One ${field.slice(0, -1)} per line`}
+              placeholderTextColor={themeColors.text}
             />
           ) : (
             (monster[field] || []).map((item, i) => (
@@ -260,6 +264,8 @@ export default function MonsterDetailsScreen({ route, navigation }) {
           multiline
           value={monster.shortDescription}
           onChangeText={(text) => updateField('shortDescription', text)}
+          placeholder='Description'
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{monster.shortDescription}</Text>
@@ -272,6 +278,9 @@ export default function MonsterDetailsScreen({ route, navigation }) {
           multiline
           value={monster.lore}
           onChangeText={(text) => updateField('lore', text)}
+          placeholder='Lore'
+          placeholderTextColor={themeColors.text}
+
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{monster.lore}</Text>

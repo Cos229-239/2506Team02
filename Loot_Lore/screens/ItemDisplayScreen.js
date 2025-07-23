@@ -74,7 +74,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
 
       Alert.alert('Saved', 'Item updated in Firebase.');
     } catch (error) {
-      console.error('Error saving item:', error);
+      console.log('Error saving item:', error);
       Alert.alert('Error', error.message);
     }
   };
@@ -99,7 +99,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
               Alert.alert('Deleted', 'Item deleted successfully!');
               navigation.navigate('Private Items');
             } catch (error) {
-              console.error('Delete error:', error);
+              console.log('Delete error:', error);
               Alert.alert('Delete error', error.message || 'Unknown error occurred.');
             }
           },
@@ -129,6 +129,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
           value={item.name}
           onChangeText={(text) => updateField('name', text)}
           placeholder="Name"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.title, applyTextStyle]}>{item.name}</Text>
@@ -142,12 +143,14 @@ export default function ItemDisplayScreen({ route, navigation }) {
             value={item.type}
             onChangeText={(text) => updateField('type', text)}
             placeholder="Type"
+            placeholderTextColor={themeColors.text}
           />
           <TextInput
             style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
             value={item.magicItem}
             onChangeText={(text) => updateField('magicItem', text)}
             placeholder="Magic"
+            placeholderTextColor={themeColors.text}
           />
         </>
       ) : (
@@ -165,12 +168,14 @@ export default function ItemDisplayScreen({ route, navigation }) {
             value={item.damage?.amount}
             onChangeText={(text) => updateField('damage', { ...item.damage, amount: text })}
             placeholder="Damage Amount"
+            placeholderTextColor={themeColors.text}
           />
           <TextInput
             style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
             value={item.damage?.type}
             onChangeText={(text) => updateField('damage', { ...item.damage, type: text })}
             placeholder="Damage Type"
+            placeholderTextColor={themeColors.text}
           />
         </>
       ) : (
@@ -187,6 +192,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
           value={(item.properties || []).join('\n')}
           onChangeText={(text) => updateField('properties', text.split('\n'))}
           placeholder="Properties (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (item.properties || []).map((prop, idx) => (
@@ -202,6 +208,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
           value={(item.effect || []).join('\n')}
           onChangeText={(text) => updateField('effect', text.split('\n'))}
           placeholder="Effects (one per line)"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         (item.effect || []).map((eff, idx) => (
@@ -217,6 +224,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
           value={item.origin}
           onChangeText={(text) => updateField('origin', text)}
           placeholder="Origin"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{item.origin}</Text>
@@ -230,6 +238,7 @@ export default function ItemDisplayScreen({ route, navigation }) {
           value={item.description}
           onChangeText={(text) => updateField('description', text)}
           placeholder="Description"
+          placeholderTextColor={themeColors.text}
         />
       ) : (
         <Text style={[styles.text, applyTextStyle]}>{item.description}</Text>

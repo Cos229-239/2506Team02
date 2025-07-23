@@ -51,7 +51,7 @@ export const handleSaveCreation = async (creation, type = 'character') => {
 
     Alert.alert('Success', `${type.charAt(0).toUpperCase() + type.slice(1)} saved to your library!`);
   } catch (error) {
-    console.error(`Error saving ${type}:`, error);
+    console.log(`Error saving ${type}:`, error);
     Alert.alert('Save Failed', `Unable to save your ${type}. Please try again.`);
   }
 };

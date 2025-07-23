@@ -94,14 +94,14 @@ export default function ItemDetailsScreen() {
             },
           });
         } catch (err) {
-          console.error('Failed to parse JSON:', err, data.choices[0].message?.content);
+          console.log('Failed to parse JSON:', err, data.choices[0].message?.content);
           Alert.alert('Error', 'Item generation failed. Try again.');
         }
       } else {
         Alert.alert('Error', 'OpenAI did not return a valid response.');
       }
     } catch (fetchErr) {
-      console.error('API request failed:', fetchErr);
+      console.log('API request failed:', fetchErr);
       Alert.alert('Error', 'Failed to fetch from OpenAI. Try again.');
     } finally {
       setIsLoading(false);
