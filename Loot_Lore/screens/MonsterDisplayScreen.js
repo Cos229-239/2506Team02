@@ -321,14 +321,22 @@ export default function MonsterDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.backButton}>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: themeColors.button }]}
-          onPress={handleCreateNewMonster}
-        >
-          <Text style={[styles.buttonText, applyTextStyle]}>Create New Monster</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.buttonRow}>
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={handleCreateNewMonster}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>New Monster</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={() => navigation.navigate('Private Monsters')}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>Back</Text>
+  </TouchableOpacity>
+</View>
+
 
       <View style={styles.buttonRow}>
         <TouchableOpacity

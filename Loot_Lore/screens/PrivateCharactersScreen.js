@@ -14,7 +14,6 @@ import { auth, db } from '../firebaseConfig';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
-import BackButton from '../BackButton';
 
 export default function PrivateCharactersScreen() {
   const navigation = useNavigation();
@@ -144,8 +143,8 @@ export default function PrivateCharactersScreen() {
           { backgroundColor: colors.background, borderTopColor: colors.text },
         ]}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignSelf: 'center' }}>
-          <BackButton />
+        <TouchableOpacity onPress={() => navigation.navigate('Saved Databases')} style={{ alignSelf: 'center' }}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

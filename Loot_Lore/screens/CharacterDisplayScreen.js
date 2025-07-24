@@ -244,28 +244,20 @@ export default function CharacterDisplayScreen({ route, navigation }) {
       </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
-          onPress={handleCopy}
-        >
-          <Text style={[styles.buttonText, applyTextStyle]}>Copy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
-          onPress={() => setIsEditing((e) => !e)}
-        >
-          <Text style={[styles.buttonText, applyTextStyle]}>{isEditing ? 'Done' : 'Edit'}</Text>
-        </TouchableOpacity>
-      </View>
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={handleCreateNewCharacter}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>New Character</Text>
+  </TouchableOpacity>
 
-      <View style={styles.backButton}>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: themeColors.button }]}
-          onPress={handleCreateNewCharacter}
-        >
-          <Text style={[styles.buttonText, applyTextStyle]}>Create New Character</Text>
-        </TouchableOpacity>
-      </View>
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={() => navigation.navigate('Private Characters')}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>Back</Text>
+  </TouchableOpacity>
+</View>
 
       {/* Delete Button */}
       <View style={styles.buttonRow}>

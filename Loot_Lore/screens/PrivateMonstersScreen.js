@@ -14,7 +14,6 @@ import { auth, db } from '../firebaseConfig';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
-import OtherBackButton from '../OtherBackButton';
 
 export default function PrivateMonstersScreen() {
   const navigation = useNavigation();
@@ -115,15 +114,15 @@ export default function PrivateMonstersScreen() {
       </ScrollView>
 
       <View
-        style={[
-          localStyles.footer,
-          { backgroundColor: colors.background, borderTopColor: colors.text },
-        ]}
-      >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignSelf: 'center' }}>
-          <OtherBackButton />
-        </TouchableOpacity>
-      </View>
+              style={[
+                localStyles.footer,
+                { backgroundColor: colors.background, borderTopColor: colors.text },
+              ]}
+            >
+              <TouchableOpacity onPress={() => navigation.navigate('Saved Databases')} style={{ alignSelf: 'center' }}>
+                <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
+              </TouchableOpacity>
+            </View>
     </SafeAreaView>
   );
 }

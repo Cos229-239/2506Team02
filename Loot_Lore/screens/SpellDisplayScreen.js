@@ -313,12 +313,19 @@ export default function SpellDetailsScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.backButton}>
+      <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: themeColors.button }]}
+          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
           onPress={handleCreateNewSpell}
         >
-          <Text style={[styles.buttonText, applyTextStyle]}>Create New Spell</Text>
+          <Text style={[styles.buttonText, applyTextStyle]}>New Spell</Text>
+        </TouchableOpacity>
+      
+        <TouchableOpacity
+          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+          onPress={() => navigation.navigate('Private Spells')}
+        >
+          <Text style={[styles.buttonText, applyTextStyle]}>Back</Text>
         </TouchableOpacity>
       </View>
 

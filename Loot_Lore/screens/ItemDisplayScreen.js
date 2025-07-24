@@ -274,14 +274,22 @@ export default function ItemDisplayScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.backButton}>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: themeColors.button }]}
-          onPress={handleCreateNewItem}
-        >
-          <Text style={[styles.buttonText, applyTextStyle]}>Create New Item</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.buttonRow}>
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={handleCreateNewItem}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>New Item</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={() => navigation.navigate('Private Items')}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>Back</Text>
+  </TouchableOpacity>
+</View>
+
 
       <View style={styles.buttonRow}>
         <TouchableOpacity
