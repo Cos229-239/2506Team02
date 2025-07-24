@@ -114,7 +114,9 @@ export default function MonsterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
+      {!monster.isChecked ? (
       <ImageGenerator prompt={editableMonster.shortDescription} onImageGenerated={setImageUrl} />
+      ) : (<></>)}
       {isEditing ? (
         <TextInput
           style={[styles.inputTitle, applyTextStyle, { borderColor: themeColors.text }]}

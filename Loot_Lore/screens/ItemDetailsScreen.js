@@ -88,8 +88,11 @@ export default function ItemDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
-      <ImageGenerator prompt={item.name + ' ' + item.description} onImageGenerated={setImageUrl} />
 
+      {!item.isChecked ? (
+      <ImageGenerator prompt={item.name + ' ' + item.description} onImageGenerated={setImageUrl} />
+      ) : (<></>)}
+      
       {isEditing ? (
         <TextInput
           style={[styles.inputTitle, applyTextStyle, { borderColor: themeColors.text }]}

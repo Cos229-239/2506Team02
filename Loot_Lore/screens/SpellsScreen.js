@@ -19,6 +19,7 @@ import { getGlobalStyles, THEMES } from '../styles';
 import { SPELL_CREATION_PROMPT } from '../prompts';
 import spellOptions from '../data/spellOptions';
 import LoadingOverlay from './LoadingOverlay';
+import { Checkbox } from 'expo-checkbox';
 
 export default function SpellsScreen() {
   const navigation = useNavigation();
@@ -33,6 +34,7 @@ export default function SpellsScreen() {
   const [selectedRangeArea, setSelectedRangeArea] = useState('');
   const [spell, setSpell] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setChecked] = useState(false);
 
   const isGenerateDisabled =
     !selectedSpellType ||
@@ -87,6 +89,7 @@ export default function SpellsScreen() {
               castingTime: selectedCastingTime,
               duration: selectedDuration,
               rangeArea: selectedRangeArea,
+              isChecked: isChecked,
               ...generated,
             },
           });
@@ -195,7 +198,16 @@ export default function SpellsScreen() {
             dropdownItemStyles={styles.dropdownItem}
             dropdownTextStyles={[styles.dropdownText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}
           />
-
+          <View style={styles.checkboxContainer}>
+            <Checkbox
+              value={isChecked}
+              onValueChange={setChecked}
+              color={isChecked ? themeColors.button : undefined}
+            />
+            <Text style={[styles.checkboxLabel, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+              Generate Image?
+            </Text>
+          </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: themeColors.button }]}>
               <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>Clear</Text>
@@ -275,4 +287,13 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
   },
+  checkboxContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginVertical: 10,
+},
+  checkboxLabel: {
+  fontSize: 18,
+  marginLeft: 10,
+},
 });

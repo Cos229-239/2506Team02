@@ -104,7 +104,9 @@ export default function SpellDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, {backgroundColor: themeColors.background}]}>
+      {!spell.isChecked ? (
     <ImageGenerator prompt={editableSpell.name + editableSpell.description} onImageGenerated={setImageUrl} />
+      ) : (<></>)}
       {isEditing ? (
         <TextInput
           style={[styles.input, applyTextStyle, { borderColor: themeColors.text }]}
@@ -272,4 +274,4 @@ export default function SpellDetailsScreen({ route, navigation }) {
       fontSize: 16,
       fontFamily: 'Aclonica',
     },
-  });
+});

@@ -19,6 +19,7 @@ import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
 import monsterOptions from '../data/monsterOptions';
 import LoadingOverlay from './LoadingOverlay';
+import { Checkbox } from 'expo-checkbox';
 
 export default function MonsterScreen() {
   const navigation = useNavigation();
@@ -29,6 +30,7 @@ export default function MonsterScreen() {
   const [selectedAlignment, setSelectedAlignment] = useState('');
   const [monster, setMonster] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setChecked] = useState(false);
 
   const { theme, boldText } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
@@ -95,6 +97,7 @@ export default function MonsterScreen() {
             cr: selectedCR,
             size: selectedSize,
             alignment: selectedAlignment,
+            gemerateImage: isChecked,
             ...generated, // Ensure generated data matches structure you're expecting
           },
         });
@@ -148,6 +151,16 @@ export default function MonsterScreen() {
               />
             </React.Fragment>
           ))}
+          <View style={styles.checkboxContainer}>
+            <Checkbox
+              value={isChecked}
+              onValueChange={setChecked}
+              color={isChecked ? themeColors.button : undefined}
+            />
+            <Text style={[styles.checkboxLabel, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+              Generate Image?
+            </Text>
+          </View>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -252,4 +265,13 @@ const styles = StyleSheet.create({
   monsterInfo: {
     marginTop: 20,
   },
+  checkboxContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginVertical: 10,
+},
+checkboxLabel: {
+  fontSize: 18,
+  marginLeft: 10,
+},
 });
