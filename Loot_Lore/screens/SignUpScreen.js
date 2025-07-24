@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from 'react-native';
 import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
@@ -31,6 +32,7 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const isUsernameTaken = async (usernameToCheck) => {
     const normalized = usernameToCheck.trim().toLowerCase();
@@ -188,9 +190,11 @@ export default function SignUpScreen({ navigation }) {
             </Text>
           </TouchableOpacity>
 
-          <Text style={[styles.legalText, { color: themeColors.text }]}>
+          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+             <Text style={[styles.legalText, { color: themeColors.text }]}>
             By signing up, you agree to our Terms of Service and Privacy Policy.
           </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
@@ -205,6 +209,31 @@ export default function SignUpScreen({ navigation }) {
             </Text>
           </TouchableOpacity>
         </ScrollView>
+
+
+        {/* Terms View Button */}
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            <ScrollView>
+              <Text style={styles.modalTitle}>Terms and Agreement</Text>
+              <Text style={styles.modalText}>
+                {/* This is where the legal verbage goes */}
+                By using this app, you agree to the following terms and conditions...
+              </Text>
+            </ScrollView>
+            <TouchableOpacity
+              styles={styles.closeButton}
+              onPress={() => setIsModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -285,5 +314,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
     textAlign: 'center',
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 24,
+    marginBottom: 10,
+    color: 'white',
+  },
+  modalText: {
+    fontSize: 16,
+    color: 'white',
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
