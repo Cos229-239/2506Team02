@@ -19,6 +19,19 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
+const TERMS_LIST = [
+  '1. You agree to use this app in accordance with all applicable laws and regulations.',
+  '2. You shall not misuse or interfere with the app’s functionality.',
+  '3. Your data may be stored securely and used for app functionality purposes.',
+  '4. We do not share your personal data without consent.',
+  '5. We are not liable for any loss or damage resulting from app usage.',
+  '6. Terms may be updated periodically. Continued use implies acceptance.',
+  '7. You are responsible for maintaining the confidentiality of your login credentials.',
+  '8. All content is owned by the app creator unless otherwise specified.',
+  '9. You must not attempt to reverse-engineer or hack the app.',
+  '10. Violation of these terms may result in access restrictions or termination.',
+];
+
 export default function SignUpScreen({ navigation }) {
   const { theme } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
@@ -194,6 +207,15 @@ export default function SignUpScreen({ navigation }) {
           />
 
           {/* ✅ Custom checkbox using TouchableOpacity */}
+          <Text style={[styles.legalText, { color: themeColors.text }]}>
+            To continue, you must read and agree to our Terms and Agreement, confirming your understanding and acceptance.
+            </Text>
+             <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+             <Text style={[styles.legalText, { color: themeColors.text }]}>
+            Click here for Terms and Agreement.
+          </Text>
+          </TouchableOpacity>
+            
           <TouchableOpacity
             onPress={() => setTermsAccepted(!termsAccepted)}
             style={styles.checkboxContainer}
@@ -204,12 +226,6 @@ export default function SignUpScreen({ navigation }) {
             <Text style={[styles.termsText, { color: themeColors.text }]}>
               I accept the Terms and Agreement.
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-             <Text style={[styles.legalText, { color: themeColors.text }]}>
-            By signing up, you agree to our Terms of Service and Privacy Policy.
-          </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -234,19 +250,24 @@ export default function SignUpScreen({ navigation }) {
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
         >
-          <View style={styles.modalView}>
+          <View style={[styles.modalView, { backgroundColor: themeColors.background }]}>
             <ScrollView>
-              <Text style={styles.modalTitle}>Terms and Agreement</Text>
-              <Text style={styles.modalText}>
+              <Text style={[styles.modalTitle, { color: themeColors.text }]}>Terms and Agreement</Text>
+              <Text style={[styles.modalText, { color: themeColors.text }]}>
                 {/* This is where the legal verbage goes */}
-                By using this app, you agree to the following terms and conditions...
+                By using this app, you agree to the following Terms and Agreement...
               </Text>
+              {TERMS_LIST.map((term, index) => (
+               <Text key={index} style={[styles.modalText, { color: themeColors.text }]}>
+                {term}
+                </Text>
+              ))}
             </ScrollView>
             <TouchableOpacity
-              styles={styles.closeButton}
+              style={[styles.closeButton, { backgroundColor: themeColors.button }]}
               onPress={() => setIsModalVisible(false)}
               >
-                <Text style={styles.closeButtonText}>Close</Text>
+                <Text style={[styles.closeButtonText, { color: themeColors.text }]}>Close</Text>
             </TouchableOpacity>
           </View>
         </Modal>
@@ -335,7 +356,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 1)',
     padding: 20,
   },
   modalTitle: {
@@ -349,7 +369,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 5,
   },
