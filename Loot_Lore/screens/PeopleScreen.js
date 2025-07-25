@@ -32,11 +32,7 @@ export default function PeopleScreen() {
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setChecked] = useState(false);
-<<<<<<< HEAD
   
-=======
-
->>>>>>> 9a7e6c7afb842be6153d9cb68948de997a88eb80
   const { theme, boldText } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
@@ -152,7 +148,6 @@ export default function PeopleScreen() {
               />
             </React.Fragment>
           ))}
-<<<<<<< HEAD
           <View style={styles.checkboxContainer}>
             <Checkbox
               value={isChecked}
@@ -163,19 +158,6 @@ export default function PeopleScreen() {
               Generate Image?
             </Text>
           </View>
-=======
-           <View style={styles.checkboxContainer}>
-                      <Checkbox
-                        value={isChecked}
-                        onValueChange={setChecked}
-                        color={isChecked ? themeColors.button : undefined}
-                      />
-                      <Text style={[styles.checkboxLabel, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
-                        Generate Image?
-                      </Text>
-                    </View>
-          
->>>>>>> 9a7e6c7afb842be6153d9cb68948de997a88eb80
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={handleClear}
@@ -275,11 +257,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Aclonica',
     fontWeight: 'bold',
   },
-<<<<<<< HEAD
     checkboxContainer: {
-=======
-  checkboxContainer: {
->>>>>>> 9a7e6c7afb842be6153d9cb68948de997a88eb80
   flexDirection: 'row',
   alignItems: 'center',
   marginVertical: 10,
