@@ -9,6 +9,7 @@ import {
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles'; // 👈 import THEMES
 import BackButton from '../BackButton';
+import DeleteAccountButton from '../DeleteAccountButton';
 
 const themes = ['default', 'light', 'dark'];
 
@@ -32,7 +33,7 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         ))}
 
-        <View style={{ marginTop: 30, width: '100%', paddingHorizontal: 20 }}>
+        <View style={{ marginTop: 30, width: '100%', paddingHorizontal: 0 }}>
           <TouchableOpacity
             onPress={toggleBoldText}
             style={{
@@ -48,6 +49,11 @@ export default function SettingsScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+        
+        <View style={{ marginTop: 80 }}>
+          <DeleteAccountButton />
+        </View>
+
       </ScrollView>
 
       {/* 🔧 Footer now uses themed background and border color */}

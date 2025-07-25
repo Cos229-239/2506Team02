@@ -14,7 +14,6 @@ import { auth, db } from '../firebaseConfig';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
-import BackButton from '../BackButton';
 
 export default function PrivateCharactersScreen() {
   const navigation = useNavigation();
@@ -34,9 +33,11 @@ export default function PrivateCharactersScreen() {
           setLoading(true);
           const user = auth.currentUser;
           if (!user) return;
+
           const snapshot = await getDocs(
             collection(db, 'users', user.uid, 'creations')
           );
+
           if (isActive) {
             const data = snapshot.docs.map((doc) => ({
               id: doc.id,
@@ -45,7 +46,7 @@ export default function PrivateCharactersScreen() {
             setCreations(data);
           }
         } catch (error) {
-          console.error('Error fetching characters:', error);
+          console.log('Error fetching characters:', error);
         } finally {
           if (isActive) setLoading(false);
         }
@@ -104,9 +105,31 @@ export default function PrivateCharactersScreen() {
             <TouchableOpacity
               key={character.id}
               style={[localStyles.card, { backgroundColor: colors.button }]}
-              onPress={() => navigation.navigate('Character Details', { character })}
+              onPress={() =>
+                navigation.navigate('Character Display', {
+                  type: 'character',
+                  data: character,
+                  fields: [
+                    'race',
+                    'class',
+                    'level',
+                    'background',
+                    'alignment',
+                    'personality',
+                    'backstory',
+                    'traits',
+                    'stats',
+                  ],
+                  imageField: 'imageUrl', // Ensure this matches your Firestore key
+                })
+              }
             >
-              <Text style={[styles.text, { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+              <Text
+                style={[
+                  styles.text,
+                  { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' },
+                ]}
+              >
                 {character.name || 'Unnamed'}
               </Text>
             </TouchableOpacity>
@@ -120,8 +143,8 @@ export default function PrivateCharactersScreen() {
           { backgroundColor: colors.background, borderTopColor: colors.text },
         ]}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignSelf: 'center' }}>
-          <BackButton />
+        <TouchableOpacity onPress={() => navigation.navigate('Saved Databases')} style={{ alignSelf: 'center' }}>
+          <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

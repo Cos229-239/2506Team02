@@ -22,6 +22,7 @@ import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
 import itemOptions from '../data/itemOptions';
 import LoadingOverlay from './LoadingOverlay';
+import { Checkbox } from 'expo-checkbox';
 
 export default function ItemDetailsScreen() {
   const navigation = useNavigation();
@@ -36,6 +37,7 @@ export default function ItemDetailsScreen() {
   const [selectedProperties, setSelectedProperties] = useState('');
   const [item, setItem] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setChecked] = useState(false);
 
   const isGenerateDisabled =
     !selectedItemType ||
@@ -83,25 +85,26 @@ export default function ItemDetailsScreen() {
           const raw = data.choices[0].message?.content;
           const generated = JSON.parse(raw);
 
-          navigation.navigate('Item Details', {
+          navigation.navigate("Item Details", {
             item: {
               itemType: selectedItemType,
               magicItem: selectedMagicItem,
               damageType: selectedDamageType,
               damageAmount: selectedDamageAmount,
+              isChecked: isChecked,
               properties: Array.isArray(selectedProperties) ? selectedProperties : [selectedProperties],
               ...generated,
             },
           });
         } catch (err) {
-          console.error('Failed to parse JSON:', err, data.choices[0].message?.content);
+          console.log('Failed to parse JSON:', err, data.choices[0].message?.content);
           Alert.alert('Error', 'Item generation failed. Try again.');
         }
       } else {
         Alert.alert('Error', 'OpenAI did not return a valid response.');
       }
     } catch (fetchErr) {
-      console.error('API request failed:', fetchErr);
+      console.log('API request failed:', fetchErr);
       Alert.alert('Error', 'Failed to fetch from OpenAI. Try again.');
     } finally {
       setIsLoading(false);
@@ -205,7 +208,16 @@ export default function ItemDetailsScreen() {
               dropdownItemStyles={styles.dropdownItem}
               dropdownTextStyles={[styles.dropdownText, { color: themeColors.text }]}
             />
-
+            <View style={styles.checkboxContainer}>
+              <Checkbox
+                value={isChecked}
+                onValueChange={setChecked}
+                color={isChecked ? themeColors.button : undefined}
+              />
+              <Text style={[styles.checkboxLabel, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+                Generate Image?
+              </Text>
+            </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={handleClear} style={[styles.clearButton, { backgroundColor: themeColors.button }]}>
                 <Text style={[styles.buttonText, { color: themeColors.text }]}>Clear</Text>
@@ -286,4 +298,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+    checkboxContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginVertical: 10,
+},
+  checkboxLabel: {
+  fontSize: 18,
+  marginLeft: 10,
+},
 });

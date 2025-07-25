@@ -1,14 +1,14 @@
 // data/spellOptions.js
 
 export const spellType = [
-  { value: 'abjuration' },
-  { value: 'conjuration' },
-  { value: 'divination' },
-  { value: 'enchantment' },
-  { value: 'evocation' },
-  { value: 'illusion' },
-  { value: 'necromancy' },
-  { value: 'transmutation' },
+  { value: 'Abjuration' },
+  { value: 'Conjuration' },
+  { value: 'Divination' },
+  { value: 'Enchantment' },
+  { value: 'Evocation' },
+  { value: 'Illusion' },
+  { value: 'Necromancy' },
+  { value: 'Transmutation' },
 ];
   export const spellLevel = [
   { value: 'Level 1' },

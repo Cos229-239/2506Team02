@@ -49,8 +49,9 @@ export default function ImageGenerator({ prompt, onImageGenerated }) {
       }
 
     } catch (err) {
-      console.error('❌ Error generating image:', err.message);
+      console.log('❌ Error generating image:', err.message);
       setImageUri(null);
+      Alert.alert('Image Generation Failed', 'Unable to generate an image. Please try again.');
     } finally {
       setLoading(false);
     }

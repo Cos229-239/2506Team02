@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */ 
+/* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react';
 import {
   View,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
@@ -17,17 +18,20 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 export default function SignInScreen({ navigation }) {
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
   const { theme } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
 
   const handleLogin = async () => {
+    setLoading(true); // Set loading to true when login begins
     try {
-      let loginEmail = emailOrUsername;
+      let loginEmail = emailOrUsername.toLowerCase(); // Convert to lowercase
 
-      if (!emailOrUsername.includes('@')) {
-        const q = query(collection(db, 'users'), where('username', '==', emailOrUsername));
+      // Check if input is email or username
+      if (!loginEmail.includes('@')) {
+        const q = query(collection(db, 'users'), where('username', '==', loginEmail));
         const snapshot = await getDocs(q);
 
         if (snapshot.empty) {
@@ -39,14 +43,40 @@ export default function SignInScreen({ navigation }) {
         }
 
         const userData = snapshot.docs[0].data();
-        loginEmail = userData.email;
+        loginEmail = userData.email.toLowerCase(); // Ensure email is also in lowercase
       }
 
+      // Attempt to sign in with email and password
       await signInWithEmailAndPassword(auth, loginEmail, password);
       console.log('✅ Logged in as', loginEmail);
     } catch (error) {
-      console.error('Login error:', error.message);
-      alert(error.message);
+  console.log('Login error:', error.code); // Optional: for dev visibility
+
+  switch (error.code) {
+    case 'auth/invalid-email':
+      alert('The email address is badly formatted.');
+      break;
+    case 'auth/missing-password':
+      alert('Please enter your password.');
+      break;
+    case 'auth/internal-error':
+      // This often means password was missing
+      alert('Password is required. Please try again.');
+      break;
+    case 'auth/wrong-password':
+      alert('Incorrect password. Please try again.');
+      break;
+    case 'auth/user-not-found':
+      alert('No user found with that email or username.');
+      break;
+    case 'auth/too-many-requests':
+      alert('Too many attempts. Try again later.');
+      break;
+    default:
+      alert('Login failed. Please check your input and try again.');
+  }
+    } finally {
+      setLoading(false); // Reset loading state when login finishes
     }
   };
 
@@ -103,8 +133,13 @@ export default function SignInScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
           onPress={handleLogin}
+          disabled={loading} // Disable button during loading state
         >
-          <Text style={[styles.buttonText, { color: themeColors.text }]}>Login</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color={themeColors.text} /> // Loading spinner
+          ) : (
+            <Text style={[styles.buttonText, { color: themeColors.text }]}>Login</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

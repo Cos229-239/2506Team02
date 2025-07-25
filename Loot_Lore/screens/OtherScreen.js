@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */ 
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { auth } from '../firebaseConfig'; 
 import { signOut } from 'firebase/auth'; 
 
@@ -17,11 +17,17 @@ export default function OtherScreen({ navigation }) {
       await signOut(auth);
       console.log('👋 User signed out');
     } catch (error) {
-      console.error('Sign out error:', error.message);
+      console.log('Sign out error:', error.message);
     }
   };
 
   return (
+    <SafeAreaView style={globalStyles.screen}>
+       <ScrollView
+                contentContainerStyle={styles.scroll}
+                keyboardShouldPersistTaps="handled"
+              >
+
     <View style={[globalStyles.screen, styles.container, { backgroundColor: themeColors.background }]}>
       <Text style={[styles.title, { color: themeColors.text }]}>Loot & Lore</Text>
       <Image source={require('../assets/logo.png')} style={styles.logo} />
@@ -58,6 +64,8 @@ export default function OtherScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     </View>
+     </ScrollView>
+    </SafeAreaView>
   );
 }
 

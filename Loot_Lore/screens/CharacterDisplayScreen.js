@@ -9,16 +9,17 @@ import {
   TextInput,
   Share,
   Alert,
+  Image,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import ImageGenerator from '../ImageGenerator';
 import { ThemeContext } from '../ThemeContext';
 import { THEMES } from '../styles';
-import { handleSaveCreation } from '../data/SaveCreation';
+import ImageGenerator from '../ImageGenerator';
+import { db, auth } from '../firebaseConfig';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
-export default function CharacterDetailsScreen({ route, navigation }) {
-  const { character: initialCharacter } = route.params || {};
+export default function CharacterDisplayScreen({ route, navigation }) {
+  const initialCharacter = route.params?.character || route.params?.data;
   const { theme, boldText } = useContext(ThemeContext);
   const themeColors = THEMES[theme] || THEMES.default;
   const textWeight = boldText ? 'bold' : 'normal';
@@ -29,25 +30,8 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   useEffect(() => {
     setCharacter(initialCharacter);
+    setImageUrl(initialCharacter?.imageUrl || null);
   }, [initialCharacter]);
-
-  if (!character || typeof character !== 'object') {
-    return (
-      <View style={[styles.centeredContainer, { backgroundColor: themeColors.background }]}>
-        <Text style={[styles.title, { color: themeColors.text, fontWeight: textWeight }]}>
-          No character data found.
-        </Text>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: themeColors.button }]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.buttonText, { color: themeColors.text, fontWeight: textWeight }]}>
-            Go Back
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
 
   const generateCharacterText = () => {
     return (
@@ -57,7 +41,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
       `Stats:\n${Object.entries(character.stats || {}).map(([k, v]) => `${k}: ${v}`).join('\n')}\n\n` +
       `Personality:\n${character.personality}\n\n` +
       `Backstory:\n${character.backstory}\n\n` +
-      `Traits & Abilities:\n- ${(character.traits || []).join('\n- ')}`
+      `Traits & Abilities:\n- ${(character.traits || []).join('\n- ')}`  
     );
   };
 
@@ -75,7 +59,6 @@ export default function CharacterDetailsScreen({ route, navigation }) {
   };
 
   const handleCreateNewCharacter = () => {
-    setCharacter(null);
     navigation.navigate('Characters');
   };
 
@@ -94,6 +77,51 @@ export default function CharacterDetailsScreen({ route, navigation }) {
     setCharacter((prev) => ({ ...prev, [field]: value.split('\n') }));
   };
 
+  const handleUpdateFirebase = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user || !character.id) throw new Error('Missing user or character ID');
+
+      const docRef = doc(db, 'users', user.uid, 'creations', character.id);
+      await updateDoc(docRef, { ...character, imageUrl });
+
+      Alert.alert('Saved', 'Character updated in Firebase.');
+    } catch (error) {
+      console.log('Error saving character:', error);
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  const handleDeleteCharacter = () => {
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this character? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const user = auth.currentUser;
+              if (!user || !character.id) throw new Error('Missing user or character ID');
+
+              const docRef = doc(db, 'users', user.uid, 'creations', character.id);
+              await deleteDoc(docRef);
+
+              Alert.alert('Deleted', 'Character deleted successfully!');
+              navigation.navigate('Private Characters'); // Navigate back to the Private character list
+            } catch (error) {
+              console.log('Delete error:', error);
+              Alert.alert('Delete error', error.message || 'Unknown error occurred.');
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   const applyTextStyle = {
     color: themeColors.text,
     fontWeight: textWeight,
@@ -102,7 +130,13 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
-      <ImageGenerator prompt={character.backstory || character.race} onImageGenerated={setImageUrl} />
+    
+      {/* Image Generator button */}
+      <ImageGenerator
+        prompt={character.backstory || character.race}
+        onImageGenerated={(url) => setImageUrl(url)}
+      />
+
       {isEditing ? (
         <TextInput
           style={[styles.inputTitle, applyTextStyle, { borderColor: themeColors.text }]}
@@ -146,9 +180,7 @@ export default function CharacterDetailsScreen({ route, navigation }) {
             placeholderTextColor={themeColors.text}
           />
         ) : (
-          <Text key={stat} style={[styles.text, applyTextStyle]}>
-            {`${stat}: ${value}`}
-          </Text>
+          <Text key={stat} style={[styles.text, applyTextStyle]}>{`${stat}: ${value}`}</Text>
         )
       )}
 
@@ -192,42 +224,50 @@ export default function CharacterDetailsScreen({ route, navigation }) {
         />
       ) : (
         (character.traits || []).map((trait, i) => (
-          <Text key={i} style={[styles.text, applyTextStyle]}>
-            - {trait}
-          </Text>
+          <Text key={i} style={[styles.text, applyTextStyle]}>- {trait}</Text>
         ))
       )}
 
       <View style={styles.buttonRow}>
         <TouchableOpacity
           style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
-          onPress={() => handleSaveCreation({ ...character, imageUrl }, 'character')}
+          onPress={handleUpdateFirebase}
         >
           <Text style={[styles.buttonText, applyTextStyle]}>Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleShare}>
+        <TouchableOpacity
+          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+          onPress={handleShare}
+        >
           <Text style={[styles.buttonText, applyTextStyle]}>Share</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.buttonHalf, { backgroundColor: themeColors.button }]} onPress={handleCopy}>
-          <Text style={[styles.buttonText, applyTextStyle]}>Copy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
-          onPress={() => setIsEditing((e) => !e)}
-        >
-          <Text style={[styles.buttonText, applyTextStyle]}>{isEditing ? 'Done' : 'Edit'}</Text>
-        </TouchableOpacity>
-      </View>
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={handleCreateNewCharacter}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>New Character</Text>
+  </TouchableOpacity>
 
-      <View style={styles.backButton}>
+  <TouchableOpacity
+    style={[styles.buttonHalf, { backgroundColor: themeColors.button }]}
+    onPress={() => navigation.navigate('Private Characters')}
+  >
+    <Text style={[styles.buttonText, applyTextStyle]}>Back</Text>
+  </TouchableOpacity>
+</View>
+
+      {/* Delete Button */}
+      <View style={styles.buttonRow}>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: themeColors.button }]}
-          onPress={handleCreateNewCharacter}
+          style={[styles.buttonHalf, { backgroundColor: 'red' }]}
+          onPress={handleDeleteCharacter}
         >
-          <Text style={[styles.buttonText, applyTextStyle]}>Create New Character</Text>
+          <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>
+            Delete Character
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -238,12 +278,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flexGrow: 1,
-  },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
   },
   title: {
     fontSize: 26,
@@ -303,4 +337,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Aclonica',
   },
+  characterImage: {
+    width: '100%',
+    height: 200,
+resizeMode: 'cover',
+marginBottom: 15,
+borderRadius: 10,
+},
 });

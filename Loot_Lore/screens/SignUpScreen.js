@@ -11,12 +11,26 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from 'react-native';
 import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+
+const TERMS_LIST = [
+  '1. You agree to use this app in accordance with all applicable laws and regulations.',
+  '2. You shall not misuse or interfere with the app’s functionality.',
+  '3. Your data may be stored securely and used for app functionality purposes.',
+  '4. We do not share your personal data without consent.',
+  '5. We are not liable for any loss or damage resulting from app usage.',
+  '6. Terms may be updated periodically. Continued use implies acceptance.',
+  '7. You are responsible for maintaining the confidentiality of your login credentials.',
+  '8. All content is owned by the app creator unless otherwise specified.',
+  '9. You must not attempt to reverse-engineer or hack the app.',
+  '10. Violation of these terms may result in access restrictions or termination.',
+];
 
 export default function SignUpScreen({ navigation }) {
   const { theme } = useContext(ThemeContext);
@@ -30,6 +44,8 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const isUsernameTaken = async (usernameToCheck) => {
     const normalized = usernameToCheck.trim().toLowerCase();
@@ -46,6 +62,11 @@ export default function SignUpScreen({ navigation }) {
 
     if (!username || username.trim() === '') {
       alert("Please enter a valid username");
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert("You must accept the Terms and Agreement to sign up.");
       return;
     }
 
@@ -75,9 +96,25 @@ export default function SignUpScreen({ navigation }) {
 
       console.log('✅ User signed up & saved:', user.uid);
     } catch (error) {
-      console.error('Signup error:', error.message);
-      alert(error.message);
-    }
+  console.log('Signup error:', error.code); // Optional for dev
+
+  switch (error.code) {
+    case 'auth/email-already-in-use':
+      alert('This email is already in use. Try signing in instead.');
+      break;
+    case 'auth/invalid-email':
+      alert('Please enter a valid email address.');
+      break;
+    case 'auth/weak-password':
+      alert('Password is too weak. It should be at least 6 characters.');
+      break;
+    case 'auth/missing-password':
+      alert('Please enter a password.');
+      break;
+    default:
+      alert('Failed to create account. Please check your info and try again.');
+  }
+}
   };
 
   return (
@@ -169,6 +206,28 @@ export default function SignUpScreen({ navigation }) {
             onChangeText={setConfirmPassword}
           />
 
+          {/* ✅ Custom checkbox using TouchableOpacity */}
+          <Text style={[styles.legalText, { color: themeColors.text }]}>
+            To continue, you must read and agree to our Terms and Agreement, confirming your understanding and acceptance.
+            </Text>
+             <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+             <Text style={[styles.legalText, { color: themeColors.text }]}>
+            Click here for Terms and Agreement.
+          </Text>
+          </TouchableOpacity>
+            
+          <TouchableOpacity
+            onPress={() => setTermsAccepted(!termsAccepted)}
+            style={styles.checkboxContainer}
+          >
+            <View style={[styles.checkboxBase, termsAccepted && styles.checkboxChecked]}>
+              {termsAccepted && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={[styles.termsText, { color: themeColors.text }]}>
+              I accept the Terms and Agreement.
+            </Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.primaryButton, { backgroundColor: themeColors.button }]}
             onPress={handleSignUp}
@@ -182,6 +241,36 @@ export default function SignUpScreen({ navigation }) {
             </Text>
           </TouchableOpacity>
         </ScrollView>
+
+
+        {/* Terms View Button */}
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={[styles.modalView, { backgroundColor: themeColors.background }]}>
+            <ScrollView>
+              <Text style={[styles.modalTitle, { color: themeColors.text }]}>Terms and Agreement</Text>
+              <Text style={[styles.modalText, { color: themeColors.text }]}>
+                {/* This is where the legal verbage goes */}
+                By using this app, you agree to the following Terms and Agreement...
+              </Text>
+              {TERMS_LIST.map((term, index) => (
+               <Text key={index} style={[styles.modalText, { color: themeColors.text }]}>
+                {term}
+                </Text>
+              ))}
+            </ScrollView>
+            <TouchableOpacity
+              style={[styles.closeButton, { backgroundColor: themeColors.button }]}
+              onPress={() => setIsModalVisible(false)}
+              >
+                <Text style={[styles.closeButtonText, { color: themeColors.text }]}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -231,5 +320,60 @@ const styles = StyleSheet.create({
     fontFamily: 'Aclonica',
     fontSize: 14,
     textDecorationLine: 'underline',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkboxBase: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#999',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  checkboxChecked: {
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+  },
+  checkmark: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  termsText: {
+    fontSize: 14,
+  },
+  legalText: {
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 24,
+    marginBottom: 10,
+    color: 'white',
+  },
+  modalText: {
+    fontSize: 16,
+    color: 'white',
+    marginBottom: 20,
+  },
+  closeButton: {
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

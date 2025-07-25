@@ -14,7 +14,6 @@ import { auth, db } from '../firebaseConfig';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../ThemeContext';
 import { getGlobalStyles, THEMES } from '../styles';
-import OtherBackButton from '../OtherBackButton';
 
 export default function PrivateItemsScreen() {
   const navigation = useNavigation();
@@ -45,7 +44,7 @@ export default function PrivateItemsScreen() {
             setCreations(data);
           }
         } catch (error) {
-          console.error('Error fetching items:', error);
+          console.log('Error fetching items:', error);
         } finally {
           if (isActive) setLoading(false);
         }
@@ -104,7 +103,7 @@ export default function PrivateItemsScreen() {
             <TouchableOpacity
               key={item.id}
               style={[localStyles.card, { backgroundColor: colors.button }]}
-              onPress={() => navigation.navigate('Item Details', { item })}
+              onPress={() => navigation.navigate('Item Display', { item })}
             >
               <Text style={[styles.text, { color: colors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
                 {item.name || 'Unnamed'}
@@ -114,16 +113,16 @@ export default function PrivateItemsScreen() {
         )}
       </ScrollView>
 
-      <View
-        style={[
-          localStyles.footer,
-          { backgroundColor: colors.background, borderTopColor: colors.text },
-        ]}
-      >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignSelf: 'center' }}>
-          <OtherBackButton />
-        </TouchableOpacity>
-      </View>
+     <View
+             style={[
+               localStyles.footer,
+               { backgroundColor: colors.background, borderTopColor: colors.text },
+             ]}
+           >
+             <TouchableOpacity onPress={() => navigation.navigate('Saved Databases')} style={{ alignSelf: 'center' }}>
+               <Text style={[styles.buttonText, { color: colors.text }]}>Back</Text>
+             </TouchableOpacity>
+           </View>
     </SafeAreaView>
   );
 }

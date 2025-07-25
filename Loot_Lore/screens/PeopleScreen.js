@@ -90,7 +90,7 @@ export default function PeopleScreen() {
         Alert.alert('Error', 'OpenAI did not return a valid response.');
       }
     } catch (err) {
-      console.error('API error:', err);
+      console.log('API error:', err);
       Alert.alert('Error', 'Failed to connect to OpenAI.');
     } finally {
       setIsLoading(false);
