@@ -102,7 +102,10 @@ export default function CharacterDetailsScreen({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: themeColors.background }]}>
-      <ImageGenerator prompt={character.backstory || character.race} onImageGenerated={setImageUrl} />
+      {!character.isChecked ? (    
+          <ImageGenerator prompt={character.backstory || character.race} onImageGenerated={setImageUrl} />) 
+          : (<></>) }
+
       {isEditing ? (
         <TextInput
           style={[styles.inputTitle, applyTextStyle, { borderColor: themeColors.text }]}

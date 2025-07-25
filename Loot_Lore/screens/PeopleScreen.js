@@ -20,6 +20,7 @@ import { getGlobalStyles, THEMES } from '../styles';
 import { ThemeContext } from '../ThemeContext';
 import peopleOptions from '../data/peopleOptions';
 import LoadingOverlay from './LoadingOverlay';
+import { Checkbox } from 'expo-checkbox';
 
 export default function PeopleScreen() {
   const navigation = useNavigation();
@@ -30,7 +31,8 @@ export default function PeopleScreen() {
   const [selectedAlignment, setSelectedAlignment] = useState('');
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isChecked, setChecked] = useState(false);
+  
   const { theme, boldText } = useContext(ThemeContext);
   const globalStyles = getGlobalStyles(theme);
   const themeColors = THEMES[theme];
@@ -83,6 +85,7 @@ export default function PeopleScreen() {
             level: selectedLevel,
             background: selectedBackground,
             alignment: selectedAlignment,
+            isChecked: isChecked,
             ...generated,
           },
         });
@@ -145,7 +148,16 @@ export default function PeopleScreen() {
               />
             </React.Fragment>
           ))}
-
+          <View style={styles.checkboxContainer}>
+            <Checkbox
+              value={isChecked}
+              onValueChange={setChecked}
+              color={isChecked ? themeColors.button : undefined}
+            />
+            <Text style={[styles.checkboxLabel, { color: themeColors.text, fontWeight: boldText ? 'bold' : 'normal' }]}>
+              Generate Image?
+            </Text>
+          </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={handleClear}
@@ -245,4 +257,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Aclonica',
     fontWeight: 'bold',
   },
+    checkboxContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginVertical: 10,
+},
+checkboxLabel: {
+  fontSize: 18,
+  marginLeft: 10,
+},
 });
